@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>LexiCore - Authentication & Legal Workspace Access</title>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=JetBrains+Mono:wght@400..700&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            surface: "#051424",
+            "surface-low": "#0d1c2d",
+            "surface-container": "#122131",
+            "surface-high": "#1c2b3c",
+            "surface-highest": "#273647",
+            primary: "#adc6ff",
+            "primary-container": "#4d8eff",
+            "on-primary": "#002e6a",
+            tertiary: "#4edea3",
+            "tertiary-container": "#00a572",
+            error: "#ffb4ab",
+            "error-container": "#93000a",
+            "on-surface": "#d4e4fa",
+            "on-surface-variant": "#c2c6d6",
+            outline: "#8c909f"
+          },
+          fontFamily: {
+            sans: ["Geist", "sans-serif"],
+            mono: ["JetBrains Mono", "monospace"]
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      background: radial-gradient(circle at 50% 10%, #0d233a 0%, #051424 70%, #020a14 100%);
+      font-family: 'Geist', sans-serif;
+    }
+    .criteria-item.met {
+      color: #4edea3;
+    }
+    .criteria-item.met .symbol-icon {
+      color: #4edea3;
+    }
+    .criteria-item.unmet {
+      color: #8c909f;
+    }
+    .criteria-item.unmet .symbol-icon {
+      color: #424754;
+    }
+  </style>
+</head>
+<body class="min-h-screen text-on-surface flex flex-col justify-between p-4 selection:bg-primary/20 selection:text-primary">
+
+  <!-- Top Logo Bar -->
+  <header class="w-full max-w-5xl mx-auto flex items-center justify-between py-4">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-surface-high border border-primary/30 flex items-center justify-center text-primary shadow-lg shadow-primary/10">
+        <span class="material-symbols-outlined text-[24px]">gavel</span>
+      </div>
+      <div class="flex flex-col">
+        <span class="font-semibold text-lg tracking-tight text-on-surface">LexiCore</span>
+        <span class="text-xs text-on-surface-variant font-mono">Deterministic Legal NLP Suite</span>
+      </div>
+    </div>
+    <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container border border-surface-high text-xs text-on-surface-variant font-mono">
+      <span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+      <span>Deterministic Legal AI • Smart NLP Suite</span>
+    </div>
+  </header>
+
+  <!-- Auth Card Center -->
+  <main class="w-full max-w-md mx-auto my-6">
+    <div class="bg-surface-container/90 backdrop-blur-xl border border-surface-high/80 rounded-2xl p-6 sm:p-8 shadow-2xl shadow-black/60 relative overflow-hidden">
+      <!-- Glow ambient accent -->
+      <div class="absolute -top-24 -right-24 w-48 h-48 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      <!-- Segmented Tabs: Sign In / Sign Up -->
+      <div class="flex items-center p-1 bg-surface-low rounded-xl mb-6 border border-surface-high/50">
+        <button id="tab-signin-btn" type="button" class="flex-1 py-2 text-center text-sm font-semibold rounded-lg bg-surface-high text-primary shadow transition-all">
+          Sign In
+        </button>
+        <button id="tab-signup-btn" type="button" class="flex-1 py-2 text-center text-sm font-semibold rounded-lg text-on-surface-variant hover:text-on-surface transition-all">
+          Create Account
+        </button>
+      </div>
+
+      <!-- ================= SIGN IN FORM ================= -->
+      <form id="signin-form" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-1.5" for="signin-email">
+            Legal Workspace Email
+          </label>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-3 top-2.5 text-[18px] text-outline">alternate_email</span>
+            <input id="signin-email" type="email" required placeholder="counsel@firm.com"
+              class="w-full pl-9 pr-3 py-2.5 bg-surface-low rounded-lg border border-surface-high text-sm text-on-surface placeholder:text-outline/60 focus:outline-none focus:border-primary transition-colors"/>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="block text-xs font-semibold uppercase tracking-wider text-on-surface-variant" for="signin-password">
+              Password
+            </label>
+            <a href="#" onclick="showQuickToast('For demo, use admin@lexicore.ai / LexiCore@2026! or create a new account.'); return false;" class="text-xs text-primary hover:underline">Forgot?</a>
+          </div>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-3 top-2.5 text-[18px] text-outline">lock</span>
+            <input id="signin-password" type="password" required placeholder="••••••••••••"
+              class="w-full pl-9 pr-10 py-2.5 bg-surface-low rounded-lg border border-surface-high text-sm text-on-surface placeholder:text-outline/60 focus:outline-none focus:border-primary transition-colors"/>
+            <button type="button" onclick="togglePassVisibility('signin-password', this)" class="absolute right-3 top-2.5 text-outline hover:text-on-surface">
+              <span class="material-symbols-outlined text-[18px]">visibility</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between text-xs text-on-surface-variant pt-1">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" checked class="rounded border-surface-high text-primary focus:ring-0 bg-surface-low"/>
+            <span>Remember workspace session</span>
+          </label>
+        </div>
+
+        <div id="signin-error" class="hidden p-3 rounded-lg bg-error-container/30 border border-error/30 text-error text-xs flex items-center gap-2">
+          <span class="material-symbols-outlined text-[16px]">error</span>
+          <span id="signin-error-text">Invalid email or password.</span>
+        </div>
+
+        <button id="signin-submit-btn" type="submit"
+          class="w-full py-2.5 mt-2 bg-primary text-on-primary font-semibold text-sm rounded-lg hover:bg-primary-container transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20">
+          <span>Access LexiCore Suite</span>
+          <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+        </button>
+
+        <!-- Quick Demo Credentials Box -->
+        <div class="mt-4 p-3 rounded-xl bg-surface-low/80 border border-surface-high/60 text-xs">
+          <div class="flex items-center justify-between text-on-surface-variant font-medium mb-1">
+            <span class="flex items-center gap-1.5 text-primary">
+              <span class="material-symbols-outlined text-[14px]">key</span> Default Demo Credentials:
+            </span>
+            <button type="button" onclick="fillDemoCreds()" class="text-tertiary underline hover:opacity-80">Auto-fill</button>
+          </div>
+          <div class="font-mono text-outline space-y-0.5">
+            <div>Email: <span class="text-on-surface">admin@lexicore.ai</span></div>
+            <div>Pass: <span class="text-on-surface">LexiCore@2026!</span></div>
+          </div>
+        </div>
+      </form>
+
+      <!-- ================= SIGN UP FORM ================= -->
+      <form id="signup-form" class="space-y-3.5 hidden">
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-1" for="signup-name">
+            Full Name
+          </label>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-3 top-2.5 text-[18px] text-outline">person</span>
+            <input id="signup-name" type="text" required placeholder="Adv. Marcus Vance"
+              class="w-full pl-9 pr-3 py-2 bg-surface-low rounded-lg border border-surface-high text-sm text-on-surface placeholder:text-outline/60 focus:outline-none focus:border-primary transition-colors"/>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-1" for="signup-email">
+            Work Email Address
+          </label>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-3 top-2.5 text-[18px] text-outline">mail</span>
+            <input id="signup-email" type="email" required placeholder="counsel@firm.com"
+              class="w-full pl-9 pr-3 py-2 bg-surface-low rounded-lg border border-surface-high text-sm text-on-surface placeholder:text-outline/60 focus:outline-none focus:border-primary transition-colors"/>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-1" for="signup-password">
+            Create Password
+          </label>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-3 top-2.5 text-[18px] text-outline">lock</span>
+            <input id="signup-password" type="password" required placeholder="Minimum 8 characters..."
+              class="w-full pl-9 pr-10 py-2 bg-surface-low rounded-lg border border-surface-high text-sm text-on-surface placeholder:text-outline/60 focus:outline-none focus:border-primary transition-colors"/>
+            <button type="button" onclick="togglePassVisibility('signup-password', this)" class="absolute right-3 top-2.5 text-outline hover:text-on-surface">
+              <span class="material-symbols-outlined text-[18px]">visibility</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Password Strength Meter -->
+        <div class="space-y-1">
+          <div class="flex items-center justify-between text-[11px] font-mono">
+            <span class="text-on-surface-variant">Security Strength:</span>
+            <span id="strength-label" class="font-bold text-error">Unset</span>
+          </div>
+          <div class="w-full h-1.5 bg-surface-low rounded-full overflow-hidden flex">
+            <div id="strength-bar" class="h-full w-0 transition-all duration-300 bg-error"></div>
+          </div>
+        </div>
+
+        <!-- Password Criteria Checklist -->
+        <div class="p-3 bg-surface-low rounded-xl border border-surface-high/60 space-y-1.5 text-xs font-mono">
+          <div class="text-[11px] uppercase tracking-wider text-on-surface-variant font-semibold mb-1 font-sans">
+            Required Password Criteria:
+          </div>
+          <div id="crit-length" class="criteria-item unmet flex items-center gap-2">
+            <span class="material-symbols-outlined symbol-icon text-[15px]">radio_button_unchecked</span>
+            <span>At least 8 characters length</span>
+          </div>
+          <div id="crit-upper" class="criteria-item unmet flex items-center gap-2">
+            <span class="material-symbols-outlined symbol-icon text-[15px]">radio_button_unchecked</span>
+            <span>At least 1 uppercase letter (A-Z)</span>
+          </div>
+          <div id="crit-lower" class="criteria-item unmet flex items-center gap-2">
+            <span class="material-symbols-outlined symbol-icon text-[15px]">radio_button_unchecked</span>
+            <span>At least 1 lowercase letter (a-z)</span>
+          </div>
+          <div id="crit-number" class="criteria-item unmet flex items-center gap-2">
+            <span class="material-symbols-outlined symbol-icon text-[15px]">radio_button_unchecked</span>
+            <span>At least 1 numeric digit (0-9)</span>
+          </div>
+          <div id="crit-special" class="criteria-item unmet flex items-center gap-2">
+            <span class="material-symbols-outlined symbol-icon text-[15px]">radio_button_unchecked</span>
+            <span>At least 1 special character (!@#$%^&*)</span>
+          </div>
+          <div id="crit-match" class="criteria-item unmet flex items-center gap-2">
+            <span class="material-symbols-outlined symbol-icon text-[15px]">radio_button_unchecked</span>
+            <span>Passwords match</span>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-1" for="signup-confirm-password">
+            Confirm Password
+          </label>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-3 top-2.5 text-[18px] text-outline">verified_user</span>
+            <input id="signup-confirm-password" type="password" required placeholder="Re-enter password"
+              class="w-full pl-9 pr-3 py-2 bg-surface-low rounded-lg border border-surface-high text-sm text-on-surface placeholder:text-outline/60 focus:outline-none focus:border-primary transition-colors"/>
+          </div>
+        </div>
+
+        <div id="signup-error" class="hidden p-2.5 rounded-lg bg-error-container/30 border border-error/30 text-error text-xs flex items-center gap-2">
+          <span class="material-symbols-outlined text-[16px]">error</span>
+          <span id="signup-error-text">Please meet all password criteria above.</span>
+        </div>
+
+        <button id="signup-submit-btn" type="submit" disabled
+          class="w-full py-2.5 mt-2 bg-primary/40 text-on-primary/60 font-semibold text-sm rounded-lg transition-all flex items-center justify-center gap-2 cursor-not-allowed">
+          <span>Create Workspace Account</span>
+          <span class="material-symbols-outlined text-[18px]">how_to_reg</span>
+        </button>
+      </form>
+
+    </div>
+  </main>
+
+  <!-- Bottom Info -->
+  <footer class="w-full max-w-5xl mx-auto text-center py-4 text-xs text-outline font-mono">
+    <span>LexiCore Deterministic Legal Assistant &bull; Major Project Milestone &bull; Zero LLM Architecture</span>
+  </footer>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 px-4 py-2.5 rounded-xl bg-surface-high border border-primary/30 text-on-surface text-sm shadow-2xl flex items-center gap-2 transition-all transform translate-y-12 opacity-0 pointer-events-none">
+    <span id="toast-icon" class="material-symbols-outlined text-primary text-[18px]">info</span>
+    <span id="toast-msg">Notification</span>
+  </div>
+
+  <script>
+    // Registered Users storage in localStorage
+    const DEFAULT_USERS = [
+      {
+        name: "Marcus Vance",
+        email: "admin@lexicore.ai",
+        password: "LexiCore@2026!"
+      }
+    ];
+
+    function getUsers() {
+      try {
+        const stored = localStorage.getItem('lexicore_registered_users');
+        if (!stored) {
+          localStorage.setItem('lexicore_registered_users', JSON.stringify(DEFAULT_USERS));
+          return DEFAULT_USERS;
+        }
+        return JSON.parse(stored);
+      } catch (e) {
+        return DEFAULT_USERS;
+      }
+    }
+
+    function saveUser(user) {
+      const users = getUsers();
+      users.push(user);
+      localStorage.setItem('lexicore_registered_users', JSON.stringify(users));
+    }
+
+    // Tabs toggle
+    const tabSignIn = document.getElementById('tab-signin-btn');
+    const tabSignUp = document.getElementById('tab-signup-btn');
+    const formSignIn = document.getElementById('signin-form');
+    const formSignUp = document.getElementById('signup-form');
+
+    tabSignIn.addEventListener('click', () => {
+      tabSignIn.className = 'flex-1 py-2 text-center text-sm font-semibold rounded-lg bg-surface-high text-primary shadow transition-all';
+      tabSignUp.className = 'flex-1 py-2 text-center text-sm font-semibold rounded-lg text-on-surface-variant hover:text-on-surface transition-all';
+      formSignIn.classList.remove('hidden');
+      formSignUp.classList.add('hidden');
+    });
+
+    tabSignUp.addEventListener('click', () => {
+      tabSignUp.className = 'flex-1 py-2 text-center text-sm font-semibold rounded-lg bg-surface-high text-primary shadow transition-all';
+      tabSignIn.className = 'flex-1 py-2 text-center text-sm font-semibold rounded-lg text-on-surface-variant hover:text-on-surface transition-all';
+      formSignUp.classList.remove('hidden');
+      formSignIn.classList.add('hidden');
+    });
+
+    // Password criteria live validation
+    const passInput = document.getElementById('signup-password');
+    const confirmInput = document.getElementById('signup-confirm-password');
+    const submitSignUpBtn = document.getElementById('signup-submit-btn');
+
+    function checkCriteria() {
+      const p = passInput.value || '';
+      const c = confirmInput.value || '';
+
+      const hasLength = p.length >= 8;
+      const hasUpper = /[A-Z]/.test(p);
+      const hasLower = /[a-z]/.test(p);
+      const hasNumber = /[0-9]/.test(p);
+      const hasSpecial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(p);
+      const matches = p.length > 0 && p === c;
+
+      updateCritUI('crit-length', hasLength);
+      updateCritUI('crit-upper', hasUpper);
+      updateCritUI('crit-lower', hasLower);
+      updateCritUI('crit-number', hasNumber);
+      updateCritUI('crit-special', hasSpecial);
+      updateCritUI('crit-match', matches);
+
+      // Strength calculation
+      let score = 0;
+      if (hasLength) score++;
+      if (hasUpper) score++;
+      if (hasLower) score++;
+      if (hasNumber) score++;
+      if (hasSpecial) score++;
+
+      const strengthBar = document.getElementById('strength-bar');
+      const strengthLabel = document.getElementById('strength-label');
+
+      if (p.length === 0) {
+        strengthBar.style.width = '0%';
+        strengthBar.className = 'h-full transition-all duration-300 bg-error';
+        strengthLabel.textContent = 'Unset';
+        strengthLabel.className = 'font-bold text-outline';
+      } else if (score <= 2) {
+        strengthBar.style.width = '30%';
+        strengthBar.className = 'h-full transition-all duration-300 bg-error';
+        strengthLabel.textContent = 'Weak';
+        strengthLabel.className = 'font-bold text-error';
+      } else if (score === 3 || score === 4) {
+        strengthBar.style.width = '65%';
+        strengthBar.className = 'h-full transition-all duration-300 bg-amber-400';
+        strengthLabel.textContent = 'Moderate';
+        strengthLabel.className = 'font-bold text-amber-400';
+      } else if (score === 5) {
+        strengthBar.style.width = '100%';
+        strengthBar.className = 'h-full transition-all duration-300 bg-tertiary';
+        strengthLabel.textContent = 'Strong (Pass)';
+        strengthLabel.className = 'font-bold text-tertiary';
+      }
+
+      const allValid = hasLength && hasUpper && hasLower && hasNumber && hasSpecial && matches;
+      if (allValid) {
+        submitSignUpBtn.disabled = false;
+        submitSignUpBtn.className = 'w-full py-2.5 mt-2 bg-primary text-on-primary font-semibold text-sm rounded-lg hover:bg-primary-container transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20 cursor-pointer';
+      } else {
+        submitSignUpBtn.disabled = true;
+        submitSignUpBtn.className = 'w-full py-2.5 mt-2 bg-primary/40 text-on-primary/60 font-semibold text-sm rounded-lg transition-all flex items-center justify-center gap-2 cursor-not-allowed';
+      }
+    }
+
+    function updateCritUI(id, isMet) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const icon = el.querySelector('.symbol-icon');
+      if (isMet) {
+        el.className = 'criteria-item met flex items-center gap-2';
+        if (icon) {
+          icon.textContent = 'check_circle';
+          icon.className = 'material-symbols-outlined symbol-icon text-[15px] text-tertiary';
+        }
+      } else {
+        el.className = 'criteria-item unmet flex items-center gap-2';
+        if (icon) {
+          icon.textContent = 'radio_button_unchecked';
+          icon.className = 'material-symbols-outlined symbol-icon text-[15px] text-outline/50';
+        }
+      }
+    }
+
+    passInput.addEventListener('input', checkCriteria);
+    confirmInput.addEventListener('input', checkCriteria);
+
+    // Form Sign In submission
+    formSignIn.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('signin-email').value.trim().toLowerCase();
+      const password = document.getElementById('signin-password').value;
+      const errorBox = document.getElementById('signin-error');
+      const errorText = document.getElementById('signin-error-text');
+
+      const users = getUsers();
+      const matched = users.find(u => u.email.toLowerCase() === email && u.password === password);
+
+      if (matched) {
+        errorBox.classList.add('hidden');
+        const btn = document.getElementById('signin-submit-btn');
+        btn.innerHTML = `<span class="w-4 h-4 rounded-full border-2 border-on-primary border-t-transparent animate-spin"></span> Authenticating...`;
+        btn.disabled = true;
+
+        localStorage.setItem('lexicore_current_user', JSON.stringify({
+          name: matched.name,
+          email: matched.email
+        }));
+
+        setTimeout(() => {
+          window.location.href = '/app';
+        }, 600);
+      } else {
+        errorBox.classList.remove('hidden');
+        errorText.textContent = 'Invalid credentials. Click "Auto-fill" below or create an account.';
+      }
+    });
+
+    // Form Sign Up submission
+    formSignUp.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('signup-name').value.trim();
+      const email = document.getElementById('signup-email').value.trim().toLowerCase();
+      const password = passInput.value;
+      const errorBox = document.getElementById('signup-error');
+
+      const users = getUsers();
+      if (users.some(u => u.email.toLowerCase() === email)) {
+        errorBox.classList.remove('hidden');
+        document.getElementById('signup-error-text').textContent = 'An account with this email already exists.';
+        return;
+      }
+
+      const newUser = { name, email, password };
+      saveUser(newUser);
+
+      showQuickToast('Account created successfully! Signing you in...', 'success');
+
+      localStorage.setItem('lexicore_current_user', JSON.stringify({
+        name: newUser.name,
+        email: newUser.email
+      }));
+
+      setTimeout(() => {
+        window.location.href = '/app';
+      }, 800);
+    });
+
+    function fillDemoCreds() {
+      document.getElementById('signin-email').value = 'admin@lexicore.ai';
+      document.getElementById('signin-password').value = 'LexiCore@2026!';
+      showQuickToast('Demo credentials populated!', 'info');
+    }
+
+    function togglePassVisibility(inputId, btn) {
+      const input = document.getElementById(inputId);
+      const icon = btn.querySelector('.material-symbols-outlined');
+      if (input.type === 'password') {
+        input.type = 'text';
+        if (icon) icon.textContent = 'visibility_off';
+      } else {
+        input.type = 'password';
+        if (icon) icon.textContent = 'visibility';
+      }
+    }
+
+    function showQuickToast(msg, type = 'info') {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toast-msg');
+      const toastIcon = document.getElementById('toast-icon');
+
+      toastMsg.textContent = msg;
+      if (type === 'success') {
+        toastIcon.textContent = 'verified';
+        toastIcon.className = 'material-symbols-outlined text-tertiary text-[18px]';
+      } else {
+        toastIcon.textContent = 'info';
+        toastIcon.className = 'material-symbols-outlined text-primary text-[18px]';
+      }
+
+      toast.classList.remove('translate-y-12', 'opacity-0', 'pointer-events-none');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toast.classList.add('translate-y-12', 'opacity-0', 'pointer-events-none');
+        toast.classList.remove('translate-y-0', 'opacity-100');
+      }, 3000);
+    }
+  </script>
+</body>
+</html>

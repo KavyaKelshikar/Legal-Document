@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"secondary-container":"#3131c0","surface":"#051424","inverse-on-surface":"#233143","on-secondary-fixed-variant":"#2f2ebe","on-primary-container":"#00285d","inverse-surface":"#d4e4fa","on-tertiary-container":"#00311f","inverse-primary":"#005ac2","primary":"#adc6ff","on-secondary-fixed":"#07006c","on-primary-fixed":"#001a42","surface-variant":"#273647","secondary-fixed-dim":"#c0c1ff","primary-fixed-dim":"#adc6ff","on-surface":"#d4e4fa","outline-variant":"#424754","secondary-fixed":"#e1e0ff","on-tertiary":"#003824","on-secondary":"#1000a9","on-background":"#d4e4fa","on-primary":"#002e6a","surface-container-high":"#1c2b3c","surface-bright":"#2c3a4c","secondary":"#c0c1ff","outline":"#8c909f","error":"#ffb4ab","on-secondary-container":"#b0b2ff","on-primary-fixed-variant":"#004395","on-error":"#690005","tertiary":"#4edea3","primary-fixed":"#d8e2ff","on-error-container":"#ffdad6","surface-dim":"#051424","error-container":"#93000a","on-tertiary-fixed-variant":"#005236","surface-container-highest":"#273647","background":"#051424","surface-container-low":"#0d1c2d","tertiary-fixed":"#6ffbbe","tertiary-fixed-dim":"#4edea3","surface-tint":"#adc6ff","tertiary-container":"#00a572","surface-container":"#122131","on-surface-variant":"#c2c6d6","on-tertiary-fixed":"#002113","primary-container":"#4d8eff","surface-container-lowest":"#010f1f"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"margin-mobile":"1rem","gutter-lg":"1.5rem","space-sm":"0.5rem","space-md":"1rem","space-2xs":"0.125rem","space-xs":"0.25rem","space-lg":"1.5rem","margin":"1.5rem","space-2xl":"3rem","gutter":"1rem","space-xl":"2rem"},"fontFamily":{"headline-md":["Geist"],"metric-display":["Geist"],"headline-lg-mobile":["Geist"],"body-lg":["Geist"],"body-md":["Geist"],"code-sm":["JetBrains Mono"],"metric-display-sm":["Geist"],"headline-xl-mobile":["Geist"],"headline-lg":["Geist"],"label-sm":["Geist"],"title-md":["Geist"],"body-sm":["Geist"],"headline-xl":["Geist"],"label-md":["Geist"],"headline-sm":["Geist"],"title-sm":["Geist"]},"fontSize":{"headline-md":["24px",{"lineHeight":"32px","fontWeight":"600"}],"metric-display":["48px",{"lineHeight":"52px","fontWeight":"700"}],"headline-lg-mobile":["24px",{"lineHeight":"32px","fontWeight":"600"}],"body-lg":["16px",{"lineHeight":"26px","fontWeight":"400"}],"body-md":["14px",{"lineHeight":"22px","fontWeight":"400"}],"code-sm":["12px",{"lineHeight":"16px","fontWeight":"500"}],"metric-display-sm":["32px",{"lineHeight":"36px","fontWeight":"700"}],"headline-xl-mobile":["30px",{"lineHeight":"38px","fontWeight":"700"}],"headline-lg":["32px",{"lineHeight":"40px","fontWeight":"600"}],"label-sm":["11px",{"lineHeight":"14px","fontWeight":"600"}],"title-md":["16px",{"lineHeight":"24px","fontWeight":"600"}],"body-sm":["12px",{"lineHeight":"18px","fontWeight":"400"}],"headline-xl":["40px",{"lineHeight":"48px","fontWeight":"700"}],"label-md":["13px",{"lineHeight":"16px","fontWeight":"500"}],"headline-sm":["20px",{"lineHeight":"28px","fontWeight":"600"}],"title-sm":["14px",{"lineHeight":"20px","fontWeight":"600"}]}}}};</script></head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased min-h-screen"><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-low flex flex-col justify-between z-40"><div class="flex flex-col"><div class="h-16 px-space-md flex items-center gap-space-sm bg-surface-container-low"><img alt="Brand logo. - Primary color: #3b82f6
+- Font: geist
+- Mode: dark
+- Roundness: rounded-sm
+" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1UJ_cGocIbP8JrKf0mLK7iq72PNpr1Vb3plrWFT9C_d22ExaOvH3ulMqNb8Y0M1WHJT-8fjvq5-lLKdfw3Az93MumvSHcFUDKhxJWHF8NWCwwpTFY2yMqDcHqbwY3evVWsSVyHzqGWoRBoS6Z8fqf3VI9v8WCc5C7E4uSE_Ah1oVGEhDLhsdG1nno2QaHchF75ZXMWKqd92GOrPDq4KgHD92z48dgm2kwCzt73HuRONaEhvR-JZTUO_0Xg"/><div class="flex flex-col min-w-0"><span class="font-title-sm text-title-sm text-on-surface tracking-tight truncate">LexiCore</span><span class="font-label-sm text-label-sm text-on-surface-variant truncate">Deterministic Legal NLP</span></div></div><div class="px-space-md py-space-xs"><div class="px-space-xs py-space-2xs bg-surface-container-high rounded-lg text-on-surface-variant font-code-sm text-code-sm truncate">spaCy • TF-IDF • Fuzzy</div></div><nav class="flex flex-col px-space-sm mt-space-md gap-space-2xs" data-active-classes="bg-surface-container text-primary font-title-sm"><a class="flex items-center gap-space-sm px-space-md py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-title-sm text-title-sm transition-colors" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[18px]">grid_view</span><span>Dashboard</span></a><a class="flex items-center gap-space-sm px-space-md py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-title-sm text-title-sm transition-colors" data-path="documents" href="#"><span class="material-symbols-outlined text-[18px]">description</span><span>Documents</span></a><a aria-current="page" class="flex items-center gap-space-sm px-space-md py-space-xs rounded-lg transition-colors bg-surface-container text-primary font-title-sm" data-path="analysis" href="#"><span class="material-symbols-outlined text-[18px]">rule</span><span>Analysis</span></a><a class="flex items-center gap-space-sm px-space-md py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-title-sm text-title-sm transition-colors" data-path="search" href="#"><span class="material-symbols-outlined text-[18px]">manage_search</span><span>Search</span></a><a class="flex items-center gap-space-sm px-space-md py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-title-sm text-title-sm transition-colors" data-path="ai-assistant" href="#"><span class="material-symbols-outlined text-[18px]">smart_toy</span><span>AI Assistant</span></a><a class="flex items-center gap-space-sm px-space-md py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-title-sm text-title-sm transition-colors" data-path="reports" href="#"><span class="material-symbols-outlined text-[18px]">assessment</span><span>Reports</span></a></nav></div><div class="flex flex-col px-space-sm pb-space-md"><nav class="flex flex-col mb-space-sm" data-active-classes="bg-surface-container text-primary font-title-sm"><a class="flex items-center gap-space-sm px-space-md py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-title-sm text-title-sm transition-colors" data-path="settings" href="#"><span class="material-symbols-outlined text-[18px]">settings</span><span>Settings</span></a></nav><div class="flex items-center gap-space-sm px-space-md py-space-xs bg-surface-container rounded-lg"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="flex flex-col min-w-0"><span class="font-title-sm text-title-sm text-on-surface truncate">Marcus Vance</span><span class="font-label-sm text-label-sm text-on-surface-variant truncate">Legal Counsel / Lead</span></div></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-30 flex items-center justify-between px-space-lg"><div class="flex items-center gap-space-md min-w-0"><div class="flex items-center gap-space-xs px-space-sm py-space-2xs bg-surface-container-high rounded-lg text-on-surface font-body-sm text-body-sm truncate"><span class="material-symbols-outlined text-[16px] text-error">gavel</span><span class="font-title-sm text-title-sm truncate">High_Risk_Vendor_Contract.pdf</span><span class="px-space-xs py-space-2xs rounded bg-error-container text-error font-label-sm text-label-sm font-semibold">Analyzed</span></div><div class="hidden xl:flex items-center gap-space-2xs px-space-sm py-space-2xs bg-surface-container-low rounded-lg text-on-surface-variant font-code-sm text-code-sm"><span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span><span>Backend: FastAPI • spaCy v3.7 • Naive Bayes</span></div></div><div class="flex items-center gap-space-sm"><button class="flex items-center gap-space-sm px-space-sm py-space-2xs bg-surface-container-low hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface rounded-lg transition-colors" type="button"><span class="material-symbols-outlined text-[18px]">search</span><span class="font-body-sm text-body-sm">Clause search</span><kbd class="px-space-xs py-space-2xs bg-surface-container-highest text-on-surface-variant rounded font-code-sm text-code-sm">⌘K</kbd></button><button class="flex items-center gap-space-2xs px-space-md py-space-xs bg-primary text-on-primary font-title-sm text-title-sm rounded-lg hover:bg-primary-container hover:text-on-primary transition-colors" type="button"><span class="material-symbols-outlined text-[18px]">upload_file</span><span>Upload</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><main class="w-full pt-16 bg-surface min-h-screen"><div class="flex flex-col w-full">
+<!-- Subtle Visual Ambient Halo behind Document Header -->
+<div class="relative w-full px-space-lg pt-space-lg pb-space-md">
+<div class="absolute top-0 right-1/4 w-96 h-48 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute top-12 left-1/3 w-64 h-32 bg-error/5 rounded-full blur-2xl pointer-events-none"></div>
+<!-- Document Action Header Block -->
+<div class="relative z-10 flex flex-col xl:flex-row xl:items-center xl:justify-between gap-space-md pb-space-md">
+<div class="flex flex-col gap-space-xs min-w-0">
+<div class="flex items-center gap-space-sm flex-wrap">
+<span class="font-code-sm text-code-sm text-primary uppercase tracking-wider px-space-xs py-space-2xs bg-surface-container rounded">DOC-ANALYSIS-2024-9104</span>
+<span class="inline-flex items-center gap-space-2xs px-space-xs py-space-2xs bg-error-container text-error rounded font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-error animate-ping"></span>
+            Status: High Severity Flags
+          </span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Deterministic Model Run: v3.7.2</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight truncate">
+          Document Analysis — High_Risk_Vendor_Contract.pdf
+        </h1>
+<div class="flex items-center gap-space-sm flex-wrap text-on-surface-variant font-body-sm text-body-sm">
+<span>Status: <strong class="text-on-surface">Analyzed</strong></span>
+<span>•</span>
+<span>Date: Sep 21, 2024</span>
+<span>•</span>
+<span>24 Pages</span>
+<span>•</span>
+<span class="font-code-sm text-code-sm bg-surface-container-high text-primary px-space-xs py-space-2xs rounded">PyMuPDF Extracted</span>
+<span>•</span>
+<span class="font-code-sm text-code-sm text-tertiary">Mamdani Engine: Online</span>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex items-center gap-space-sm shrink-0">
+<button class="flex items-center gap-space-xs px-space-md py-space-xs bg-surface-container-high hover:bg-surface-bright text-on-surface rounded-lg transition-colors font-title-sm text-title-sm shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">manage_search</span>
+<span>Search in Document</span>
+<kbd class="px-space-xs py-space-2xs bg-surface-container text-on-surface-variant rounded font-code-sm text-code-sm">Ctrl+F</kbd>
+</button>
+<button class="flex items-center gap-space-xs px-space-md py-space-xs bg-primary text-on-primary font-title-sm text-title-sm rounded-lg hover:bg-primary-container transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">picture_as_pdf</span>
+<span>Export PDF Report</span>
+</button>
+</div>
+</div>
+<!-- Sub-Navigation Segmented Bar -->
+<div class="relative z-10 flex items-center justify-between mt-space-sm pt-space-xs bg-surface-container-low rounded-lg p-space-xs">
+<div class="flex items-center gap-space-xs overflow-x-auto">
+<button class="flex items-center gap-space-xs px-space-md py-space-xs rounded-lg bg-surface-container-high text-primary font-title-sm text-title-sm shadow-sm" type="button">
+<span class="material-symbols-outlined text-[16px]">dashboard</span>
+<span>Overview</span>
+<span class="px-space-xs py-space-2xs rounded bg-surface-container-highest text-primary font-code-sm text-code-sm">Active</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-md py-space-xs rounded-lg hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-title-sm text-title-sm transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">segment</span>
+<span>Clauses</span>
+<span class="px-space-xs py-space-2xs rounded bg-surface-container text-on-surface-variant font-code-sm text-code-sm">24</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-md py-space-xs rounded-lg hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-title-sm text-title-sm transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">troubleshoot</span>
+<span>Risk Analysis</span>
+<span class="w-2 h-2 rounded-full bg-error"></span>
+</button>
+<button class="flex items-center gap-space-xs px-space-md py-space-xs rounded-lg hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-title-sm text-title-sm transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">notes</span>
+<span>Summary</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-md py-space-xs rounded-lg hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-title-sm text-title-sm transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">warning_amber</span>
+<span>Missing Clauses</span>
+<span class="px-space-xs py-space-2xs rounded bg-error/20 text-error font-code-sm text-code-sm font-semibold">2 Flagged</span>
+</button>
+</div>
+<div class="hidden md:flex items-center gap-space-sm text-on-surface-variant font-code-sm text-code-sm px-space-sm">
+<span>Extractive Entropy: <strong>0.142 nats</strong></span>
+<span>•</span>
+<span>Corpus: Standard Commercial (v24.1)</span>
+</div>
+</div>
+</div>
+<!-- Primary Analytic Canvas -->
+<div class="w-full px-space-lg pb-space-2xl flex flex-col gap-space-lg">
+<!-- Section 1: Fuzzy Logic Risk Assessment (Overall Risk) & Quick Stats -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-space-lg items-stretch">
+<!-- High Severity Mamdani Gauge Card (5 Columns) -->
+<div class="xl:col-span-5 bg-surface-container rounded-xl p-space-lg flex flex-col justify-between shadow-md relative overflow-hidden">
+<div class="absolute -right-12 -top-12 w-48 h-48 bg-error/10 rounded-full blur-2xl pointer-events-none"></div>
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Inference Metric</span>
+<span class="px-space-xs py-space-2xs rounded bg-error-container text-error font-code-sm text-code-sm font-semibold">Risk: CRITICAL (78/100)</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Fuzzy Logic Risk Assessment</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-space-2xs">
+            Calculated via Mamdani Fuzzy Inference Engine evaluating clause ambiguity, asymmetric indemnity, and non-standard termination covenants.
+          </p>
+</div>
+<!-- Radial Dial Visual Element -->
+<div class="my-space-md flex flex-col sm:flex-row items-center justify-center gap-space-lg py-space-xs">
+<div class="relative w-40 h-40 flex items-center justify-center shrink-0">
+<!-- Concentric SVG Radial Track -->
+<svg class="w-full h-full -rotate-90 transform" viewbox="0 0 120 120">
+<circle class="text-surface-container-highest fill-none" cx="60" cy="60" r="48" stroke="currentColor" stroke-width="8"></circle>
+<!-- Circumference ~301.6px. 78% is ~235.2px dasharray -->
+<circle class="text-error fill-none transition-all duration-1000 ease-out" cx="60" cy="60" r="48" stroke="currentColor" stroke-dasharray="301.6" stroke-dashoffset="66.3" stroke-linecap="round" stroke-width="8"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+<span class="font-metric-display-sm text-metric-display-sm text-on-surface tracking-tight">78</span>
+<span class="font-label-sm text-label-sm text-error uppercase font-bold tracking-widest -mt-space-2xs">High Risk</span>
+</div>
+</div>
+<div class="flex flex-col gap-space-xs min-w-0">
+<div class="flex items-center gap-space-xs">
+<span class="w-2.5 h-2.5 rounded-full bg-error"></span>
+<span class="font-title-sm text-title-sm text-on-surface">Defensive Imbalance Detected</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Risk score exceeds the 70.0 institutional safety threshold. Unilateral indemnification covenants contribute to 48.5% of total mathematical penalty weights.
+            </p>
+<div class="flex items-center gap-space-xs mt-space-2xs">
+<span class="font-code-sm text-code-sm bg-surface-container-high px-space-xs py-space-2xs rounded text-on-surface-variant">Defuzzification: Centroid Method</span>
+<span class="font-code-sm text-code-sm bg-surface-container-high px-space-xs py-space-2xs rounded text-on-surface-variant">Triangular MF</span>
+</div>
+</div>
+</div>
+<!-- Segmented Clause Distribution Visual -->
+<div class="pt-space-sm bg-surface-container-low p-space-md rounded-lg">
+<div class="flex items-center justify-between text-label-sm font-label-sm text-on-surface-variant mb-space-xs">
+<span>Clause Risk Distribution</span>
+<span>24 Total Covenants</span>
+</div>
+<!-- Stacked distribution bar -->
+<div class="w-full h-3 rounded-full bg-surface-container-highest overflow-hidden flex gap-0.5">
+<div class="h-full bg-tertiary" style="width: 45.8%;" title="Low Risk: 11 (45.8%)"></div>
+<div class="h-full bg-secondary-container" style="width: 29.2%;" title="Medium Risk: 7 (29.2%)"></div>
+<div class="h-full bg-error" style="width: 25.0%;" title="High Risk: 6 (25.0%)"></div>
+</div>
+<div class="grid grid-cols-3 gap-space-xs mt-space-xs pt-space-xs font-label-sm text-label-sm">
+<div class="flex items-center gap-space-2xs">
+<span class="w-2 h-2 rounded bg-tertiary"></span>
+<span class="text-on-surface">LOW: 11 (45.8%)</span>
+</div>
+<div class="flex items-center gap-space-2xs">
+<span class="w-2 h-2 rounded bg-secondary-container"></span>
+<span class="text-on-surface">MED: 7 (29.2%)</span>
+</div>
+<div class="flex items-center gap-space-2xs">
+<span class="w-2 h-2 rounded bg-error"></span>
+<span class="text-error font-bold">HIGH: 6 (25.0%)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Statistics Row & Diagnostic Telemetry (7 Columns) -->
+<div class="xl:col-span-7 flex flex-col justify-between gap-space-md">
+<!-- 4 Metric Cards Grid -->
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-space-md">
+<div class="bg-surface-container p-space-md rounded-xl flex flex-col justify-between shadow-sm">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-label-sm text-label-sm uppercase tracking-wider">Total Clauses</span>
+<span class="material-symbols-outlined text-[18px]">format_list_numbered</span>
+</div>
+<div class="mt-space-sm">
+<span class="font-metric-display-sm text-metric-display-sm text-on-surface">24</span>
+<span class="block font-label-sm text-label-sm text-tertiary mt-space-2xs">100% Parsed</span>
+</div>
+</div>
+<div class="bg-surface-container p-space-md rounded-xl flex flex-col justify-between shadow-sm">
+<div class="flex items-center justify-between text-error">
+<span class="font-label-sm text-label-sm uppercase tracking-wider">High-Risk</span>
+<span class="material-symbols-outlined text-[18px]">warning</span>
+</div>
+<div class="mt-space-sm">
+<span class="font-metric-display-sm text-metric-display-sm text-error">6</span>
+<span class="block font-label-sm text-label-sm text-error/80 mt-space-2xs">Score ≥ 70 / 100</span>
+</div>
+</div>
+<div class="bg-surface-container p-space-md rounded-xl flex flex-col justify-between shadow-sm">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-label-sm text-label-sm uppercase tracking-wider">Avg Risk Score</span>
+<span class="material-symbols-outlined text-[18px]">analytics</span>
+</div>
+<div class="mt-space-sm">
+<span class="font-metric-display-sm text-metric-display-sm text-on-surface">54.2</span>
+<span class="block font-label-sm text-label-sm text-on-surface-variant mt-space-2xs">Weighted Norm</span>
+</div>
+</div>
+<div class="bg-surface-container p-space-md rounded-xl flex flex-col justify-between shadow-sm">
+<div class="flex items-center justify-between text-secondary">
+<span class="font-label-sm text-label-sm uppercase tracking-wider">Missing Covenants</span>
+<span class="material-symbols-outlined text-[18px]">folder_off</span>
+</div>
+<div class="mt-space-sm">
+<span class="font-metric-display-sm text-metric-display-sm text-secondary">2</span>
+<span class="block font-label-sm text-label-sm text-secondary mt-space-2xs">Categories Missing</span>
+</div>
+</div>
+</div>
+<!-- Section 2: Important Findings (Deterministic NLP Output) -->
+<div class="bg-surface-container rounded-xl p-space-lg flex-1 flex flex-col justify-between shadow-md">
+<div class="flex items-center justify-between mb-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">fact_check</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Deterministic NLP Findings</h3>
+</div>
+<span class="px-space-xs py-space-2xs rounded bg-surface-container-high text-tertiary font-code-sm text-code-sm flex items-center gap-space-2xs">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+              Extractive Sentence Extraction • Zero Generative Hallucinations
+            </span>
+</div>
+<div class="space-y-space-sm">
+<!-- Finding 1 -->
+<div class="flex items-start gap-space-sm p-space-sm bg-surface-container-low rounded-lg">
+<span class="w-6 h-6 rounded bg-error-container text-error flex items-center justify-center font-code-sm text-code-sm shrink-0 mt-0.5 font-bold">01</span>
+<div class="flex flex-col min-w-0">
+<span class="font-title-sm text-title-sm text-on-surface">Macro Portfolio Alert: High Contractual Exposure</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                  Overall risk level is classified as <strong class="text-error font-semibold">HIGH</strong> based on 6 flagged clauses scoring strictly above the 70/100 threshold in the deterministic Mamdani rule set.
+                </p>
+</div>
+</div>
+<!-- Finding 2 -->
+<div class="flex items-start gap-space-sm p-space-sm bg-surface-container-low rounded-lg">
+<span class="w-6 h-6 rounded bg-error-container text-error flex items-center justify-center font-code-sm text-code-sm shrink-0 mt-0.5 font-bold">02</span>
+<div class="flex flex-col min-w-0">
+<span class="font-title-sm text-title-sm text-on-surface">Critical Vulnerability in Limitation of Liability (Clause 14.3)</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                  Highest clause risk identified in <strong class="text-on-surface font-semibold">Clause 14.3 (Limitation of Liability)</strong> with an absolute score of <span class="font-code-sm text-code-sm text-error font-bold">94/100</span> due to unilateral uncapped indemnity paired with a $1,000 vendor ceiling.
+                </p>
+</div>
+</div>
+<!-- Finding 3 -->
+<div class="flex items-start gap-space-sm p-space-sm bg-surface-container-low rounded-lg">
+<span class="w-6 h-6 rounded bg-secondary-container text-secondary-fixed flex items-center justify-center font-code-sm text-code-sm shrink-0 mt-0.5 font-bold">03</span>
+<div class="flex flex-col min-w-0">
+<span class="font-title-sm text-title-sm text-on-surface">Structural Omission of Standard Boilerplate Protections</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                  2 Potentially missing clause categories detected: <strong class="text-secondary font-semibold">Force Majeure</strong> and <strong class="text-secondary font-semibold">Bilateral Dispute Resolution</strong>. Document relies purely on common law gap-fillers.
+                </p>
+</div>
+</div>
+</div>
+<!-- Bottom Micro Pipeline Meta -->
+<div class="flex items-center justify-between pt-space-xs text-on-surface-variant font-code-sm text-code-sm">
+<span>spaCy NER model: <span class="text-on-surface">en_core_web_trf</span></span>
+<span>TF-IDF Vocabulary: 1,842 N-grams</span>
+<span>Naive Bayes Multi-Class: 14 Target Taxonomies</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Section 3: Clauses Master Table & Detailed Clause Drawer Preview -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- Clauses Preview Master Table (7 Columns) -->
+<div class="lg:col-span-7 bg-surface-container rounded-xl shadow-md overflow-hidden flex flex-col">
+<div class="p-space-md flex items-center justify-between bg-surface-container-low">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px] text-primary">rule</span>
+<h3 class="font-title-md text-title-md text-on-surface">Clauses Preview & Stratification</h3>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Sorted by Risk (Descending)</span>
+</div>
+</div>
+<!-- Table Viewport -->
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-surface-container-highest/60 text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-space-sm px-space-md">Clause ID & Name</th>
+<th class="py-space-sm px-space-sm">Category (Naive Bayes)</th>
+<th class="py-space-sm px-space-sm text-right">Fuzzy Score</th>
+<th class="py-space-sm px-space-sm">Risk Level</th>
+<th class="py-space-sm px-space-md text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-high/40 font-body-sm text-body-sm">
+<!-- Row 1: Clause 14.3 (Active Selection) -->
+<tr class="bg-surface-container-high hover:bg-surface-bright transition-colors cursor-pointer">
+<td class="py-space-sm px-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-error">gavel</span>
+<div>
+<span class="font-title-sm text-title-sm text-on-surface block">Clause 14.3</span>
+<span class="text-on-surface-variant font-body-sm text-body-sm truncate block max-w-[210px]">Indemnification & Aggregate Liability</span>
+</div>
+</div>
+</td>
+<td class="py-space-sm px-space-sm">
+<span class="px-space-xs py-space-2xs bg-surface-container rounded text-on-surface-variant font-code-sm text-code-sm">
+                    Liability
+                  </span>
+</td>
+<td class="py-space-sm px-space-sm text-right">
+<span class="font-code-sm text-code-sm text-error font-bold">94 / 100</span>
+</td>
+<td class="py-space-sm px-space-sm">
+<span class="px-space-xs py-space-2xs rounded bg-error-container text-error font-label-sm text-label-sm font-semibold">
+                    HIGH
+                  </span>
+</td>
+<td class="py-space-sm px-space-md text-right">
+<button class="px-space-xs py-space-2xs bg-primary text-on-primary rounded font-label-sm text-label-sm hover:bg-primary-container transition-colors" type="button">
+                    Selected
+                  </button>
+</td>
+</tr>
+<!-- Row 2: Clause 09.4 -->
+<tr class="hover:bg-surface-container-high/50 transition-colors cursor-pointer">
+<td class="py-space-sm px-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-error">event_busy</span>
+<div>
+<span class="font-title-sm text-title-sm text-on-surface block">Clause 09.4</span>
+<span class="text-on-surface-variant font-body-sm text-body-sm truncate block max-w-[210px]">Unilateral Convenience Termination</span>
+</div>
+</div>
+</td>
+<td class="py-space-sm px-space-sm">
+<span class="px-space-xs py-space-2xs bg-surface-container-low rounded text-on-surface-variant font-code-sm text-code-sm">
+                    Termination
+                  </span>
+</td>
+<td class="py-space-sm px-space-sm text-right">
+<span class="font-code-sm text-code-sm text-error font-bold">91 / 100</span>
+</td>
+<td class="py-space-sm px-space-sm">
+<span class="px-space-xs py-space-2xs rounded bg-error-container text-error font-label-sm text-label-sm font-semibold">
+                    HIGH
+                  </span>
+</td>
+<td class="py-space-sm px-space-md text-right">
+<button class="px-space-xs py-space-2xs bg-surface-container-highest text-on-surface rounded font-label-sm text-label-sm hover:bg-surface-bright transition-colors" type="button">
+                    View Full Text
+                  </button>
+</td>
+</tr>
+<!-- Row 3: Clause 05.2 -->
+<tr class="hover:bg-surface-container-high/50 transition-colors cursor-pointer">
+<td class="py-space-sm px-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-error">payments</span>
+<div>
+<span class="font-title-sm text-title-sm text-on-surface block">Clause 05.2</span>
+<span class="text-on-surface-variant font-body-sm text-body-sm truncate block max-w-[210px]">Compounded Default Interest & Invoicing</span>
+</div>
+</div>
+</td>
+<td class="py-space-sm px-space-sm">
+<span class="px-space-xs py-space-2xs bg-surface-container-low rounded text-on-surface-variant font-code-sm text-code-sm">
+                    Payment
+                  </span>
+</td>
+<td class="py-space-sm px-space-sm text-right">
+<span class="font-code-sm text-code-sm text-error font-bold">86 / 100</span>
+</td>
+<td class="py-space-sm px-space-sm">
+<span class="px-space-xs py-space-2xs rounded bg-error-container text-error font-label-sm text-label-sm font-semibold">
+                    HIGH
+                  </span>
+</td>
+<td class="py-space-sm px-space-md text-right">
+<button class="px-space-xs py-space-2xs bg-surface-container-highest text-on-surface rounded font-label-sm text-label-sm hover:bg-surface-bright transition-colors" type="button">
+                    View Full Text
+                  </button>
+</td>
+</tr>
+<!-- Row 4: Clause 11.1 -->
+<tr class="hover:bg-surface-container-high/50 transition-colors cursor-pointer">
+<td class="py-space-sm px-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-secondary">lock</span>
+<div>
+<span class="font-title-sm text-title-sm text-on-surface block">Clause 11.1</span>
+<span class="text-on-surface-variant font-body-sm text-body-sm truncate block max-w-[210px]">Trade Secrets & Data Usage Rights</span>
+</div>
+</div>
+</td>
+<td class="py-space-sm px-space-sm">
+<span class="px-space-xs py-space-2xs bg-surface-container-low rounded text-on-surface-variant font-code-sm text-code-sm">
+                    Confidentiality
+                  </span>
+</td>
+<td class="py-space-sm px-space-sm text-right">
+<span class="font-code-sm text-code-sm text-secondary font-semibold">54 / 100</span>
+</td>
+<td class="py-space-sm px-space-sm">
+<span class="px-space-xs py-space-2xs rounded bg-secondary-container/40 text-secondary font-label-sm text-label-sm font-semibold">
+                    MEDIUM
+                  </span>
+</td>
+<td class="py-space-sm px-space-md text-right">
+<button class="px-space-xs py-space-2xs bg-surface-container-highest text-on-surface rounded font-label-sm text-label-sm hover:bg-surface-bright transition-colors" type="button">
+                    View Full Text
+                  </button>
+</td>
+</tr>
+<!-- Row 5: Clause 03.1 -->
+<tr class="hover:bg-surface-container-high/50 transition-colors cursor-pointer">
+<td class="py-space-sm px-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-tertiary">engineering</span>
+<div>
+<span class="font-title-sm text-title-sm text-on-surface block">Clause 03.1</span>
+<span class="text-on-surface-variant font-body-sm text-body-sm truncate block max-w-[210px]">Independent Contractor Status</span>
+</div>
+</div>
+</td>
+<td class="py-space-sm px-space-sm">
+<span class="px-space-xs py-space-2xs bg-surface-container-low rounded text-on-surface-variant font-code-sm text-code-sm">
+                    General
+                  </span>
+</td>
+<td class="py-space-sm px-space-sm text-right">
+<span class="font-code-sm text-code-sm text-tertiary font-semibold">14 / 100</span>
+</td>
+<td class="py-space-sm px-space-sm">
+<span class="px-space-xs py-space-2xs rounded bg-tertiary-container/30 text-tertiary font-label-sm text-label-sm font-semibold">
+                    LOW
+                  </span>
+</td>
+<td class="py-space-sm px-space-md text-right">
+<button class="px-space-xs py-space-2xs bg-surface-container-highest text-on-surface rounded font-label-sm text-label-sm hover:bg-surface-bright transition-colors" type="button">
+                    View Full Text
+                  </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-space-sm bg-surface-container-low flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
+<span>Showing 5 of 24 clauses</span>
+<div class="flex items-center gap-space-xs">
+<button class="px-space-xs py-space-2xs rounded bg-surface-container hover:bg-surface-container-high text-on-surface transition-colors" type="button">Prev</button>
+<span class="px-space-xs font-code-sm text-code-sm">Page 1 of 5</span>
+<button class="px-space-xs py-space-2xs rounded bg-surface-container hover:bg-surface-container-high text-on-surface transition-colors" type="button">Next</button>
+</div>
+</div>
+</div>
+<!-- Detail View Card for Selected Clause (Clause 14.3) (5 Columns) -->
+<div class="lg:col-span-5 bg-surface-container rounded-xl p-space-lg shadow-md flex flex-col gap-space-md">
+<div class="flex items-center justify-between pb-space-xs border-b border-surface-container-high">
+<div class="flex items-center gap-space-xs">
+<span class="px-space-xs py-space-2xs rounded bg-error-container text-error font-code-sm text-code-sm font-bold">CRITICAL DETAIL</span>
+<span class="font-title-sm text-title-sm text-on-surface">Clause 14.3 Inspection</span>
+</div>
+<span class="font-code-sm text-code-sm text-on-surface-variant">Page 18, Para 3</span>
+</div>
+<!-- Metric Pill Banner -->
+<div class="grid grid-cols-2 gap-space-xs p-space-xs bg-surface-container-low rounded-lg font-code-sm text-code-sm">
+<div class="p-space-xs bg-surface-container rounded">
+<span class="text-on-surface-variant block text-[10px] uppercase">Naive Bayes Classification</span>
+<span class="text-primary font-semibold">Liability (97.8% conf)</span>
+</div>
+<div class="p-space-xs bg-surface-container rounded">
+<span class="text-on-surface-variant block text-[10px] uppercase">Fuzzy Risk Score</span>
+<span class="text-error font-bold">94 / 100 [HIGH]</span>
+</div>
+<div class="p-space-xs bg-surface-container rounded">
+<span class="text-on-surface-variant block text-[10px] uppercase">spaCy Ambiguity Index</span>
+<span class="text-secondary font-semibold">0.72 (High Entanglement)</span>
+</div>
+<div class="p-space-xs bg-surface-container rounded">
+<span class="text-on-surface-variant block text-[10px] uppercase">Bilateral Symmetry</span>
+<span class="text-error font-semibold">0.08 (Severe Imbalance)</span>
+</div>
+</div>
+<!-- Full Extracted Raw Text Block -->
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant block mb-space-2xs">Full Extracted Text (PyMuPDF)</span>
+<div class="bg-surface-container-lowest p-space-md rounded-lg font-body-sm text-body-sm leading-relaxed text-on-surface">
+<p>
+              “Vendor’s maximum aggregate cumulative liability arising out of or related to this Agreement shall be <mark class="bg-error/30 text-error px-1 py-0.5 rounded font-semibold">strictly limited to $1,000.00 USD</mark>. In contrast, Customer agrees to defend, indemnify, and hold harmless Vendor against <mark class="bg-error/30 text-error px-1 py-0.5 rounded font-semibold">any and all claims, including third-party software actions, without dollar limitation</mark> or limitation as to incidental, indirect, or consequential damages.”
+            </p>
+</div>
+</div>
+<!-- Algorithmic Rationalization Breakdown -->
+<div class="space-y-space-xs">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant block">Deterministic Linguistic Breakdown</span>
+<div class="p-space-xs bg-surface-container-low rounded flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-on-surface flex items-center gap-space-2xs">
+<span class="material-symbols-outlined text-[16px] text-error">priority_high</span>
+              Vendor Aggregate Cap: $1,000
+            </span>
+<span class="font-code-sm text-code-sm text-error">Unreasonable Cap Ratio</span>
+</div>
+<div class="p-space-xs bg-surface-container-low rounded flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-on-surface flex items-center gap-space-2xs">
+<span class="material-symbols-outlined text-[16px] text-error">priority_high</span>
+              Customer Indemnity: Uncapped
+            </span>
+<span class="font-code-sm text-code-sm text-error">Strict Liability Exposure</span>
+</div>
+<div class="p-space-xs bg-surface-container-low rounded flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-on-surface flex items-center gap-space-2xs">
+<span class="material-symbols-outlined text-[16px] text-secondary">alt_route</span>
+              Dependency Tree Depth: 12 tokens
+            </span>
+<span class="font-code-sm text-code-sm text-secondary">High Complexity Syntax</span>
+</div>
+</div>
+<!-- Action Drawer Controls -->
+<div class="flex items-center gap-space-sm pt-space-xs">
+<button class="flex-1 py-space-xs px-space-md bg-surface-container-high hover:bg-surface-bright text-on-surface rounded-lg font-title-sm text-title-sm transition-colors text-center shadow-sm" type="button">
+            Generate Redline Diff
+          </button>
+<button class="flex-1 py-space-xs px-space-md bg-primary text-on-primary rounded-lg font-title-sm text-title-sm hover:bg-primary-container transition-colors text-center shadow-sm" type="button">
+            Flag in Final Audit
+          </button>
+</div>
+</div>
+</div>
+<!-- Section 4: Extractive Contract Summary & Missing Clause Panels -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-lg items-stretch">
+<!-- Extractive Contract Summary Card -->
+<div class="bg-surface-container rounded-xl p-space-lg shadow-md flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">summarize</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Extractive Contract Summary</h3>
+</div>
+<span class="px-space-xs py-space-2xs rounded bg-surface-container-high text-on-surface-variant font-code-sm text-code-sm">
+              LexRank Algorithm
+            </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-md">
+            Sentence salience scoring generated via graph-based LexRank centrality over semantic node representations. Zero LLM interpolation applied.
+          </p>
+<div class="space-y-space-sm">
+<div class="p-space-sm bg-surface-container-low rounded-lg text-body-sm font-body-sm text-on-surface">
+<strong class="text-primary font-semibold block mb-space-2xs">1. Scope & Deliverables:</strong>
+              “Vendor shall provide enterprise cloud telemetry services on an as-is basis without express SLA guarantees for scheduled infrastructure outages exceeding 72 hours.”
+            </div>
+<div class="p-space-sm bg-surface-container-low rounded-lg text-body-sm font-body-sm text-on-surface">
+<strong class="text-primary font-semibold block mb-space-2xs">2. Payment & Penalty Terms:</strong>
+              “All past-due undisputed sums shall compound at a statutory maximum of 2.5% per month or the highest permissible interest under applicable commercial regulations.”
+            </div>
+<div class="p-space-sm bg-surface-container-low rounded-lg text-body-sm font-body-sm text-on-surface">
+<strong class="text-primary font-semibold block mb-space-2xs">3. Governing Law & Venue:</strong>
+              “This Agreement is governed exclusively under the laws of the State of Delaware, with jurisdiction assigned to Chancery Court.”
+            </div>
+</div>
+</div>
+<div class="flex items-center justify-between pt-space-md text-on-surface-variant font-code-sm text-code-sm border-t border-surface-container-high mt-space-md">
+<span>Reduction: 91.4% of original token count</span>
+<span class="text-tertiary">Confidence: High Concordance</span>
+</div>
+</div>
+<!-- Missing Clauses & Regulatory Gap Audit -->
+<div class="bg-surface-container rounded-xl p-space-lg shadow-md flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-[20px]">notification_important</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Omission & Missing Clause Audit</h3>
+</div>
+<span class="px-space-xs py-space-2xs rounded bg-error-container text-error font-code-sm text-code-sm font-bold">
+              2 Omissions
+            </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-md">
+            Verified against Standard Commercial Benchmark Corpus (v24.1). TF-IDF vector distance exceeded threshold for expected mandatory provisions.
+          </p>
+<div class="space-y-space-md">
+<!-- Missing Item 1 -->
+<div class="p-space-md bg-surface-container-low rounded-lg">
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-title-sm text-title-sm text-error flex items-center gap-space-2xs">
+<span class="material-symbols-outlined text-[16px]">cancel</span>
+                  Force Majeure Provision
+                </span>
+<span class="px-space-xs py-space-2xs bg-surface-container rounded text-on-surface-variant font-code-sm text-code-sm">Similarity: 0.04</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                No contingency clause found addressing acts of God, civil unrest, grid outages, or governmental sanctions. Absence leaves parties subject to stringent doctrine of impossibility under UCC § 2-615.
+              </p>
+<div class="mt-space-sm flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-primary bg-surface-container px-space-xs py-space-2xs rounded">Recommendation: Insert ABA Model Clause 18</span>
+</div>
+</div>
+<!-- Missing Item 2 -->
+<div class="p-space-md bg-surface-container-low rounded-lg">
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-title-sm text-title-sm text-error flex items-center gap-space-2xs">
+<span class="material-symbols-outlined text-[16px]">cancel</span>
+                  Bilateral Dispute Escalation & Mediation
+                </span>
+<span class="px-space-xs py-space-2xs bg-surface-container rounded text-on-surface-variant font-code-sm text-code-sm">Similarity: 0.11</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                Document jumps directly from breach notification to litigation. Missing mandatory executive negotiation cooling-off period (30 days) and AAA commercial arbitration step.
+              </p>
+<div class="mt-space-sm flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-primary bg-surface-container px-space-xs py-space-2xs rounded">Recommendation: Insert AAA Two-Tier Escalation</span>
+</div>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between pt-space-md text-on-surface-variant font-code-sm text-code-sm border-t border-surface-container-high mt-space-md">
+<span>Corpus Cosine Sim Threshold: 0.450</span>
+<span class="text-on-surface">Corpus Coverage: 88.2%</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Dialogflow Assistive Intent Indicator (Fixed Footer Anchor) -->
+<div class="fixed bottom-4 right-4 z-40 bg-surface-container-high border-0 shadow-xl rounded-xl p-space-sm flex items-center gap-space-md max-w-md">
+<div class="w-10 h-10 rounded-lg bg-primary-container text-on-primary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">smart_toy</span>
+</div>
+<div class="flex flex-col min-w-0 pr-space-xs">
+<span class="font-title-sm text-title-sm text-on-surface truncate">Dialogflow Intent Engine</span>
+<span class="font-code-sm text-code-sm text-primary truncate">Intent: evaluate_indemnity_cap [conf: 0.98]</span>
+</div>
+<button class="px-space-xs py-space-2xs bg-surface-container hover:bg-surface-bright text-on-surface rounded font-label-sm text-label-sm shrink-0 transition-colors" type="button">
+      Expand
+    </button>
+</div>
+</div></main></div></body></html>

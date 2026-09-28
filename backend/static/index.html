@@ -1,0 +1,2529 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"secondary-container":"#3131c0","surface":"#051424","inverse-on-surface":"#233143","on-secondary-fixed-variant":"#2f2ebe","on-primary-container":"#00285d","inverse-surface":"#d4e4fa","on-tertiary-container":"#00311f","inverse-primary":"#005ac2","primary":"#adc6ff","on-secondary-fixed":"#07006c","on-primary-fixed":"#001a42","surface-variant":"#273647","secondary-fixed-dim":"#c0c1ff","primary-fixed-dim":"#adc6ff","on-surface":"#d4e4fa","outline-variant":"#424754","secondary-fixed":"#e1e0ff","on-tertiary":"#003824","on-secondary":"#1000a9","on-background":"#d4e4fa","on-primary":"#002e6a","surface-container-high":"#1c2b3c","surface-bright":"#2c3a4c","secondary":"#c0c1ff","outline":"#8c909f","error":"#ffb4ab","on-secondary-container":"#b0b2ff","on-primary-fixed-variant":"#004395","on-error":"#690005","tertiary":"#4edea3","primary-fixed":"#d8e2ff","on-error-container":"#ffdad6","surface-dim":"#051424","error-container":"#93000a","on-tertiary-fixed-variant":"#005236","surface-container-highest":"#273647","background":"#051424","surface-container-low":"#0d1c2d","tertiary-fixed":"#6ffbbe","tertiary-fixed-dim":"#4edea3","surface-tint":"#adc6ff","tertiary-container":"#00a572","surface-container":"#122131","on-surface-variant":"#c2c6d6","on-tertiary-fixed":"#002113","primary-container":"#4d8eff","surface-container-lowest":"#010f1f"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"margin-mobile":"1rem","gutter-lg":"1.5rem","space-sm":"0.5rem","space-md":"1rem","space-2xs":"0.125rem","space-xs":"0.25rem","space-lg":"1.5rem","margin":"1.5rem","space-2xl":"3rem","gutter":"1rem","space-xl":"2rem"},"fontFamily":{"headline-md":["Geist"],"metric-display":["Geist"],"headline-lg-mobile":["Geist"],"body-lg":["Geist"],"body-md":["Geist"],"code-sm":["JetBrains Mono"],"metric-display-sm":["Geist"],"headline-xl-mobile":["Geist"],"headline-lg":["Geist"],"label-sm":["Geist"],"title-md":["Geist"],"body-sm":["Geist"],"headline-xl":["Geist"],"label-md":["Geist"],"headline-sm":["Geist"],"title-sm":["Geist"]},"fontSize":{"headline-md":["24px",{"lineHeight":"32px","fontWeight":"600"}],"metric-display":["48px",{"lineHeight":"52px","fontWeight":"700"}],"headline-lg-mobile":["24px",{"lineHeight":"32px","fontWeight":"600"}],"body-lg":["16px",{"lineHeight":"26px","fontWeight":"400"}],"body-md":["14px",{"lineHeight":"22px","fontWeight":"400"}],"code-sm":["12px",{"lineHeight":"16px","fontWeight":"500"}],"metric-display-sm":["32px",{"lineHeight":"36px","fontWeight":"700"}],"headline-xl-mobile":["30px",{"lineHeight":"38px","fontWeight":"700"}],"headline-lg":["32px",{"lineHeight":"40px","fontWeight":"600"}],"label-sm":["11px",{"lineHeight":"14px","fontWeight":"600"}],"title-md":["16px",{"lineHeight":"24px","fontWeight":"600"}],"body-sm":["12px",{"lineHeight":"18px","fontWeight":"400"}],"headline-xl":["40px",{"lineHeight":"48px","fontWeight":"700"}],"label-md":["13px",{"lineHeight":"16px","fontWeight":"500"}],"headline-sm":["20px",{"lineHeight":"28px","fontWeight":"600"}],"title-sm":["14px",{"lineHeight":"20px","fontWeight":"600"}]}}}};</script>
+<title>LexiCore - Deterministic Legal NLP Suite</title>
+<style>
+  .tab-view {
+    animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .nav-active {
+    background-color: #122131 !important;
+    color: #adc6ff !important;
+    font-weight: 600 !important;
+  }
+  .cursor-pointer {
+    cursor: pointer;
+  }
+  #chatStream::-webkit-scrollbar, .overflow-x-auto::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    display: block;
+  }
+  #chatStream::-webkit-scrollbar-thumb, .overflow-x-auto::-webkit-scrollbar-thumb {
+    background: #1c2b3c;
+    border-radius: 4px;
+  }
+  #chatStream::-webkit-scrollbar-thumb:hover, .overflow-x-auto::-webkit-scrollbar-thumb:hover {
+    background: #273647;
+  }
+</style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen selection:bg-primary/20 selection:text-primary">
+<aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-low flex flex-col justify-between z-40"><div class="flex flex-col"><div class="h-16 px-space-md flex items-center gap-space-sm bg-surface-container-low"><img alt="Brand logo. - Primary color: #3b82f6
+- Font: geist
+- Mode: dark
+- Roundness: rounded-sm
+" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1UJ_cGocIbP8JrKf0mLK7iq72PNpr1Vb3plrWFT9C_d22ExaOvH3ulMqNb8Y0M1WHJT-8fjvq5-lLKdfw3Az93MumvSHcFUDKhxJWHF8NWCwwpTFY2yMqDcHqbwY3evVWsSVyHzqGWoRBoS6Z8fqf3VI9v8WCc5C7E4uSE_Ah1oVGEhDLhsdG1nno2QaHchF75ZXMWKqd92GOrPDq4KgHD92z48dgm2kwCzt73HuRONaEhvR-JZTUO_0Xg"/><div class="flex flex-col min-w-0"><span class="font-title-sm text-title-sm text-on-surface tracking-tight truncate">LexiCore</span><span class="font-label-sm text-label-sm text-on-surface-variant truncate">Deterministic Legal NLP</span></div></div><nav class="flex flex-col px-space-sm mt-space-md gap-space-2xs" data-active-classes="bg-surface-container text-primary font-title-sm"><a aria-current="page" class="flex items-center gap-space-sm px-space-md py-space-xs rounded-lg transition-colors bg-surface-container text-primary font-title-sm" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[18px]">grid_view</span><span>Dashboard</span></a><a class="flex items-center gap-space-sm px-space-md py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-title-sm text-title-sm transition-colors" data-path="documents" href="#"><span class="material-symbols-outlined text-[18px]">description</span><span>Documents</span></a><a class="flex items-center gap-space-sm px-space-md py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-title-sm text-title-sm transition-colors" data-path="analysis" href="#"><span class="material-symbols-outlined text-[18px]">rule</span><span>Analysis</span></a><a class="flex items-center gap-space-sm px-space-md py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-title-sm text-title-sm transition-colors" data-path="search" href="#"><span class="material-symbols-outlined text-[18px]">manage_search</span><span>Search</span></a><a class="flex items-center gap-space-sm px-space-md py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-title-sm text-title-sm transition-colors" data-path="ai-assistant" href="#"><span class="material-symbols-outlined text-[18px]">smart_toy</span><span>AI Assistant</span></a><a class="flex items-center gap-space-sm px-space-md py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-title-sm text-title-sm transition-colors" data-path="reports" href="#"><span class="material-symbols-outlined text-[18px]">assessment</span><span>Reports</span></a></nav></div><div class="flex flex-col px-space-sm pb-space-md"><nav class="flex flex-col mb-space-sm" data-active-classes="bg-surface-container text-primary font-title-sm"><a class="flex items-center gap-space-sm px-space-md py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-title-sm text-title-sm transition-colors" data-path="settings" href="#"><span class="material-symbols-outlined text-[18px]">settings</span><span>Settings</span></a></nav><div class="flex items-center gap-space-sm px-space-md py-space-xs bg-surface-container rounded-lg"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="flex flex-col min-w-0"><span id="user-display-name" class="font-title-sm text-title-sm text-on-surface truncate">Marcus Vance</span><div class="flex items-center justify-between"><span id="user-display-role" class="font-label-sm text-label-sm text-on-surface-variant truncate">Legal Counsel</span><button type="button" onclick="logoutUser()" title="Sign Out" class="text-outline hover:text-error transition-colors ml-2"><span class="material-symbols-outlined text-[16px]">logout</span></button></div></div></div></div></aside>
+<div class="pl-64">
+<header class="fixed top-0 left-64 right-0 h-16 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-30 flex items-center justify-between px-space-lg"><div class="flex items-center gap-space-md min-w-0"><div class="flex items-center gap-space-xs px-space-sm py-space-2xs bg-surface-container-high rounded-lg text-on-surface font-body-sm text-body-sm truncate"><span class="material-symbols-outlined text-[16px] text-error">gavel</span><span id="top-doc-title" class="font-title-sm text-title-sm truncate">No Document Selected</span><span id="top-doc-risk" class="px-space-xs py-space-2xs rounded bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm font-semibold">Ready</span></div></div><div class="flex items-center gap-space-sm">
+    <select id="top-doc-selector" onchange="if(this.value) selectDocument(this.value)" class="bg-surface-container-high border border-surface-highest text-on-surface text-xs rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-primary cursor-pointer max-w-[210px] truncate" title="Switch active contract">
+      <option value="">Switch Contract...</option>
+    </select>
+    <button type="button" onclick="openHelpModal()" class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container-high text-on-surface-variant hover:text-primary text-xs font-semibold transition-colors cursor-pointer border border-surface-container-high" title="Architecture Guide & Viva Walkthrough">
+      <span class="material-symbols-outlined text-[16px] text-primary">help</span>
+      <span>Guide</span>
+    </button>
+    <button id="top-search-btn" onclick="switchTab(\'search\')" class="flex items-center gap-space-sm px-space-sm py-space-2xs bg-surface-container-low hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface rounded-lg transition-colors cursor-pointer" type="button"><span class="material-symbols-outlined text-[18px]">search</span><span class="font-body-sm text-body-sm">Clause search</span><kbd class="px-space-xs py-space-2xs bg-surface-container-highest text-on-surface-variant rounded font-code-sm text-code-sm">⌘K</kbd></button><button id="top-upload-btn" onclick="triggerUpload()" class="flex items-center gap-space-2xs px-space-md py-space-xs bg-primary text-on-primary font-title-sm text-title-sm rounded-lg hover:bg-primary-container hover:text-on-primary transition-colors cursor-pointer shadow-md" type="button"><span class="material-symbols-outlined text-[18px]">upload_file</span><span>Upload</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header>
+<main class="w-full pt-16 bg-surface min-h-screen">
+<div id="view-dashboard" class="tab-view"><div class="flex flex-col w-full p-space-lg space-y-space-lg">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-space-sm">
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Dashboard</h1>
+<span class="px-space-xs py-space-2xs bg-surface-container-high rounded text-tertiary font-code-sm text-code-sm flex items-center gap-space-2xs">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+          AI Legal Intelligence Suite
+        </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-space-2xs">Overview of analyzed legal documents, structural clause classification, and contract risk evaluation.</p>
+</div>
+<div class="flex items-center gap-space-sm shrink-0">
+<button onclick="switchTab('documents')" class="flex items-center gap-space-xs px-space-sm py-space-xs bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface rounded-lg transition-colors font-title-sm text-title-sm cursor-pointer" type="button">
+<span class="material-symbols-outlined text-[18px]">folder_open</span>
+<span>View Documents</span>
+</button>
+<button onclick="triggerUpload()" class="flex items-center gap-space-xs px-space-md py-space-xs bg-primary-container text-on-primary font-title-sm text-title-sm rounded-lg hover:bg-primary transition-colors shadow-sm cursor-pointer" type="button">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span>Upload New Contract</span>
+</button>
+</div>
+</div>
+<!-- KPI Metrology Cards (4-Column Grid) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md">
+<!-- Card 1 -->
+<div class="bg-surface-container-low rounded-xl p-space-md flex flex-col justify-between shadow-sm relative overflow-hidden group">
+<div class="flex items-start justify-between">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Total Documents</span>
+<div class="p-space-xs bg-surface-container rounded-lg text-primary">
+<span class="material-symbols-outlined text-[20px]">folder_open</span>
+</div>
+</div>
+<div class="mt-space-md">
+<div id="dash-total-docs" class="font-metric-display text-metric-display text-on-surface tracking-tight">0</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mt-space-2xs flex items-center gap-space-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<span id="dash-docs-subtext">Active vault repository</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center justify-between text-on-surface-variant font-code-sm text-code-sm">
+<span>Document Engine</span>
+<span class="text-tertiary">Verified Active</span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-low rounded-xl p-space-md flex flex-col justify-between shadow-sm relative overflow-hidden group">
+<div class="flex items-start justify-between">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Total Clauses</span>
+<div class="p-space-xs bg-surface-container rounded-lg text-secondary">
+<span class="material-symbols-outlined text-[20px]">segment</span>
+</div>
+</div>
+<div class="mt-space-md">
+<div id="dash-total-clauses" class="font-metric-display text-metric-display text-on-surface tracking-tight">0</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mt-space-2xs flex items-center gap-space-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span id="dash-clauses-subtext">Segmented via Legal NLP Engine</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center justify-between text-on-surface-variant font-code-sm text-code-sm">
+<span>Syntactic Clause Parser</span>
+<span id="dash-parsed-status">100% Parsed</span>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container-low rounded-xl p-space-md flex flex-col justify-between shadow-sm relative overflow-hidden group">
+<div class="flex items-start justify-between">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">High-Risk Documents</span>
+<div class="p-space-xs bg-error-container text-error rounded-lg">
+<span class="material-symbols-outlined text-[20px]">warning</span>
+</div>
+</div>
+<div class="mt-space-md">
+<div class="flex items-baseline gap-space-sm">
+<span id="dash-high-risk-docs" class="font-metric-display text-metric-display text-error tracking-tight">0</span>
+<span id="dash-risk-tag" class="px-space-xs py-space-2xs rounded bg-surface-container text-tertiary font-label-sm text-label-sm uppercase font-semibold tracking-wide">Optimal</span>
+</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mt-space-2xs">
+<span id="dash-risk-desc">High risk score ≥ 65 • Action required</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center justify-between text-on-surface-variant font-code-sm text-code-sm">
+<span>Risk Threshold</span>
+<span class="text-error">≥ 65 High</span>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="bg-surface-container-low rounded-xl p-space-md flex flex-col justify-between shadow-sm relative overflow-hidden group">
+<div class="flex items-start justify-between">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Average Risk Score</span>
+<div class="p-space-xs bg-surface-container rounded-lg text-primary-container">
+<span class="material-symbols-outlined text-[20px]">speed</span>
+</div>
+</div>
+<div class="mt-space-md">
+<div class="flex items-baseline gap-space-xs">
+<span id="dash-avg-risk" class="font-metric-display text-metric-display text-on-surface tracking-tight">0</span>
+<span class="font-headline-sm text-headline-sm text-on-surface-variant">/ 100</span>
+</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mt-space-2xs">
+<span id="dash-avg-desc">Multi-Factor Risk Assessment</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center justify-between text-on-surface-variant font-code-sm text-code-sm">
+<span>Risk Evaluation</span>
+<span class="text-on-surface">Deterministic Scoring</span>
+</div>
+</div>
+</div>
+<!-- Main Workstation Layout (Balanced Columns: 8 cols / 4 cols) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg">
+<!-- LEFT COLUMN: 8 Columns -->
+<div class="lg:col-span-8 flex flex-col space-y-space-lg">
+<!-- Document Risk Distribution Panel -->
+<div class="bg-surface-container-low rounded-xl p-space-lg shadow-sm">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between pb-space-md gap-space-xs">
+<div>
+<h2 class="font-title-md text-title-md text-on-surface">Document Risk Distribution</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-space-2xs">Deterministic risk evaluation across indemnification, unilateral covenants, and penalties.</p>
+</div>
+<div class="flex items-center gap-space-xs bg-surface-container px-space-sm py-space-2xs rounded-lg text-on-surface-variant font-code-sm text-code-sm self-start sm:self-auto">
+<span class="material-symbols-outlined text-[14px]">tune</span>
+<span>Deterministic Risk Engine</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-space-lg items-center pt-space-sm">
+<!-- Donut Graphic Visualizer (Pure SVG) -->
+<div class="md:col-span-4 flex flex-col items-center justify-center relative">
+<div class="relative w-40 h-40">
+<svg class="w-full h-full -rotate-90 transform" viewbox="0 0 120 120">
+<circle class="text-surface-container-high" cx="60" cy="60" fill="transparent" r="48" stroke="currentColor" stroke-width="12"></circle>
+<!-- Dynamic Risk Circles -->
+<circle id="dash-circle-low" class="text-tertiary transition-all duration-500" cx="60" cy="60" fill="transparent" r="48" stroke="currentColor" stroke-dasharray="301.59" stroke-dashoffset="301.59" stroke-linecap="round" stroke-width="12"></circle>
+<circle id="dash-circle-med" class="text-secondary transition-all duration-500" cx="60" cy="60" fill="transparent" r="48" stroke="currentColor" stroke-dasharray="301.59" stroke-dashoffset="301.59" stroke-linecap="round" stroke-width="12"></circle>
+<circle id="dash-circle-high" class="text-error transition-all duration-500" cx="60" cy="60" fill="transparent" r="48" stroke="currentColor" stroke-dasharray="301.59" stroke-dashoffset="301.59" stroke-linecap="round" stroke-width="12"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+<span id="dash-donut-count" class="font-metric-display-sm text-metric-display-sm text-on-surface leading-none">0</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mt-1">Contracts</span>
+</div>
+</div>
+</div>
+<!-- Breakdown Cards & Bars -->
+<div class="md:col-span-8 flex flex-col space-y-space-md">
+<!-- Consolidated Stacked Distribution Bar -->
+<div class="w-full h-3 rounded-full bg-surface-container-high flex overflow-hidden">
+<div id="dash-bar-low" class="bg-tertiary h-full transition-all duration-500" style="width: 0%" title="Low Risk"></div>
+<div id="dash-bar-med" class="bg-secondary h-full transition-all duration-500" style="width: 0%" title="Medium Risk"></div>
+<div id="dash-bar-high" class="bg-error h-full transition-all duration-500" style="width: 0%" title="High Risk"></div>
+</div>
+<!-- Detailed Stat Rows -->
+<div class="grid grid-cols-3 gap-space-sm pt-space-xs">
+<div class="bg-surface-container rounded-lg p-space-sm flex flex-col">
+<div class="flex items-center gap-space-2xs text-tertiary">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span class="font-label-sm text-label-sm uppercase font-semibold">Low (0-35)</span>
+</div>
+<div class="flex items-baseline gap-space-xs mt-space-xs">
+<span id="dash-count-low" class="font-headline-sm text-headline-sm text-on-surface">0</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Docs</span>
+</div>
+<span id="dash-share-low" class="font-code-sm text-code-sm text-tertiary mt-space-2xs">0% share</span>
+</div>
+<div class="bg-surface-container rounded-lg p-space-sm flex flex-col">
+<div class="flex items-center gap-space-2xs text-secondary">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-label-sm text-label-sm uppercase font-semibold">Med (36-64)</span>
+</div>
+<div class="flex items-baseline gap-space-xs mt-space-xs">
+<span id="dash-count-med" class="font-headline-sm text-headline-sm text-on-surface">0</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Docs</span>
+</div>
+<span id="dash-share-med" class="font-code-sm text-code-sm text-secondary mt-space-2xs">0% share</span>
+</div>
+<div class="bg-surface-container rounded-lg p-space-sm flex flex-col">
+<div class="flex items-center gap-space-2xs text-error">
+<span class="w-2 h-2 rounded-full bg-error"></span>
+<span class="font-label-sm text-label-sm uppercase font-semibold">High (65-100)</span>
+</div>
+<div class="flex items-baseline gap-space-xs mt-space-xs">
+<span id="dash-count-high" class="font-headline-sm text-headline-sm text-on-surface">0</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Docs</span>
+</div>
+<span id="dash-share-high" class="font-code-sm text-code-sm text-error mt-space-2xs">0% share</span>
+</div>
+</div>
+<!-- Mathematical Engine Caption -->
+<div class="text-on-surface-variant font-code-sm text-code-sm flex items-center gap-space-sm pt-space-xs">
+<span class="material-symbols-outlined text-[16px] text-primary">analytics</span>
+<span>Multi-Factor Deterministic Risk Evaluation</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Recent Documents Table -->
+<div class="bg-surface-container-low rounded-xl p-space-lg shadow-sm flex flex-col">
+<div class="flex items-center justify-between pb-space-md">
+<div class="flex items-center gap-space-sm">
+<h2 class="font-title-md text-title-md text-on-surface">Recent Documents</h2>
+<span class="px-space-xs py-space-2xs rounded bg-surface-container text-on-surface-variant font-code-sm text-code-sm">AI Analyzed</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<button onclick="switchTab('documents')" class="p-space-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded transition-colors cursor-pointer" title="View all documents" type="button">
+<span class="material-symbols-outlined text-[18px]">folder_open</span>
+</button>
+</div>
+</div>
+<div class="overflow-x-auto -mx-space-lg">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-space-sm px-space-lg">Document Name</th>
+<th class="py-space-sm px-space-md">Date Analyzed</th>
+<th class="py-space-sm px-space-md">Clauses</th>
+<th class="py-space-sm px-space-md">Risk Score</th>
+<th class="py-space-sm px-space-lg text-right">Action</th>
+</tr>
+</thead>
+<tbody id="dash-recent-docs-tbody" class="divide-y divide-surface-container-high/40 font-body-md text-body-md">
+  <tr>
+    <td colspan="5" class="py-space-xl text-center text-on-surface-variant font-body-md">
+      Loading recent documents...
+    </td>
+  </tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- RIGHT COLUMN: 4 Columns -->
+<div class="lg:col-span-4 flex flex-col space-y-space-lg">
+<!-- Clause Category Distribution Panel -->
+<div class="bg-surface-container-low rounded-xl p-space-lg shadow-sm flex flex-col">
+<div class="flex items-center justify-between pb-space-sm">
+<div>
+<h2 class="font-title-md text-title-md text-on-surface">Clause Categories</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-space-2xs">AI clause taxonomy distribution</p>
+</div>
+<span class="material-symbols-outlined text-primary text-[20px]">category</span>
+</div>
+<div id="dash-clause-categories-list" class="flex flex-col space-y-space-md mt-space-sm">
+  <div class="text-on-surface-variant text-body-sm font-body-sm py-4 text-center">
+    Analyzing contract taxonomy...
+  </div>
+</div>
+<div class="mt-space-lg pt-space-sm bg-surface-container rounded-lg p-space-sm flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Classification Engine</span>
+<span class="font-code-sm text-code-sm text-primary">AI Legal Classifier • Active</span>
+</div>
+<span class="material-symbols-outlined text-tertiary text-[20px]">verified</span>
+</div>
+</div>
+<!-- Alerts & Findings Panel -->
+<div class="bg-surface-container-low rounded-xl p-space-lg shadow-sm flex flex-col space-y-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-error text-[18px]">rule_folder</span>
+<h2 class="font-title-md text-title-md text-on-surface">Alerts & Findings</h2>
+</div>
+<span class="px-space-xs py-space-2xs rounded bg-error-container text-error font-code-sm text-code-sm font-semibold">4 Flags</span>
+</div>
+<!-- High-Risk Clauses Section -->
+<div class="flex flex-col space-y-space-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold">High-Risk Clauses</span>
+<div class="bg-surface-container rounded-lg p-space-sm flex flex-col space-y-space-2xs">
+<div class="flex items-center justify-between">
+<span class="font-title-sm text-title-sm text-error">Clause 14.3 (Vendor Contract)</span>
+<span class="px-space-xs py-space-2xs rounded bg-error-container text-error font-code-sm text-code-sm">Fuzzy: 94/100</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface">Uncapped unilateral liability waiver detected in indemnification section.</p>
+<div class="text-on-surface-variant font-code-sm text-code-sm pt-space-2xs flex items-center gap-space-2xs">
+<span class="material-symbols-outlined text-[14px]">psychology</span>
+<span>Matched: UNILATERAL_INDEMNITY_UNLIMITED</span>
+</div>
+</div>
+<div class="bg-surface-container rounded-lg p-space-sm flex flex-col space-y-space-2xs">
+<div class="flex items-center justify-between">
+<span class="font-title-sm text-title-sm text-error">Clause 09.4 (Vendor Contract)</span>
+<span class="px-space-xs py-space-2xs rounded bg-error-container text-error font-code-sm text-code-sm">Fuzzy: 91/100</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface">Immediate termination without mandatory 30-day cure period.</p>
+<div class="text-on-surface-variant font-code-sm text-code-sm pt-space-2xs flex items-center gap-space-2xs">
+<span class="material-symbols-outlined text-[14px]">psychology</span>
+<span>Matched: TERMINATION_NO_CURE_PERIOD</span>
+</div>
+</div>
+</div>
+<!-- Missing Clauses Section -->
+<div class="flex flex-col space-y-space-xs pt-space-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold">Potentially Missing Clauses</span>
+<div class="bg-surface-container rounded-lg p-space-sm flex flex-col space-y-space-2xs">
+<div class="flex items-center justify-between">
+<span class="font-title-sm text-title-sm text-on-surface truncate">High_Risk_Vendor_Contract.pdf</span>
+<span class="px-space-xs py-space-2xs rounded bg-surface-container-high text-secondary font-code-sm text-code-sm">Omission</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Missing clause category: <span class="text-on-surface font-medium">Force Majeure / Business Continuity</span></p>
+</div>
+<div class="bg-surface-container rounded-lg p-space-sm flex flex-col space-y-space-2xs">
+<div class="flex items-center justify-between">
+<span class="font-title-sm text-title-sm text-on-surface truncate">Simple_NDA.pdf</span>
+<span class="px-space-xs py-space-2xs rounded bg-surface-container-high text-secondary font-code-sm text-code-sm">Omission</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Missing clause category: <span class="text-on-surface font-medium">Dispute Resolution & Jurisdiction</span></p>
+</div>
+</div>
+</div>
+<!-- Quick Pipeline Diagnostic Card -->
+<div class="bg-surface-container-low rounded-xl p-space-md shadow-sm flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-tertiary text-[24px]">terminal</span>
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm text-on-surface">NLP Engine Diagnostic</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant">Semantic Vector Engine • Active</span>
+</div>
+</div>
+<span class="px-space-xs py-space-2xs rounded bg-surface-container-high text-tertiary font-code-sm text-code-sm">200 OK</span>
+</div>
+</div>
+</div>
+</div></div>
+<div id="view-analysis" class="tab-view hidden"><div class="flex flex-col w-full">
+<!-- Subtle Visual Ambient Halo behind Document Header -->
+<div class="relative w-full px-space-lg pt-space-lg pb-space-md">
+<div class="absolute top-0 right-1/4 w-96 h-48 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute top-12 left-1/3 w-64 h-32 bg-error/5 rounded-full blur-2xl pointer-events-none"></div>
+<!-- Document Action Header Block -->
+<div class="relative z-10 flex flex-col xl:flex-row xl:items-center xl:justify-between gap-space-md pb-space-md">
+<div class="flex flex-col gap-space-xs min-w-0">
+<div class="flex items-center gap-space-sm flex-wrap">
+<span class="font-code-sm text-code-sm text-primary uppercase tracking-wider px-space-xs py-space-2xs bg-surface-container rounded">DOC-ANALYSIS-2024-9104</span>
+<span class="inline-flex items-center gap-space-2xs px-space-xs py-space-2xs bg-error-container text-error rounded font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-error animate-ping"></span>
+            Status: High Severity Flags
+          </span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Deterministic Model Run: v3.7.2</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight truncate">
+          Document Analysis — <span id="analysis-doc-title">Select or Upload a Document</span>
+        </h1>
+<div class="flex items-center gap-space-sm flex-wrap text-on-surface-variant font-body-sm text-body-sm">
+<span>Status: <strong class="text-on-surface">Analyzed</strong></span>
+<span>•</span>
+<span>Date: Sep 21, 2024</span>
+<span>•</span>
+<span>24 Pages</span>
+<span>•</span>
+<span class="font-code-sm text-code-sm bg-surface-container-high text-primary px-space-xs py-space-2xs rounded">PyMuPDF Extracted</span>
+<span>•</span>
+<span class="font-code-sm text-code-sm text-tertiary">Mamdani Engine: Online</span>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex items-center gap-space-sm shrink-0">
+<button class="flex items-center gap-space-xs px-space-md py-space-xs bg-surface-container-high hover:bg-surface-bright text-on-surface rounded-lg transition-colors font-title-sm text-title-sm shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">manage_search</span>
+<span>Search in Document</span>
+<kbd class="px-space-xs py-space-2xs bg-surface-container text-on-surface-variant rounded font-code-sm text-code-sm">Ctrl+F</kbd>
+</button>
+<button id="analysis-export-report-btn" class="flex items-center gap-space-xs px-space-md py-space-xs bg-primary text-on-primary font-title-sm text-title-sm rounded-lg hover:bg-primary-container transition-colors shadow-sm cursor-pointer" type="button"><span class="material-symbols-outlined text-[18px]">picture_as_pdf</span><span>Export PDF Report</span></button>
+</div>
+</div>
+<!-- Sub-Navigation Segmented Bar -->
+<div class="relative z-10 flex items-center justify-between mt-space-sm pt-space-xs bg-surface-container-low rounded-lg p-space-xs">
+<div class="flex items-center gap-space-xs overflow-x-auto">
+<button class="flex items-center gap-space-xs px-space-md py-space-xs rounded-lg bg-surface-container-high text-primary font-title-sm text-title-sm shadow-sm" type="button">
+<span class="material-symbols-outlined text-[16px]">dashboard</span>
+<span>Overview</span>
+<span class="px-space-xs py-space-2xs rounded bg-surface-container-highest text-primary font-code-sm text-code-sm">Active</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-md py-space-xs rounded-lg hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-title-sm text-title-sm transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">segment</span>
+<span>Clauses</span>
+<span class="px-space-xs py-space-2xs rounded bg-surface-container text-on-surface-variant font-code-sm text-code-sm">24</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-md py-space-xs rounded-lg hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-title-sm text-title-sm transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">troubleshoot</span>
+<span>Risk Analysis</span>
+<span class="w-2 h-2 rounded-full bg-error"></span>
+</button>
+<button class="flex items-center gap-space-xs px-space-md py-space-xs rounded-lg hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-title-sm text-title-sm transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">notes</span>
+<span>Summary</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-md py-space-xs rounded-lg hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-title-sm text-title-sm transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">warning_amber</span>
+<span>Missing Clauses</span>
+<span class="px-space-xs py-space-2xs rounded bg-error/20 text-error font-code-sm text-code-sm font-semibold">2 Flagged</span>
+</button>
+</div>
+<div class="hidden md:flex items-center gap-space-sm text-on-surface-variant font-code-sm text-code-sm px-space-sm">
+<span>Extractive Entropy: <strong>0.142 nats</strong></span>
+<span>•</span>
+<span>Corpus: Standard Commercial (v24.1)</span>
+</div>
+</div>
+</div>
+<!-- Primary Analytic Canvas -->
+<div class="w-full px-space-lg pb-space-2xl flex flex-col gap-space-lg">
+<!-- Section 1: Fuzzy Logic Risk Assessment (Overall Risk) & Quick Stats -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-space-lg items-stretch">
+<!-- High Severity Mamdani Gauge Card (5 Columns) -->
+<div class="xl:col-span-5 bg-surface-container rounded-xl p-space-lg flex flex-col justify-between shadow-md relative overflow-hidden">
+<div class="absolute -right-12 -top-12 w-48 h-48 bg-error/10 rounded-full blur-2xl pointer-events-none"></div>
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Inference Metric</span>
+<span class="px-space-xs py-space-2xs rounded bg-error-container text-error font-code-sm text-code-sm font-semibold"><span id="analysis-risk-badge">Risk: PENDING</span></span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Fuzzy Logic Risk Assessment</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-space-2xs">
+            Calculated via Mamdani Fuzzy Inference Engine evaluating clause ambiguity, asymmetric indemnity, and non-standard termination covenants.
+          </p>
+</div>
+<!-- Radial Dial Visual Element -->
+<div class="my-space-md flex flex-col sm:flex-row items-center justify-center gap-space-lg py-space-xs">
+<div class="relative w-40 h-40 flex items-center justify-center shrink-0">
+<!-- Concentric SVG Radial Track -->
+<svg class="w-full h-full -rotate-90 transform" viewbox="0 0 120 120">
+<circle class="text-surface-container-highest fill-none" cx="60" cy="60" r="48" stroke="currentColor" stroke-width="8"></circle>
+<!-- Circumference ~301.6px. 78% is ~235.2px dasharray -->
+<circle class="text-error fill-none transition-all duration-1000 ease-out" cx="60" cy="60" r="48" stroke="currentColor" id="analysis-risk-gauge-circle" stroke-dasharray="301.6" stroke-dashoffset="301.6" stroke-linecap="round" stroke-width="8"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+<span id="analysis-risk-score" class="font-metric-display-sm text-metric-display-sm text-on-surface tracking-tight">0</span>
+<span class="font-label-sm text-label-sm text-error uppercase font-bold tracking-widest -mt-space-2xs">High Risk</span>
+</div>
+</div>
+<div class="flex flex-col gap-space-xs min-w-0">
+<div class="flex items-center gap-space-xs">
+<span class="w-2.5 h-2.5 rounded-full bg-error"></span>
+<span class="font-title-sm text-title-sm text-on-surface">Defensive Imbalance Detected</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Risk score exceeds the 70.0 institutional safety threshold. Unilateral indemnification covenants contribute to 48.5% of total mathematical penalty weights.
+            </p>
+<div class="flex items-center gap-space-xs mt-space-2xs">
+<span class="font-code-sm text-code-sm bg-surface-container-high px-space-xs py-space-2xs rounded text-on-surface-variant">Defuzzification: Centroid Method</span>
+<span class="font-code-sm text-code-sm bg-surface-container-high px-space-xs py-space-2xs rounded text-on-surface-variant">Triangular MF</span>
+</div>
+</div>
+</div>
+<!-- Segmented Clause Distribution Visual -->
+<div class="pt-space-sm bg-surface-container-low p-space-md rounded-lg">
+<div class="flex items-center justify-between text-label-sm font-label-sm text-on-surface-variant mb-space-xs">
+<span>Clause Risk Distribution</span>
+<span>24 Total Covenants</span>
+</div>
+<!-- Stacked distribution bar -->
+<div class="w-full h-3 rounded-full bg-surface-container-highest overflow-hidden flex gap-0.5">
+<div class="h-full bg-tertiary" style="width: 45.8%;" title="Low Risk: 11 (45.8%)"></div>
+<div class="h-full bg-secondary-container" style="width: 29.2%;" title="Medium Risk: 7 (29.2%)"></div>
+<div class="h-full bg-error" style="width: 25.0%;" title="High Risk: 6 (25.0%)"></div>
+</div>
+<div class="grid grid-cols-3 gap-space-xs mt-space-xs pt-space-xs font-label-sm text-label-sm">
+<div class="flex items-center gap-space-2xs">
+<span class="w-2 h-2 rounded bg-tertiary"></span>
+<span class="text-on-surface">LOW: 11 (45.8%)</span>
+</div>
+<div class="flex items-center gap-space-2xs">
+<span class="w-2 h-2 rounded bg-secondary-container"></span>
+<span class="text-on-surface">MED: 7 (29.2%)</span>
+</div>
+<div class="flex items-center gap-space-2xs">
+<span class="w-2 h-2 rounded bg-error"></span>
+<span class="text-error font-bold">HIGH: 6 (25.0%)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Statistics Row & Diagnostic Telemetry (7 Columns) -->
+<div class="xl:col-span-7 flex flex-col justify-between gap-space-md">
+<!-- 4 Metric Cards Grid -->
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-space-md">
+<div class="bg-surface-container p-space-md rounded-xl flex flex-col justify-between shadow-sm">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-label-sm text-label-sm uppercase tracking-wider">Total Clauses</span>
+<span class="material-symbols-outlined text-[18px]">format_list_numbered</span>
+</div>
+<div class="mt-space-sm">
+<span class="font-metric-display-sm text-metric-display-sm text-on-surface">24</span>
+<span class="block font-label-sm text-label-sm text-tertiary mt-space-2xs">100% Parsed</span>
+</div>
+</div>
+<div class="bg-surface-container p-space-md rounded-xl flex flex-col justify-between shadow-sm">
+<div class="flex items-center justify-between text-error">
+<span class="font-label-sm text-label-sm uppercase tracking-wider">High-Risk</span>
+<span class="material-symbols-outlined text-[18px]">warning</span>
+</div>
+<div class="mt-space-sm">
+<span class="font-metric-display-sm text-metric-display-sm text-error">6</span>
+<span class="block font-label-sm text-label-sm text-error/80 mt-space-2xs">Score ≥ 70 / 100</span>
+</div>
+</div>
+<div class="bg-surface-container p-space-md rounded-xl flex flex-col justify-between shadow-sm">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-label-sm text-label-sm uppercase tracking-wider">Avg Risk Score</span>
+<span class="material-symbols-outlined text-[18px]">analytics</span>
+</div>
+<div class="mt-space-sm">
+<span class="font-metric-display-sm text-metric-display-sm text-on-surface">54.2</span>
+<span class="block font-label-sm text-label-sm text-on-surface-variant mt-space-2xs">Weighted Norm</span>
+</div>
+</div>
+<div class="bg-surface-container p-space-md rounded-xl flex flex-col justify-between shadow-sm">
+<div class="flex items-center justify-between text-secondary">
+<span class="font-label-sm text-label-sm uppercase tracking-wider">Missing Covenants</span>
+<span class="material-symbols-outlined text-[18px]">folder_off</span>
+</div>
+<div class="mt-space-sm">
+<span class="font-metric-display-sm text-metric-display-sm text-secondary">2</span>
+<span class="block font-label-sm text-label-sm text-secondary mt-space-2xs">Categories Missing</span>
+</div>
+</div>
+</div>
+<!-- Section 2: Important Findings (Deterministic NLP Output) -->
+<div class="bg-surface-container rounded-xl p-space-lg flex-1 flex flex-col justify-between shadow-md">
+<div class="flex items-center justify-between mb-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">fact_check</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Deterministic NLP Findings</h3>
+</div>
+<span class="px-space-xs py-space-2xs rounded bg-surface-container-high text-tertiary font-code-sm text-code-sm flex items-center gap-space-2xs">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+              Extractive Sentence Extraction • Zero Generative Hallucinations
+            </span>
+</div>
+<div class="space-y-space-sm">
+<!-- Finding 1 -->
+<div class="flex items-start gap-space-sm p-space-sm bg-surface-container-low rounded-lg">
+<span class="w-6 h-6 rounded bg-error-container text-error flex items-center justify-center font-code-sm text-code-sm shrink-0 mt-0.5 font-bold">01</span>
+<div class="flex flex-col min-w-0">
+<span class="font-title-sm text-title-sm text-on-surface">Macro Portfolio Alert: High Contractual Exposure</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                  Overall risk level is classified as <strong class="text-error font-semibold">HIGH</strong> based on 6 flagged clauses scoring strictly above the 70/100 threshold in the deterministic Mamdani rule set.
+                </p>
+</div>
+</div>
+<!-- Finding 2 -->
+<div class="flex items-start gap-space-sm p-space-sm bg-surface-container-low rounded-lg">
+<span class="w-6 h-6 rounded bg-error-container text-error flex items-center justify-center font-code-sm text-code-sm shrink-0 mt-0.5 font-bold">02</span>
+<div class="flex flex-col min-w-0">
+<span class="font-title-sm text-title-sm text-on-surface">Critical Vulnerability in Limitation of Liability (Clause 14.3)</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                  Highest clause risk identified in <strong class="text-on-surface font-semibold">Clause 14.3 (Limitation of Liability)</strong> with an absolute score of <span class="font-code-sm text-code-sm text-error font-bold">94/100</span> due to unilateral uncapped indemnity paired with a $1,000 vendor ceiling.
+                </p>
+</div>
+</div>
+<!-- Finding 3 -->
+<div class="flex items-start gap-space-sm p-space-sm bg-surface-container-low rounded-lg">
+<span class="w-6 h-6 rounded bg-secondary-container text-secondary-fixed flex items-center justify-center font-code-sm text-code-sm shrink-0 mt-0.5 font-bold">03</span>
+<div class="flex flex-col min-w-0">
+<span class="font-title-sm text-title-sm text-on-surface">Structural Omission of Standard Boilerplate Protections</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                  2 Potentially missing clause categories detected: <strong class="text-secondary font-semibold">Force Majeure</strong> and <strong class="text-secondary font-semibold">Bilateral Dispute Resolution</strong>. Document relies purely on common law gap-fillers.
+                </p>
+</div>
+</div>
+</div>
+<!-- Bottom Micro Pipeline Meta -->
+<div class="flex items-center justify-between pt-space-xs text-on-surface-variant font-code-sm text-code-sm">
+<span>Legal NER Engine: <span class="text-on-surface">Deterministic NLP</span></span>
+<span>Semantic Vocabulary: 1,842 Terms</span>
+<span>AI Clause Intelligence: 14 Target Taxonomies</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Section 3: Clauses Master Table & Detailed Clause Drawer Preview -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- Clauses Preview Master Table (7 Columns) -->
+<div class="lg:col-span-7 bg-surface-container rounded-xl shadow-md overflow-hidden flex flex-col">
+<div class="p-space-md flex items-center justify-between bg-surface-container-low">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px] text-primary">rule</span>
+<h3 class="font-title-md text-title-md text-on-surface">Clauses Preview & Stratification</h3>
+</div>
+    <div class="px-space-md py-space-xs bg-surface-container-low flex flex-wrap items-center justify-between gap-space-xs border-b border-surface-container-high/60">
+      <div class="flex items-center gap-1.5 flex-wrap text-xs font-mono" id="clause-filter-pills">
+        <button type="button" onclick="filterClauses('ALL')" class="clause-filter-btn px-2.5 py-1 rounded-md bg-surface-container-high text-primary font-semibold">All</button>
+        <button type="button" onclick="filterClauses('Liability')" class="clause-filter-btn px-2.5 py-1 rounded-md bg-surface-container text-on-surface-variant hover:text-on-surface">Liability</button>
+        <button type="button" onclick="filterClauses('Payment')" class="clause-filter-btn px-2.5 py-1 rounded-md bg-surface-container text-on-surface-variant hover:text-on-surface">Payment</button>
+        <button type="button" onclick="filterClauses('Termination')" class="clause-filter-btn px-2.5 py-1 rounded-md bg-surface-container text-on-surface-variant hover:text-on-surface">Termination</button>
+        <button type="button" onclick="filterClauses('Confidentiality')" class="clause-filter-btn px-2.5 py-1 rounded-md bg-surface-container text-on-surface-variant hover:text-on-surface">Confidentiality</button>
+        <button type="button" onclick="filterClauses('HIGH_RISK')" class="clause-filter-btn px-2.5 py-1 rounded-md bg-error-container/20 text-error hover:bg-error-container/40">High Risk Only</button>
+      </div>
+      <div class="relative">
+        <span class="material-symbols-outlined absolute left-2 top-1.5 text-[14px] text-outline">search</span>
+        <input type="text" id="clause-search-box" oninput="searchClausesLocal(this.value)" placeholder="Filter clauses..." class="pl-6 pr-2 py-1 bg-surface-container text-xs text-on-surface rounded border border-surface-container-high focus:outline-none focus:border-primary w-36"/>
+      </div>
+    </div>
+    
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Sorted by Risk (Descending)</span>
+</div>
+</div>
+<!-- Table Viewport -->
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-surface-container-highest/60 text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-space-sm px-space-md">Clause ID & Name</th>
+<th class="py-space-sm px-space-sm">Clause Classification</th>
+<th class="py-space-sm px-space-sm text-right">Fuzzy Score</th>
+<th class="py-space-sm px-space-sm">Risk Level</th>
+<th class="py-space-sm px-space-md text-right">Action</th>
+</tr>
+</thead>
+<tbody id="analysis-clauses-tbody" class="divide-y divide-surface-container-high/40 font-body-sm text-body-sm">
+<!-- Row 1: Clause 14.3 (Active Selection) -->
+<tr class="bg-surface-container-high hover:bg-surface-bright transition-colors cursor-pointer">
+<td class="py-space-sm px-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-error">gavel</span>
+<div>
+<span class="font-title-sm text-title-sm text-on-surface block">Clause 14.3</span>
+<span class="text-on-surface-variant font-body-sm text-body-sm truncate block max-w-[210px]">Indemnification & Aggregate Liability</span>
+</div>
+</div>
+</td>
+<td class="py-space-sm px-space-sm">
+<span class="px-space-xs py-space-2xs bg-surface-container rounded text-on-surface-variant font-code-sm text-code-sm">
+                    Liability
+                  </span>
+</td>
+<td class="py-space-sm px-space-sm text-right">
+<span class="font-code-sm text-code-sm text-error font-bold">94 / 100</span>
+</td>
+<td class="py-space-sm px-space-sm">
+<span class="px-space-xs py-space-2xs rounded bg-error-container text-error font-label-sm text-label-sm font-semibold">
+                    HIGH
+                  </span>
+</td>
+<td class="py-space-sm px-space-md text-right">
+<button class="px-space-xs py-space-2xs bg-primary text-on-primary rounded font-label-sm text-label-sm hover:bg-primary-container transition-colors" type="button">
+                    Selected
+                  </button>
+</td>
+</tr>
+<!-- Row 2: Clause 09.4 -->
+<tr class="hover:bg-surface-container-high/50 transition-colors cursor-pointer">
+<td class="py-space-sm px-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-error">event_busy</span>
+<div>
+<span class="font-title-sm text-title-sm text-on-surface block">Clause 09.4</span>
+<span class="text-on-surface-variant font-body-sm text-body-sm truncate block max-w-[210px]">Unilateral Convenience Termination</span>
+</div>
+</div>
+</td>
+<td class="py-space-sm px-space-sm">
+<span class="px-space-xs py-space-2xs bg-surface-container-low rounded text-on-surface-variant font-code-sm text-code-sm">
+                    Termination
+                  </span>
+</td>
+<td class="py-space-sm px-space-sm text-right">
+<span class="font-code-sm text-code-sm text-error font-bold">91 / 100</span>
+</td>
+<td class="py-space-sm px-space-sm">
+<span class="px-space-xs py-space-2xs rounded bg-error-container text-error font-label-sm text-label-sm font-semibold">
+                    HIGH
+                  </span>
+</td>
+<td class="py-space-sm px-space-md text-right">
+<button class="px-space-xs py-space-2xs bg-surface-container-highest text-on-surface rounded font-label-sm text-label-sm hover:bg-surface-bright transition-colors" type="button">
+                    View Full Text
+                  </button>
+</td>
+</tr>
+<!-- Row 3: Clause 05.2 -->
+<tr class="hover:bg-surface-container-high/50 transition-colors cursor-pointer">
+<td class="py-space-sm px-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-error">payments</span>
+<div>
+<span class="font-title-sm text-title-sm text-on-surface block">Clause 05.2</span>
+<span class="text-on-surface-variant font-body-sm text-body-sm truncate block max-w-[210px]">Compounded Default Interest & Invoicing</span>
+</div>
+</div>
+</td>
+<td class="py-space-sm px-space-sm">
+<span class="px-space-xs py-space-2xs bg-surface-container-low rounded text-on-surface-variant font-code-sm text-code-sm">
+                    Payment
+                  </span>
+</td>
+<td class="py-space-sm px-space-sm text-right">
+<span class="font-code-sm text-code-sm text-error font-bold">86 / 100</span>
+</td>
+<td class="py-space-sm px-space-sm">
+<span class="px-space-xs py-space-2xs rounded bg-error-container text-error font-label-sm text-label-sm font-semibold">
+                    HIGH
+                  </span>
+</td>
+<td class="py-space-sm px-space-md text-right">
+<button class="px-space-xs py-space-2xs bg-surface-container-highest text-on-surface rounded font-label-sm text-label-sm hover:bg-surface-bright transition-colors" type="button">
+                    View Full Text
+                  </button>
+</td>
+</tr>
+<!-- Row 4: Clause 11.1 -->
+<tr class="hover:bg-surface-container-high/50 transition-colors cursor-pointer">
+<td class="py-space-sm px-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-secondary">lock</span>
+<div>
+<span class="font-title-sm text-title-sm text-on-surface block">Clause 11.1</span>
+<span class="text-on-surface-variant font-body-sm text-body-sm truncate block max-w-[210px]">Trade Secrets & Data Usage Rights</span>
+</div>
+</div>
+</td>
+<td class="py-space-sm px-space-sm">
+<span class="px-space-xs py-space-2xs bg-surface-container-low rounded text-on-surface-variant font-code-sm text-code-sm">
+                    Confidentiality
+                  </span>
+</td>
+<td class="py-space-sm px-space-sm text-right">
+<span class="font-code-sm text-code-sm text-secondary font-semibold">54 / 100</span>
+</td>
+<td class="py-space-sm px-space-sm">
+<span class="px-space-xs py-space-2xs rounded bg-secondary-container/40 text-secondary font-label-sm text-label-sm font-semibold">
+                    MEDIUM
+                  </span>
+</td>
+<td class="py-space-sm px-space-md text-right">
+<button class="px-space-xs py-space-2xs bg-surface-container-highest text-on-surface rounded font-label-sm text-label-sm hover:bg-surface-bright transition-colors" type="button">
+                    View Full Text
+                  </button>
+</td>
+</tr>
+<!-- Row 5: Clause 03.1 -->
+<tr class="hover:bg-surface-container-high/50 transition-colors cursor-pointer">
+<td class="py-space-sm px-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-tertiary">engineering</span>
+<div>
+<span class="font-title-sm text-title-sm text-on-surface block">Clause 03.1</span>
+<span class="text-on-surface-variant font-body-sm text-body-sm truncate block max-w-[210px]">Independent Contractor Status</span>
+</div>
+</div>
+</td>
+<td class="py-space-sm px-space-sm">
+<span class="px-space-xs py-space-2xs bg-surface-container-low rounded text-on-surface-variant font-code-sm text-code-sm">
+                    General
+                  </span>
+</td>
+<td class="py-space-sm px-space-sm text-right">
+<span class="font-code-sm text-code-sm text-tertiary font-semibold">14 / 100</span>
+</td>
+<td class="py-space-sm px-space-sm">
+<span class="px-space-xs py-space-2xs rounded bg-tertiary-container/30 text-tertiary font-label-sm text-label-sm font-semibold">
+                    LOW
+                  </span>
+</td>
+<td class="py-space-sm px-space-md text-right">
+<button class="px-space-xs py-space-2xs bg-surface-container-highest text-on-surface rounded font-label-sm text-label-sm hover:bg-surface-bright transition-colors" type="button">
+                    View Full Text
+                  </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-space-sm bg-surface-container-low flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
+<span>Showing 5 of 24 clauses</span>
+<div class="flex items-center gap-space-xs">
+<button class="px-space-xs py-space-2xs rounded bg-surface-container hover:bg-surface-container-high text-on-surface transition-colors" type="button">Prev</button>
+<span class="px-space-xs font-code-sm text-code-sm">Page 1 of 5</span>
+<button class="px-space-xs py-space-2xs rounded bg-surface-container hover:bg-surface-container-high text-on-surface transition-colors" type="button">Next</button>
+</div>
+</div>
+</div>
+<!-- Detail View Card for Selected Clause (Clause 14.3) (5 Columns) -->
+<div id="analysis-clause-detail-container" class="lg:col-span-5 bg-surface-container rounded-xl p-space-lg shadow-md flex flex-col gap-space-md">
+<div class="flex items-center justify-between pb-space-xs border-b border-surface-container-high">
+<div class="flex items-center gap-space-xs">
+<span class="px-space-xs py-space-2xs rounded bg-error-container text-error font-code-sm text-code-sm font-bold">CRITICAL DETAIL</span>
+<span class="font-title-sm text-title-sm text-on-surface">Clause 14.3 Inspection</span>
+</div>
+<span class="font-code-sm text-code-sm text-on-surface-variant">Page 18, Para 3</span>
+</div>
+<!-- Metric Pill Banner -->
+<div class="grid grid-cols-2 gap-space-xs p-space-xs bg-surface-container-low rounded-lg font-code-sm text-code-sm">
+<div class="p-space-xs bg-surface-container rounded">
+<span class="text-on-surface-variant block text-[10px] uppercase">AI Clause Classification</span>
+<span class="text-primary font-semibold">Liability (97.8% conf)</span>
+</div>
+<div class="p-space-xs bg-surface-container rounded">
+<span class="text-on-surface-variant block text-[10px] uppercase">Fuzzy Risk Score</span>
+<span class="text-error font-bold">94 / 100 [HIGH]</span>
+</div>
+<div class="p-space-xs bg-surface-container rounded">
+<span class="text-on-surface-variant block text-[10px] uppercase">Clause Ambiguity Index</span>
+<span class="text-secondary font-semibold">0.72 (High Entanglement)</span>
+</div>
+<div class="p-space-xs bg-surface-container rounded">
+<span class="text-on-surface-variant block text-[10px] uppercase">Bilateral Symmetry</span>
+<span class="text-error font-semibold">0.08 (Severe Imbalance)</span>
+</div>
+</div>
+<!-- Full Extracted Raw Text Block -->
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant block mb-space-2xs">Full Extracted Text (PyMuPDF)</span>
+<div class="bg-surface-container-lowest p-space-md rounded-lg font-body-sm text-body-sm leading-relaxed text-on-surface">
+<p>
+              “Vendor’s maximum aggregate cumulative liability arising out of or related to this Agreement shall be <mark class="bg-error/30 text-error px-1 py-0.5 rounded font-semibold">strictly limited to $1,000.00 USD</mark>. In contrast, Customer agrees to defend, indemnify, and hold harmless Vendor against <mark class="bg-error/30 text-error px-1 py-0.5 rounded font-semibold">any and all claims, including third-party software actions, without dollar limitation</mark> or limitation as to incidental, indirect, or consequential damages.”
+            </p>
+</div>
+</div>
+<!-- Algorithmic Rationalization Breakdown -->
+<div class="space-y-space-xs">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant block">Deterministic Linguistic Breakdown</span>
+<div class="p-space-xs bg-surface-container-low rounded flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-on-surface flex items-center gap-space-2xs">
+<span class="material-symbols-outlined text-[16px] text-error">priority_high</span>
+              Vendor Aggregate Cap: $1,000
+            </span>
+<span class="font-code-sm text-code-sm text-error">Unreasonable Cap Ratio</span>
+</div>
+<div class="p-space-xs bg-surface-container-low rounded flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-on-surface flex items-center gap-space-2xs">
+<span class="material-symbols-outlined text-[16px] text-error">priority_high</span>
+              Customer Indemnity: Uncapped
+            </span>
+<span class="font-code-sm text-code-sm text-error">Strict Liability Exposure</span>
+</div>
+<div class="p-space-xs bg-surface-container-low rounded flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-on-surface flex items-center gap-space-2xs">
+<span class="material-symbols-outlined text-[16px] text-secondary">alt_route</span>
+              Dependency Tree Depth: 12 tokens
+            </span>
+<span class="font-code-sm text-code-sm text-secondary">High Complexity Syntax</span>
+</div>
+</div>
+<!-- Action Drawer Controls -->
+<div class="flex items-center gap-space-sm pt-space-xs">
+<button class="flex-1 py-space-xs px-space-md bg-surface-container-high hover:bg-surface-bright text-on-surface rounded-lg font-title-sm text-title-sm transition-colors text-center shadow-sm" type="button">
+            Generate Redline Diff
+          </button>
+<button class="flex-1 py-space-xs px-space-md bg-primary text-on-primary rounded-lg font-title-sm text-title-sm hover:bg-primary-container transition-colors text-center shadow-sm" type="button">
+            Flag in Final Audit
+          </button>
+</div>
+</div>
+</div>
+<!-- Section 4: Extractive Contract Summary & Missing Clause Panels -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-lg items-stretch">
+<!-- Extractive Contract Summary Card -->
+<div class="bg-surface-container rounded-xl p-space-lg shadow-md flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">summarize</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Extractive Contract Summary</h3>
+</div>
+<span class="px-space-xs py-space-2xs rounded bg-surface-container-high text-on-surface-variant font-code-sm text-code-sm">
+              LexRank Algorithm
+            </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-md">
+            Sentence salience scoring generated via graph-based LexRank centrality over semantic node representations. Zero LLM interpolation applied.
+          </p>
+<div id="analysis-summary-container" class="space-y-space-sm">
+<div class="p-space-sm bg-surface-container-low rounded-lg text-body-sm font-body-sm text-on-surface">
+<strong class="text-primary font-semibold block mb-space-2xs">1. Scope & Deliverables:</strong>
+              “Vendor shall provide enterprise cloud telemetry services on an as-is basis without express SLA guarantees for scheduled infrastructure outages exceeding 72 hours.”
+            </div>
+<div class="p-space-sm bg-surface-container-low rounded-lg text-body-sm font-body-sm text-on-surface">
+<strong class="text-primary font-semibold block mb-space-2xs">2. Payment & Penalty Terms:</strong>
+              “All past-due undisputed sums shall compound at a statutory maximum of 2.5% per month or the highest permissible interest under applicable commercial regulations.”
+            </div>
+<div class="p-space-sm bg-surface-container-low rounded-lg text-body-sm font-body-sm text-on-surface">
+<strong class="text-primary font-semibold block mb-space-2xs">3. Governing Law & Venue:</strong>
+              “This Agreement is governed exclusively under the laws of the State of Delaware, with jurisdiction assigned to Chancery Court.”
+            </div>
+</div>
+</div>
+<div class="flex items-center justify-between pt-space-md text-on-surface-variant font-code-sm text-code-sm border-t border-surface-container-high mt-space-md">
+<span>Reduction: 91.4% of original token count</span>
+<span class="text-tertiary">Confidence: High Concordance</span>
+</div>
+</div>
+<!-- Missing Clauses & Regulatory Gap Audit -->
+<div class="bg-surface-container rounded-xl p-space-lg shadow-md flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-[20px]">notification_important</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Omission & Missing Clause Audit</h3>
+</div>
+<span class="px-space-xs py-space-2xs rounded bg-error-container text-error font-code-sm text-code-sm font-bold">
+              2 Omissions
+            </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-md">
+            Verified against Standard Commercial Benchmark Corpus (v24.1). Semantic distance exceeded threshold for expected mandatory provisions.
+          </p>
+<div id="analysis-missing-clauses-container" class="space-y-space-md">
+<!-- Missing Item 1 -->
+<div class="p-space-md bg-surface-container-low rounded-lg">
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-title-sm text-title-sm text-error flex items-center gap-space-2xs">
+<span class="material-symbols-outlined text-[16px]">cancel</span>
+                  Force Majeure Provision
+                </span>
+<span class="px-space-xs py-space-2xs bg-surface-container rounded text-on-surface-variant font-code-sm text-code-sm">Similarity: 0.04</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                No contingency clause found addressing acts of God, civil unrest, grid outages, or governmental sanctions. Absence leaves parties subject to stringent doctrine of impossibility under UCC § 2-615.
+              </p>
+<div class="mt-space-sm flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-primary bg-surface-container px-space-xs py-space-2xs rounded">Recommendation: Insert ABA Model Clause 18</span>
+</div>
+</div>
+<!-- Missing Item 2 -->
+<div class="p-space-md bg-surface-container-low rounded-lg">
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-title-sm text-title-sm text-error flex items-center gap-space-2xs">
+<span class="material-symbols-outlined text-[16px]">cancel</span>
+                  Bilateral Dispute Escalation & Mediation
+                </span>
+<span class="px-space-xs py-space-2xs bg-surface-container rounded text-on-surface-variant font-code-sm text-code-sm">Similarity: 0.11</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                Document jumps directly from breach notification to litigation. Missing mandatory executive negotiation cooling-off period (30 days) and AAA commercial arbitration step.
+              </p>
+<div class="mt-space-sm flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-primary bg-surface-container px-space-xs py-space-2xs rounded">Recommendation: Insert AAA Two-Tier Escalation</span>
+</div>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between pt-space-md text-on-surface-variant font-code-sm text-code-sm border-t border-surface-container-high mt-space-md">
+<span>Corpus Cosine Sim Threshold: 0.450</span>
+<span class="text-on-surface">Corpus Coverage: 88.2%</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Dialogflow Assistive Intent Indicator (Fixed Footer Anchor) -->
+<div class="fixed bottom-4 right-4 z-40 bg-surface-container-high border-0 shadow-xl rounded-xl p-space-sm flex items-center gap-space-md max-w-md">
+<div class="w-10 h-10 rounded-lg bg-primary-container text-on-primary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">smart_toy</span>
+</div>
+<div class="flex flex-col min-w-0 pr-space-xs">
+<span class="font-title-sm text-title-sm text-on-surface truncate">Dialogflow Intent Engine</span>
+<span class="font-code-sm text-code-sm text-primary truncate">Intent: evaluate_indemnity_cap [conf: 0.98]</span>
+</div>
+<button class="px-space-xs py-space-2xs bg-surface-container hover:bg-surface-bright text-on-surface rounded font-label-sm text-label-sm shrink-0 transition-colors" type="button">
+      Expand
+    </button>
+</div>
+</div></div>
+<div id="view-documents" class="tab-view hidden"><div class="flex flex-col w-full">
+<div class="p-space-lg max-w-[1600px] mx-auto w-full space-y-space-xl">
+<!-- Title and Primary Control Bar -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md">
+<div class="flex flex-col gap-space-2xs">
+<div class="flex items-center gap-space-xs text-primary font-code-sm text-code-sm uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+<span>Corpus Repository & Ingress Gateway</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Documents</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Upload, manage, and audit cryptographically verified contracts with deterministic NLP classification.</p>
+</div>
+<div class="flex items-center gap-space-sm self-start md:self-auto shrink-0">
+<button class="flex items-center gap-space-xs px-space-md py-space-xs bg-surface-container-high hover:bg-surface-bright text-on-surface font-title-sm text-title-sm rounded-lg transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">table_view</span>
+<span>Export CSV Summary</span>
+</button>
+<button onclick="triggerUpload()" class="flex items-center gap-space-xs px-space-md py-space-xs bg-primary text-on-primary font-title-sm text-title-sm rounded-lg hover:bg-primary-container hover:text-on-primary transition-all shadow-md cursor-pointer" type="button">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span>Upload PDF</span>
+</button>
+</div>
+</div>
+<!-- Telemetry Strip & System Health Overview -->
+
+    <div class="bg-surface-container-low p-space-md rounded-xl border border-surface-container-high flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm shadow-sm">
+      <div class="flex items-center gap-space-sm">
+        <div class="w-10 h-10 rounded-lg bg-primary-container/20 text-primary flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-[22px]">quickreference</span>
+        </div>
+        <div>
+          <span class="font-title-sm text-title-sm text-on-surface font-semibold block">Quick Demo Contracts</span>
+          <span class="font-body-sm text-body-sm text-on-surface-variant">Click to load and analyze a realistic legal contract instantly:</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-space-xs flex-wrap">
+        <button type="button" onclick="loadSampleContract('High_Risk_Vendor_Contract.pdf')" class="px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-bright text-xs font-semibold text-error border border-error/30 transition-all flex items-center gap-1 shadow-sm">
+          <span class="material-symbols-outlined text-[14px]">gavel</span> High Risk Vendor
+        </button>
+        <button type="button" onclick="loadSampleContract('Standard_Consulting_Agreement.pdf')" class="px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-bright text-xs font-semibold text-primary border border-primary/30 transition-all flex items-center gap-1 shadow-sm">
+          <span class="material-symbols-outlined text-[14px]">description</span> Consulting Agmt
+        </button>
+        <button type="button" onclick="loadSampleContract('Simple_NDA.pdf')" class="px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-bright text-xs font-semibold text-tertiary border border-tertiary/30 transition-all flex items-center gap-1 shadow-sm">
+          <span class="material-symbols-outlined text-[14px]">lock</span> Simple NDA
+        </button>
+      </div>
+    </div>
+    
+<div class="grid grid-cols-1 md:grid-cols-4 gap-space-md">
+<div class="bg-surface-container-low p-space-md rounded-xl flex items-center justify-between shadow-sm">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Total Indexed Vault</span>
+<span id="docs-total-count" class="font-metric-display-sm text-metric-display-sm text-on-surface tracking-tight">0</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant mt-space-2xs">18.4 MB SHA-256 Validated</span>
+</div>
+<div class="w-12 h-12 rounded-lg bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[24px]">folder_special</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-space-md rounded-xl flex items-center justify-between shadow-sm">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Critical Exposure Items</span>
+<span class="font-metric-display-sm text-metric-display-sm text-error tracking-tight">03</span>
+<span class="font-code-sm text-code-sm text-error-container bg-error/10 px-space-xs py-space-2xs rounded w-fit mt-space-2xs">Action Required</span>
+</div>
+<div class="w-12 h-12 rounded-lg bg-error-container/20 flex items-center justify-center text-error">
+<span class="material-symbols-outlined text-[24px]">warning</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-space-md rounded-xl flex items-center justify-between shadow-sm">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Parsed Clauses (Legal NLP)</span>
+<span class="font-metric-display-sm text-metric-display-sm text-on-surface tracking-tight">342</span>
+<span class="font-code-sm text-code-sm text-tertiary mt-space-2xs">99.4% F1 Segmentation</span>
+</div>
+<div class="w-12 h-12 rounded-lg bg-surface-container-high flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-[24px]">segment</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-space-md rounded-xl flex items-center justify-between shadow-sm">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Active NLP Ingress Worker</span>
+<div class="flex items-center gap-space-xs mt-space-xs">
+<span class="w-2 h-2 rounded-full bg-tertiary animate-ping"></span>
+<span class="font-title-sm text-title-sm text-on-surface">Queue Active (1)</span>
+</div>
+<span class="font-code-sm text-code-sm text-on-surface-variant mt-space-2xs">FastAPI Worker PID: 4092</span>
+</div>
+<div class="w-12 h-12 rounded-lg bg-surface-container-high flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[24px]">memory</span>
+</div>
+</div>
+</div>
+<!-- Ingress & Dropzone Section -->
+<div class="bg-surface-container-low rounded-xl p-space-lg shadow-sm">
+<div class="flex flex-col lg:flex-row gap-space-lg items-stretch">
+<!-- Interactive Drag & Drop Box -->
+<div class="flex-1 bg-surface-container-lowest rounded-xl p-space-xl flex flex-col items-center justify-center text-center group cursor-pointer transition-all hover:bg-surface-container relative overflow-hidden" id="dropzone" onclick="triggerUpload()">
+<div class="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+<div class="w-16 h-16 rounded-xl bg-surface-container-high flex items-center justify-center text-primary mb-space-md group-hover:scale-110 transition-transform shadow-inner">
+<span class="material-symbols-outlined text-[36px]">picture_as_pdf</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-space-2xs">
+            Drag & drop your PDF here or <span class="text-primary underline decoration-primary/40 underline-offset-4 font-bold hover:text-white cursor-pointer" onclick="event.stopPropagation(); triggerUpload();">Browse Files</span>
+</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-xl mb-space-md">
+            PDF documents only (up to 50MB per file) • Extracted via <span class="font-code-sm text-code-sm text-on-surface">PyMuPDF v1.23.8</span> with SHA-256 cryptographic hashing for legal reproducibility.
+          </p>
+<div class="flex flex-wrap items-center justify-center gap-space-sm">
+<div class="flex items-center gap-space-2xs px-space-sm py-space-2xs bg-surface-container-high rounded text-on-surface-variant font-code-sm text-code-sm">
+<span class="material-symbols-outlined text-[14px] text-tertiary">check_circle</span>
+<span>Encrypted at Rest</span>
+</div>
+<div class="flex items-center gap-space-2xs px-space-sm py-space-2xs bg-surface-container-high rounded text-on-surface-variant font-code-sm text-code-sm">
+<span class="material-symbols-outlined text-[14px] text-tertiary">fingerprint</span>
+<span>Deterministic Hash</span>
+</div>
+<div class="flex items-center gap-space-2xs px-space-sm py-space-2xs bg-surface-container-high rounded text-on-surface-variant font-code-sm text-code-sm">
+<span class="material-symbols-outlined text-[14px] text-tertiary">lock</span>
+<span>No Cloud LLM Leaks</span>
+</div>
+</div>
+</div>
+<!-- Deterministic Micro-Pipeline Telemetry Visualizer -->
+<div class="lg:w-96 bg-surface-container rounded-xl p-space-md flex flex-col justify-between shrink-0 shadow-inner">
+<div class="flex items-center justify-between pb-space-sm">
+<span class="font-title-sm text-title-sm text-on-surface flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">account_tree</span>
+              Ingress Pipeline Sequence
+            </span>
+<span class="px-space-xs py-space-2xs bg-surface-container-high text-primary font-code-sm text-code-sm rounded">Active</span>
+</div>
+<div class="space-y-space-md my-auto py-space-sm">
+<!-- Step 1 -->
+<div class="flex items-start gap-space-sm">
+<div class="w-6 h-6 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-code-sm text-code-sm shrink-0">1</div>
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm text-on-surface leading-none">Text Ingress (PyMuPDF)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant mt-space-2xs">Raw token stripping & font metadata extraction</span>
+</div>
+</div>
+<div class="w-0.5 h-3 bg-surface-container-highest ml-3 -my-space-xs"></div>
+<!-- Step 2 -->
+<div class="flex items-start gap-space-sm">
+<div class="w-6 h-6 rounded-full bg-surface-container-highest text-on-surface flex items-center justify-center font-code-sm text-code-sm shrink-0">2</div>
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm text-on-surface leading-none">Clause Segmentation</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant mt-space-2xs">Clause boundary parsing via legal-NER model</span>
+</div>
+</div>
+<div class="w-0.5 h-3 bg-surface-container-highest ml-3 -my-space-xs"></div>
+<!-- Step 3 -->
+<div class="flex items-start gap-space-sm">
+<div class="w-6 h-6 rounded-full bg-surface-container-highest text-on-surface flex items-center justify-center font-code-sm text-code-sm shrink-0">3</div>
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm text-on-surface leading-none">AI Clause Classification</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant mt-space-2xs">Categorizing clauses to standard legal taxonomy</span>
+</div>
+</div>
+<div class="w-0.5 h-3 bg-surface-container-highest ml-3 -my-space-xs"></div>
+<!-- Step 4 -->
+<div class="flex items-start gap-space-sm">
+<div class="w-6 h-6 rounded-full bg-surface-container-highest text-on-surface flex items-center justify-center font-code-sm text-code-sm shrink-0">4</div>
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm text-on-surface leading-none">Fuzzy Risk Inference</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant mt-space-2xs">Semantic vector comparison vs golden baseline clauses</span>
+</div>
+</div>
+</div>
+<div class="p-space-xs bg-surface-container-high rounded text-on-surface-variant font-code-sm text-code-sm flex items-center justify-between">
+<span>Latency Target: < 850ms / doc</span>
+<span class="text-tertiary">Nominal</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Document Repository Controls & Filtering Strip -->
+<div class="bg-surface-container-low rounded-xl p-space-md shadow-sm space-y-space-md">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+<!-- Filter Tabs -->
+<div class="flex flex-wrap items-center gap-space-xs" id="filter-container">
+<button class="filter-btn active flex items-center gap-space-xs px-space-md py-space-xs rounded-lg bg-surface-container-high text-primary font-title-sm text-title-sm transition-colors" type="button">
+<span>All</span>
+<span class="px-space-xs py-0.5 rounded-full bg-surface-container-highest font-code-sm text-code-sm">14</span>
+</button>
+<button class="filter-btn flex items-center gap-space-xs px-space-md py-space-xs rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-title-sm text-title-sm transition-colors" type="button">
+<span class="w-2 h-2 rounded-full bg-error"></span>
+<span>High Risk</span>
+<span class="px-space-xs py-0.5 rounded-full bg-surface-container-highest font-code-sm text-code-sm text-error">3</span>
+</button>
+<button class="filter-btn flex items-center gap-space-xs px-space-md py-space-xs rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-title-sm text-title-sm transition-colors" type="button">
+<span class="w-2 h-2 rounded-full bg-[#f59e0b]"></span>
+<span>Medium Risk</span>
+<span class="px-space-xs py-0.5 rounded-full bg-surface-container-highest font-code-sm text-code-sm text-[#f59e0b]">4</span>
+</button>
+<button class="filter-btn flex items-center gap-space-xs px-space-md py-space-xs rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-title-sm text-title-sm transition-colors" type="button">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span>Low Risk</span>
+<span class="px-space-xs py-0.5 rounded-full bg-surface-container-highest font-code-sm text-code-sm text-tertiary">7</span>
+</button>
+<button class="filter-btn flex items-center gap-space-xs px-space-md py-space-xs rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-title-sm text-title-sm transition-colors" type="button">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span>Processing</span>
+<span class="px-space-xs py-0.5 rounded-full bg-surface-container-highest font-code-sm text-code-sm text-secondary">1</span>
+</button>
+</div>
+<!-- Search Bar with Regex & Shortcut Affordance -->
+<div class="relative flex-1 lg:max-w-md">
+<span class="material-symbols-outlined absolute left-space-sm top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+<input class="w-full h-10 pl-10 pr-24 bg-surface-container text-on-surface placeholder:text-on-surface-variant rounded-lg font-body-sm text-body-sm focus:outline-none focus:bg-surface-container-high transition-colors" placeholder="Search contracts by title, hash, or keyword..." type="text"/>
+<div class="absolute right-space-sm top-1/2 -translate-y-1/2 flex items-center gap-space-2xs pointer-events-none">
+<kbd class="px-space-xs py-space-2xs bg-surface-container-highest text-on-surface-variant rounded font-code-sm text-code-sm">⌘</kbd>
+<kbd class="px-space-xs py-space-2xs bg-surface-container-highest text-on-surface-variant rounded font-code-sm text-code-sm">F</kbd>
+</div>
+</div>
+</div>
+<!-- Main Document Inventory Table -->
+<div class="overflow-x-auto rounded-lg">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-lowest text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-space-md px-space-md font-semibold">Document Metadata</th>
+<th class="py-space-md px-space-md font-semibold">Ingress Date</th>
+<th class="py-space-md px-space-md font-semibold">Segmentation</th>
+<th class="py-space-md px-space-md font-semibold">Risk Vector Score</th>
+<th class="py-space-md px-space-md font-semibold">Pipeline State</th>
+<th class="py-space-md px-space-md font-semibold text-right">Deterministic Actions</th>
+</tr>
+</thead>
+<tbody id="docs-vault-tbody" class="divide-y-0 text-on-surface font-body-md text-body-md">
+<!-- Row 1: High Risk -->
+<tr class="bg-surface-container hover:bg-surface-container-high transition-colors group">
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="w-10 h-10 rounded-lg bg-error-container/20 text-error flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">gavel</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-space-xs">
+<span class="font-title-sm text-title-sm text-on-surface font-semibold truncate group-hover:text-primary transition-colors">High_Risk_Vendor_Contract.pdf</span>
+<span class="px-space-xs py-space-2xs rounded bg-error-container/30 text-error font-label-sm text-label-sm uppercase">Rev 4</span>
+</div>
+<div class="flex items-center gap-space-xs text-on-surface-variant font-code-sm text-code-sm mt-space-2xs">
+<span>2.4 MB</span>
+<span>•</span>
+<span class="font-code-sm truncate max-w-[120px]" title="SHA-256: a92b8d0113f8902b77a1639c09bf83371">SHA: a92b...3371</span>
+<button class="hover:text-on-surface transition-colors" title="Copy Checksum" type="button">
+<span class="material-symbols-outlined text-[14px]">content_copy</span>
+</button>
+</div>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm text-on-surface">Sep 21, 2024</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">14:32 UTC</span>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="font-code-sm text-code-sm text-on-surface font-semibold">24</span>
+<span class="text-on-surface-variant font-body-sm text-body-sm">clauses</span>
+</div>
+<div class="w-24 bg-surface-container-highest h-1 rounded-full overflow-hidden mt-space-xs">
+<div class="bg-primary h-full w-[85%]"></div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="font-metric-display-sm text-[20px] leading-tight text-error font-bold">78</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant">/ 100</span>
+</div>
+<span class="px-space-xs py-space-2xs rounded bg-error-container text-error font-label-sm text-label-sm font-semibold uppercase tracking-wider w-fit mt-space-2xs">
+                      HIGH RISK
+                    </span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="inline-flex items-center gap-space-xs px-space-sm py-space-2xs bg-surface-container-high rounded text-on-surface font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+<span>Analyzed</span>
+</div>
+</td>
+<td class="py-space-md px-space-md text-right">
+<div class="flex items-center justify-end gap-space-xs">
+<a class="flex items-center gap-space-2xs px-space-sm py-space-2xs rounded-lg bg-surface-container-high hover:bg-primary hover:text-on-primary text-primary transition-all text-title-sm font-title-sm shadow-sm" data-path="analysis" href="#" title="View Full Risk Matrix">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+<span class="hidden sm:inline">View Analysis</span>
+</a>
+<button class="p-space-xs rounded-lg hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="Vector Clause Search" type="button">
+<span class="material-symbols-outlined text-[18px]">manage_search</span>
+</button>
+<button class="p-space-xs rounded-lg hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="Download Audit PDF / JSON" type="button">
+<span class="material-symbols-outlined text-[18px]">download</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2: Medium Risk -->
+<tr class="bg-surface-container-low hover:bg-surface-container-high transition-colors group">
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high text-[#f59e0b] flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">description</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-space-xs">
+<span class="font-title-sm text-title-sm text-on-surface font-semibold truncate group-hover:text-primary transition-colors">Master_Services_Agreement.pdf</span>
+</div>
+<div class="flex items-center gap-space-xs text-on-surface-variant font-code-sm text-code-sm mt-space-2xs">
+<span>3.8 MB</span>
+<span>•</span>
+<span class="font-code-sm truncate max-w-[120px]" title="SHA-256: 7fb281903eec1829019cf391012e9">SHA: 7fb2...12e9</span>
+<button class="hover:text-on-surface transition-colors" title="Copy Checksum" type="button">
+<span class="material-symbols-outlined text-[14px]">content_copy</span>
+</button>
+</div>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm text-on-surface">Sep 18, 2024</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">09:15 UTC</span>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="font-code-sm text-code-sm text-on-surface font-semibold">31</span>
+<span class="text-on-surface-variant font-body-sm text-body-sm">clauses</span>
+</div>
+<div class="w-24 bg-surface-container-highest h-1 rounded-full overflow-hidden mt-space-xs">
+<div class="bg-primary h-full w-[95%]"></div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="font-metric-display-sm text-[20px] leading-tight text-[#f59e0b] font-bold">64</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant">/ 100</span>
+</div>
+<span class="px-space-xs py-space-2xs rounded bg-[#78350f]/40 text-[#f59e0b] font-label-sm text-label-sm font-semibold uppercase tracking-wider w-fit mt-space-2xs">
+                      MEDIUM RISK
+                    </span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="inline-flex items-center gap-space-xs px-space-sm py-space-2xs bg-surface-container-high rounded text-on-surface font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+<span>Analyzed</span>
+</div>
+</td>
+<td class="py-space-md px-space-md text-right">
+<div class="flex items-center justify-end gap-space-xs">
+<a class="flex items-center gap-space-2xs px-space-sm py-space-2xs rounded-lg bg-surface-container-high hover:bg-primary hover:text-on-primary text-primary transition-all text-title-sm font-title-sm shadow-sm" data-path="analysis" href="#" title="View Full Risk Matrix">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+<span class="hidden sm:inline">View Analysis</span>
+</a>
+<button class="p-space-xs rounded-lg hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="Vector Clause Search" type="button">
+<span class="material-symbols-outlined text-[18px]">manage_search</span>
+</button>
+<button class="p-space-xs rounded-lg hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="Download Audit PDF / JSON" type="button">
+<span class="material-symbols-outlined text-[18px]">download</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3: Low Risk -->
+<tr class="bg-surface-container hover:bg-surface-container-high transition-colors group">
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high text-tertiary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">verified</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-space-xs">
+<span class="font-title-sm text-title-sm text-on-surface font-semibold truncate group-hover:text-primary transition-colors">Consulting_Agreement.pdf</span>
+</div>
+<div class="flex items-center gap-space-xs text-on-surface-variant font-code-sm text-code-sm mt-space-2xs">
+<span>1.1 MB</span>
+<span>•</span>
+<span class="font-code-sm truncate max-w-[120px]" title="SHA-256: d19c89833afc0022390a1844e1">SHA: d19c...44e1</span>
+<button class="hover:text-on-surface transition-colors" title="Copy Checksum" type="button">
+<span class="material-symbols-outlined text-[14px]">content_copy</span>
+</button>
+</div>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm text-on-surface">Sep 22, 2024</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">11:04 UTC</span>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="font-code-sm text-code-sm text-on-surface font-semibold">18</span>
+<span class="text-on-surface-variant font-body-sm text-body-sm">clauses</span>
+</div>
+<div class="w-24 bg-surface-container-highest h-1 rounded-full overflow-hidden mt-space-xs">
+<div class="bg-primary h-full w-[60%]"></div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="font-metric-display-sm text-[20px] leading-tight text-tertiary font-bold">32</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant">/ 100</span>
+</div>
+<span class="px-space-xs py-space-2xs rounded bg-on-tertiary-container/40 text-tertiary font-label-sm text-label-sm font-semibold uppercase tracking-wider w-fit mt-space-2xs">
+                      LOW RISK
+                    </span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="inline-flex items-center gap-space-xs px-space-sm py-space-2xs bg-surface-container-high rounded text-on-surface font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+<span>Analyzed</span>
+</div>
+</td>
+<td class="py-space-md px-space-md text-right">
+<div class="flex items-center justify-end gap-space-xs">
+<a class="flex items-center gap-space-2xs px-space-sm py-space-2xs rounded-lg bg-surface-container-high hover:bg-primary hover:text-on-primary text-primary transition-all text-title-sm font-title-sm shadow-sm" data-path="analysis" href="#" title="View Full Risk Matrix">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+<span class="hidden sm:inline">View Analysis</span>
+</a>
+<button class="p-space-xs rounded-lg hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="Vector Clause Search" type="button">
+<span class="material-symbols-outlined text-[18px]">manage_search</span>
+</button>
+<button class="p-space-xs rounded-lg hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="Download Audit PDF / JSON" type="button">
+<span class="material-symbols-outlined text-[18px]">download</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4: Simple NDA (Low Risk) -->
+<tr class="bg-surface-container-low hover:bg-surface-container-high transition-colors group">
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high text-tertiary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">assignment_turned_in</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-space-xs">
+<span class="font-title-sm text-title-sm text-on-surface font-semibold truncate group-hover:text-primary transition-colors">Simple_NDA.pdf</span>
+</div>
+<div class="flex items-center gap-space-xs text-on-surface-variant font-code-sm text-code-sm mt-space-2xs">
+<span>850 KB</span>
+<span>•</span>
+<span class="font-code-sm truncate max-w-[120px]" title="SHA-256: 4ef80018a4593bc102890a2">SHA: 4ef8...90a2</span>
+<button class="hover:text-on-surface transition-colors" title="Copy Checksum" type="button">
+<span class="material-symbols-outlined text-[14px]">content_copy</span>
+</button>
+</div>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm text-on-surface">Sep 20, 2024</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">16:48 UTC</span>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="font-code-sm text-code-sm text-on-surface font-semibold">12</span>
+<span class="text-on-surface-variant font-body-sm text-body-sm">clauses</span>
+</div>
+<div class="w-24 bg-surface-container-highest h-1 rounded-full overflow-hidden mt-space-xs">
+<div class="bg-primary h-full w-[40%]"></div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="font-metric-display-sm text-[20px] leading-tight text-tertiary font-bold">18</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant">/ 100</span>
+</div>
+<span class="px-space-xs py-space-2xs rounded bg-on-tertiary-container/40 text-tertiary font-label-sm text-label-sm font-semibold uppercase tracking-wider w-fit mt-space-2xs">
+                      LOW RISK
+                    </span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="inline-flex items-center gap-space-xs px-space-sm py-space-2xs bg-surface-container-high rounded text-on-surface font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+<span>Analyzed</span>
+</div>
+</td>
+<td class="py-space-md px-space-md text-right">
+<div class="flex items-center justify-end gap-space-xs">
+<a class="flex items-center gap-space-2xs px-space-sm py-space-2xs rounded-lg bg-surface-container-high hover:bg-primary hover:text-on-primary text-primary transition-all text-title-sm font-title-sm shadow-sm" data-path="analysis" href="#" title="View Full Risk Matrix">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+<span class="hidden sm:inline">View Analysis</span>
+</a>
+<button class="p-space-xs rounded-lg hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="Vector Clause Search" type="button">
+<span class="material-symbols-outlined text-[18px]">manage_search</span>
+</button>
+<button class="p-space-xs rounded-lg hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="Download Audit PDF / JSON" type="button">
+<span class="material-symbols-outlined text-[18px]">download</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 5: In-Flight Processing -->
+<tr class="bg-surface-container/70 hover:bg-surface-container-high transition-colors group">
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="w-10 h-10 rounded-lg bg-secondary-container/40 text-secondary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px] animate-spin">sync</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-space-xs">
+<span class="font-title-sm text-title-sm text-on-surface font-semibold truncate group-hover:text-primary transition-colors">IP_Assignment_Draft.pdf</span>
+<span class="px-space-xs py-space-2xs rounded bg-surface-container-highest text-secondary font-label-sm text-label-sm">Stage 2/4</span>
+</div>
+<div class="flex items-center gap-space-xs text-on-surface-variant font-code-sm text-code-sm mt-space-2xs">
+<span>1.5 MB</span>
+<span>•</span>
+<span class="font-code-sm truncate max-w-[120px]" title="SHA-256: 22d1094038a8344e19899bc">SHA: 22d1...99bc</span>
+<button class="hover:text-on-surface transition-colors" title="Copy Checksum" type="button">
+<span class="material-symbols-outlined text-[14px]">content_copy</span>
+</button>
+</div>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm text-on-surface">Sep 17, 2024</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">18:22 UTC</span>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="font-code-sm text-code-sm text-on-surface font-semibold">14</span>
+<span class="text-on-surface-variant font-body-sm text-body-sm">clauses</span>
+</div>
+<div class="w-24 bg-surface-container-highest h-1 rounded-full overflow-hidden mt-space-xs">
+<div class="bg-secondary h-full w-[45%] animate-pulse"></div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-2xs text-on-surface-variant font-code-sm text-code-sm">
+<span class="w-2 h-2 rounded-full bg-secondary animate-ping"></span>
+<span>Calculating...</span>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="inline-flex items-center gap-space-xs px-space-sm py-space-2xs bg-secondary-container/40 text-secondary rounded font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>
+<span>Processing (Contract Parsing)</span>
+</div>
+</td>
+<td class="py-space-md px-space-md text-right">
+<div class="flex items-center justify-end gap-space-xs">
+<button class="flex items-center gap-space-2xs px-space-sm py-space-2xs rounded-lg bg-surface-container-high hover:bg-surface-bright text-on-surface transition-all text-title-sm font-title-sm shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">terminal</span>
+<span class="hidden sm:inline">Inspect Pipeline</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination and Table Telemetry Footer -->
+<div class="flex flex-col sm:flex-row items-center justify-between gap-space-md pt-space-xs text-on-surface-variant font-body-sm text-body-sm">
+<div class="flex items-center gap-space-sm">
+<span>Displaying <strong class="text-on-surface font-semibold">1-5</strong> of <strong class="text-on-surface font-semibold">14</strong> contracts</span>
+<div class="h-4 w-[1px] bg-surface-container-highest"></div>
+<span class="font-code-sm text-code-sm text-on-surface-variant">Deterministic Hash Index: v3.4.1</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<button class="p-space-xs rounded bg-surface-container-lowest text-on-surface-variant opacity-40 cursor-not-allowed" disabled="" type="button">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="px-space-sm py-space-xs rounded bg-primary text-on-primary font-code-sm text-code-sm font-semibold" type="button">1</button>
+<button class="px-space-sm py-space-xs rounded hover:bg-surface-container-high text-on-surface font-code-sm text-code-sm" type="button">2</button>
+<button class="px-space-sm py-space-xs rounded hover:bg-surface-container-high text-on-surface font-code-sm text-code-sm" type="button">3</button>
+<button class="p-space-xs rounded bg-surface-container-high hover:bg-surface-bright text-on-surface" type="button">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Empty State Component Design Pattern & QA Reference Callout -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm">
+<div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md mb-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">developer_board</span>
+<span class="font-title-sm text-title-sm text-on-surface">System Repository Spec & Empty State Preview</span>
+</div>
+<span class="px-space-xs py-space-2xs bg-surface-container text-on-surface-variant font-code-sm text-code-sm rounded">
+          Fallback State Trigger: corpus.length === 0
+        </span>
+</div>
+<!-- Preview Box of Empty State -->
+<div class="bg-surface-container-low rounded-lg p-space-2xl flex flex-col items-center justify-center text-center">
+<div class="w-16 h-16 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant mb-space-md">
+<span class="material-symbols-outlined text-[32px]">folder_off</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface mb-space-xs">No documents analyzed yet</h4>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-md mb-space-lg">
+          Upload your organization's executed or inbound legal documents to commence automated clause parsing, semantic baseline diffing, and rule-based risk profiling.
+        </p>
+<button onclick="triggerUpload()" class="flex items-center gap-space-xs px-space-lg py-space-xs bg-primary text-on-primary font-title-sm text-title-sm rounded-lg hover:bg-primary-container transition-colors shadow-md cursor-pointer" type="button">
+<span class="material-symbols-outlined text-[18px]">upload_file</span>
+<span>Upload your first legal document</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Simple drag-and-drop feedback demonstration
+  const dropzone = document.getElementById('dropzone');
+  if (dropzone) {
+    ['dragenter', 'dragover'].forEach(eventName => {
+      dropzone.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        dropzone.classList.add('bg-surface-container-high');
+      }, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+      dropzone.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        dropzone.classList.remove('bg-surface-container-high');
+      }, false);
+    });
+  }
+
+  // Filter Pill state toggles
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => {
+        b.classList.remove('bg-surface-container-high', 'text-primary');
+        b.classList.add('bg-surface-container', 'text-on-surface-variant');
+      });
+      btn.classList.add('bg-surface-container-high', 'text-primary');
+      btn.classList.remove('bg-surface-container', 'text-on-surface-variant');
+    });
+  });
+</script></div>
+<div id="view-search" class="tab-view hidden"><div class="flex flex-col w-full">
+<div class="px-space-lg py-space-md flex flex-col gap-space-lg max-w-[1520px] mx-auto w-full">
+<!-- Top Context & Header Banner -->
+<section class="flex flex-col lg:flex-row lg:items-end justify-between gap-space-md pb-space-xs">
+<div class="flex flex-col gap-space-2xs min-w-0">
+<div class="flex items-center gap-space-xs font-label-sm text-label-sm tracking-widest uppercase text-primary">
+<span class="material-symbols-outlined text-[15px]">model_training</span>
+<span>Deterministic Information Retrieval • Cosine Space</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Search Document</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">
+          Ask a question and find the most relevant clause in the uploaded document via weighted term vector alignment.
+        </p>
+</div>
+<!-- Active Document Telemetry Badge -->
+<div class="flex items-center gap-space-sm bg-surface-container-low px-space-md py-space-sm rounded-xl shadow-sm shrink-0">
+<div class="w-9 h-9 rounded-lg bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">verified_user</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Active Corpus Target</span>
+<div class="flex items-center gap-space-xs">
+<span class="font-title-sm text-title-sm text-on-surface font-medium truncate max-w-[220px]">High_Risk_Vendor_Contract.pdf</span>
+<span class="font-code-sm text-code-sm text-tertiary bg-surface-container-highest px-space-xs py-space-2xs rounded">24 Clauses</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Query Input Station -->
+<section class="flex flex-col gap-space-sm bg-surface-container-low p-space-md lg:p-space-lg rounded-xl shadow-md relative overflow-hidden">
+<!-- Ambient Vector Grid Backing -->
+<div class="absolute -right-16 -top-16 w-80 h-80 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
+<form class="relative z-10 flex flex-col md:flex-row items-stretch gap-space-sm" id="search-form">
+<div class="relative flex-1 min-w-0">
+<div class="absolute inset-y-0 left-0 pl-space-md flex items-center pointer-events-none text-on-surface-variant">
+<span class="material-symbols-outlined text-[22px]">manage_search</span>
+</div>
+<input class="w-full h-14 pl-12 pr-28 bg-surface-container rounded-lg font-body-lg text-body-lg text-on-surface placeholder:text-outline outline-none transition-all shadow-inner focus:bg-surface-container-high" id="query-input" placeholder="Ask a question about this document..." type="text" value="When does this agreement expire and what is the notice period?"/>
+<div class="absolute inset-y-0 right-0 pr-space-md flex items-center gap-space-xs pointer-events-none">
+<kbd class="px-space-xs py-space-2xs bg-surface-container-highest text-on-surface-variant font-code-sm text-code-sm rounded shadow-sm">⌘K</kbd>
+</div>
+</div>
+<button class="h-14 px-space-xl bg-primary text-on-primary hover:bg-primary-container font-title-md text-title-md rounded-lg flex items-center justify-center gap-space-xs transition-colors shrink-0 shadow-sm" type="submit">
+<span class="material-symbols-outlined text-[20px]">search</span>
+<span>Search</span>
+</button>
+</form>
+<!-- Technical Protocol Metadata -->
+<div class="relative z-10 flex flex-wrap items-center justify-between gap-space-sm pt-space-xs">
+<div class="flex items-center gap-space-xs font-code-sm text-code-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px] text-tertiary">check_circle</span>
+<span class="text-on-surface">Retrieval method:</span>
+<span>Semantic Clause Retrieval • Zero Generative LLM Hallucinations</span>
+</div>
+<div class="flex items-center gap-space-xs font-code-sm text-code-sm text-on-surface-variant">
+<span>Stopwords: Standard NLTK English</span>
+<span>•</span>
+<span>N-gram Range: (1, 2)</span>
+</div>
+</div>
+<!-- Suggested Question Pills -->
+<div class="relative z-10 flex flex-col gap-space-xs pt-space-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Suggested Pre-Computed Inquiries</span>
+<div class="flex flex-wrap gap-space-xs" id="pill-container">
+<button class="query-pill px-space-sm py-space-xs bg-surface-container hover:bg-surface-container-high text-on-surface hover:text-primary font-body-sm text-body-sm rounded-lg transition-colors flex items-center gap-space-xs" type="button">
+<span class="material-symbols-outlined text-[14px] text-outline">saved_search</span>
+<span>When does this agreement expire?</span>
+</button>
+<button class="query-pill px-space-sm py-space-xs bg-surface-container hover:bg-surface-container-high text-on-surface hover:text-primary font-body-sm text-body-sm rounded-lg transition-colors flex items-center gap-space-xs" type="button">
+<span class="material-symbols-outlined text-[14px] text-outline">saved_search</span>
+<span>What is the notice period?</span>
+</button>
+<button class="query-pill px-space-sm py-space-xs bg-surface-container hover:bg-surface-container-high text-on-surface hover:text-primary font-body-sm text-body-sm rounded-lg transition-colors flex items-center gap-space-xs" type="button">
+<span class="material-symbols-outlined text-[14px] text-outline">saved_search</span>
+<span>What are the payment terms?</span>
+</button>
+<button class="query-pill px-space-sm py-space-xs bg-surface-container hover:bg-surface-container-high text-on-surface hover:text-primary font-body-sm text-body-sm rounded-lg transition-colors flex items-center gap-space-xs" type="button">
+<span class="material-symbols-outlined text-[14px] text-outline">saved_search</span>
+<span>What happens if I terminate early?</span>
+</button>
+<button class="query-pill px-space-sm py-space-xs bg-surface-container hover:bg-surface-container-high text-on-surface hover:text-primary font-body-sm text-body-sm rounded-lg transition-colors flex items-center gap-space-xs" type="button">
+<span class="material-symbols-outlined text-[14px] text-outline">saved_search</span>
+<span>What are the confidentiality obligations?</span>
+</button>
+<button class="query-pill px-space-sm py-space-xs bg-surface-container hover:bg-surface-container-high text-on-surface hover:text-primary font-body-sm text-body-sm rounded-lg transition-colors flex items-center gap-space-xs" type="button">
+<span class="material-symbols-outlined text-[14px] text-outline">saved_search</span>
+<span>What are the liability provisions?</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Main Results Grid: 8-col Lead / 4-col Telemetry Sidebar -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-space-lg items-start">
+<!-- Primary Analysis Stream (8 Columns) -->
+<div class="xl:col-span-8 flex flex-col gap-space-lg">
+<!-- Results Counter & Status Line -->
+<div class="flex items-center justify-between px-space-xs">
+<div class="flex items-center gap-space-sm">
+<span class="font-title-sm text-title-sm text-on-surface">Top Matched Clauses</span>
+<span class="px-space-xs py-space-2xs bg-surface-container-high font-code-sm text-code-sm text-on-surface-variant rounded">3 matches above threshold</span>
+</div>
+<span class="font-code-sm text-code-sm text-outline">Computation Latency: 12.4ms</span>
+</div>
+<!-- RANK #1: HIGHEST COSINE SIMILARITY (MASTER CARD) -->
+<article class="bg-surface-container-low rounded-xl p-space-md lg:p-space-lg flex flex-col gap-space-md shadow-md relative overflow-hidden">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<span class="px-space-xs py-space-2xs rounded bg-surface-container-high font-code-sm text-code-sm text-primary font-semibold">RANK #1</span>
+<span class="font-title-md text-title-md text-on-surface font-semibold">Clause 09.4 — Termination Protocol & Notice</span>
+</div>
+<!-- Similarity Badge -->
+<div class="flex items-center gap-space-xs self-start sm:self-auto bg-surface-container px-space-sm py-space-xs rounded-full">
+<span class="w-2.5 h-2.5 rounded-full bg-tertiary"></span>
+<span class="font-code-sm text-code-sm font-semibold text-tertiary">Similarity: 88.42%</span>
+</div>
+</div>
+<!-- Metadata Ribbon -->
+<div class="flex flex-wrap items-center gap-space-xs font-body-sm text-body-sm text-on-surface-variant">
+<span class="flex items-center gap-space-2xs">
+<span class="material-symbols-outlined text-[16px]">menu_book</span>
+<span>Page 14, Paragraph 2</span>
+</span>
+<span>•</span>
+<span class="flex items-center gap-space-2xs">
+<span class="material-symbols-outlined text-[16px]">category</span>
+<span>Category: <strong class="text-on-surface font-medium">Termination</strong></span>
+</span>
+<span class="px-space-xs py-space-2xs rounded bg-surface-container font-code-sm text-code-sm text-outline">Classified via AI Engine (97.1%)</span>
+</div>
+<!-- Extracted Sentence Direct Token Match -->
+<div class="bg-surface-container p-space-md rounded-lg flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-wider font-semibold">Extracted Direct Deterministic Answer</span>
+<span class="font-code-sm text-code-sm text-tertiary bg-surface-container-high px-space-xs py-space-2xs rounded">Verbatim Tokens</span>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface leading-relaxed">
+              “Client may terminate this agreement prior to expiration upon ninety (90) days written notice, subject to full settlement of all projected annual licensing fees.”
+            </p>
+</div>
+<!-- Original Source Text Quote Box -->
+<div class="bg-surface-container-lowest p-space-md rounded-lg flex flex-col gap-space-xs">
+<div class="flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
+<span class="uppercase tracking-wider font-code-sm">Original Source Document Text [Normalized UTF-8]</span>
+<button class="copy-btn hover:text-on-surface flex items-center gap-space-2xs font-code-sm text-code-sm" data-copy="In the event Customer elects early unilateral termination prior to month 36, Customer shall forfeit all paid deposits and remit 100% of all projected monthly SaaS fees through the remainder of the calendar term upon ninety (90) days advance certified notice." type="button">
+<span class="material-symbols-outlined text-[14px]">content_copy</span>
+<span>Copy</span>
+</button>
+</div>
+<p class="font-code-sm text-code-sm text-on-surface-variant leading-relaxed">
+              “In the event Customer elects early unilateral termination prior to month 36, Customer shall forfeit all paid deposits and remit 100% of all projected monthly SaaS fees through the remainder of the calendar term upon ninety (90) days advance certified notice.”
+            </p>
+</div>
+<!-- Matched Vector Terms Visualization -->
+<div class="flex flex-col gap-space-xs pt-space-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Top Matched Query Terms (Relevance Weight)</span>
+<div class="flex flex-wrap items-center gap-space-xs">
+<div class="flex items-center gap-space-xs bg-surface-container px-space-sm py-space-xs rounded font-code-sm text-code-sm">
+<span class="text-primary font-semibold">terminate</span>
+<div class="w-12 h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[84%]"></div>
+</div>
+<span class="text-outline">0.42</span>
+</div>
+<div class="flex items-center gap-space-xs bg-surface-container px-space-sm py-space-xs rounded font-code-sm text-code-sm">
+<span class="text-primary font-semibold">notice</span>
+<div class="w-12 h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[76%]"></div>
+</div>
+<span class="text-outline">0.38</span>
+</div>
+<div class="flex items-center gap-space-xs bg-surface-container px-space-sm py-space-xs rounded font-code-sm text-code-sm">
+<span class="text-primary font-semibold">agreement</span>
+<div class="w-12 h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[58%]"></div>
+</div>
+<span class="text-outline">0.29</span>
+</div>
+<div class="flex items-center gap-space-xs bg-surface-container px-space-sm py-space-xs rounded font-code-sm text-code-sm">
+<span class="text-primary font-semibold">ninety</span>
+<div class="w-12 h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[48%]"></div>
+</div>
+<span class="text-outline">0.24</span>
+</div>
+<div class="flex items-center gap-space-xs bg-surface-container px-space-sm py-space-xs rounded font-code-sm text-code-sm">
+<span class="text-primary font-semibold">expire</span>
+<div class="w-12 h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[38%]"></div>
+</div>
+<span class="text-outline">0.19</span>
+</div>
+</div>
+</div>
+<!-- Bottom Master Actions -->
+<div class="flex flex-wrap items-center gap-space-sm pt-space-xs">
+<button class="px-space-md py-space-xs bg-surface-container hover:bg-surface-container-high text-on-surface font-title-sm text-title-sm rounded-lg flex items-center gap-space-xs transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">find_in_page</span>
+<span>Inspect in Clause Explorer</span>
+</button>
+<button class="px-space-md py-space-xs bg-surface-container hover:bg-surface-container-high text-primary font-title-sm text-title-sm rounded-lg flex items-center gap-space-xs transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">smart_toy</span>
+<span>Ask in Dialogflow Assistant</span>
+</button>
+<button class="copy-btn px-space-md py-space-xs bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-title-sm text-title-sm rounded-lg flex items-center gap-space-xs transition-colors" data-copy="High_Risk_Vendor_Contract.pdf, Section 09.4 (Page 14): 'Client may terminate this agreement prior to expiration upon ninety (90) days written notice...'" type="button">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+<span>Copy Verbatim Citation</span>
+</button>
+</div>
+</article>
+<!-- SECONDARY MATCHES -->
+<div class="flex flex-col gap-space-md">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider px-space-xs">Subsequent Ranked Matches</span>
+<!-- Match Rank #2 -->
+<article class="bg-surface-container-low hover:bg-surface-container p-space-md rounded-xl transition-all shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
+<div class="flex flex-col gap-space-2xs min-w-0">
+<div class="flex items-center gap-space-xs">
+<span class="px-space-xs py-space-2xs rounded bg-surface-container-high font-code-sm text-code-sm text-on-surface-variant">RANK #2</span>
+<span class="font-title-sm text-title-sm text-on-surface font-semibold truncate">Clause 03.1 — Duration, Effective Commencement & Renewal</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1">
+                “This Agreement shall commence on the Effective Date and continue for an initial fixed period of thirty-six (36) consecutive calendar months...”
+              </p>
+<div class="flex items-center gap-space-xs font-code-sm text-code-sm text-outline pt-space-2xs">
+<span>Page 4</span>
+<span>•</span>
+<span>Category: General</span>
+<span>•</span>
+<span>Top Term: agreement (0.35)</span>
+</div>
+</div>
+<div class="flex items-center gap-space-md shrink-0 self-end md:self-auto">
+<div class="flex flex-col items-end">
+<div class="flex items-center gap-space-2xs">
+<span class="font-code-sm text-code-sm font-semibold text-primary">74.20%</span>
+</div>
+<div class="w-20 h-1.5 bg-surface-container-high rounded-full overflow-hidden mt-1">
+<div class="bg-primary h-full w-[74%]"></div>
+</div>
+</div>
+<button class="w-8 h-8 rounded-lg bg-surface-container-high hover:bg-surface-bright flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors" title="View Details" type="button">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</article>
+<!-- Match Rank #3 -->
+<article class="bg-surface-container-low hover:bg-surface-container p-space-md rounded-xl transition-all shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
+<div class="flex flex-col gap-space-2xs min-w-0">
+<div class="flex items-center gap-space-xs">
+<span class="px-space-xs py-space-2xs rounded bg-surface-container-high font-code-sm text-code-sm text-on-surface-variant">RANK #3</span>
+<span class="font-title-sm text-title-sm text-on-surface font-semibold truncate">Clause 12.4 — Survival of Obligations Upon Termination</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1">
+                “Provisions regarding Confidential Information and audit rights shall survive the natural expiration or premature termination of this Agreement...”
+              </p>
+<div class="flex items-center gap-space-xs font-code-sm text-code-sm text-outline pt-space-2xs">
+<span>Page 19</span>
+<span>•</span>
+<span>Category: Confidentiality</span>
+<span>•</span>
+<span>Top Term: terminate (0.28)</span>
+</div>
+</div>
+<div class="flex items-center gap-space-md shrink-0 self-end md:self-auto">
+<div class="flex flex-col items-end">
+<div class="flex items-center gap-space-2xs">
+<span class="font-code-sm text-code-sm font-semibold text-secondary">61.85%</span>
+</div>
+<div class="w-20 h-1.5 bg-surface-container-high rounded-full overflow-hidden mt-1">
+<div class="bg-secondary h-full w-[61%]"></div>
+</div>
+</div>
+<button class="w-8 h-8 rounded-lg bg-surface-container-high hover:bg-surface-bright flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors" title="View Details" type="button">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</article>
+</div>
+<!-- Strict Threshold Callout Box -->
+<div class="bg-surface-container p-space-md rounded-xl flex items-start gap-space-sm shadow-inner">
+<div class="w-8 h-8 rounded-lg bg-surface-container-high flex items-center justify-center text-outline shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[20px]">shield</span>
+</div>
+<div class="flex flex-col gap-space-2xs min-w-0">
+<span class="font-title-sm text-title-sm text-on-surface font-medium">Deterministic Threshold Guardrail</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Threshold guardrail: Queries resulting in Cosine Similarity below <strong>40.00%</strong> will display: 
+              <span class="font-code-sm text-code-sm text-error bg-error-container/40 px-space-xs py-space-2xs rounded">"No sufficiently relevant clause was found in this document."</span>
+              Unrelated clauses are never returned, safeguarding against contextual hallucination.
+            </p>
+</div>
+</div>
+</div>
+<!-- Telemetry & Document Analytical Summary Sidebar (4 Columns) -->
+<aside class="xl:col-span-4 flex flex-col gap-space-md">
+<!-- Vector Space Telemetry Card -->
+<div class="bg-surface-container-low p-space-md rounded-xl shadow-md flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">hub</span>
+<span class="font-title-sm text-title-sm text-on-surface font-semibold">Similarity Distribution</span>
+</div>
+<span class="font-code-sm text-code-sm text-tertiary">N=24 Vectors</span>
+</div>
+<!-- Graphic Donut / Gauge Metric -->
+<div class="flex items-center justify-around py-space-xs">
+<div class="relative flex items-center justify-center">
+<svg class="w-28 h-28 transform -rotate-90" viewbox="0 0 100 100">
+<circle class="text-surface-container-high fill-transparent" cx="50" cy="50" r="40" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-tertiary fill-transparent transition-all duration-1000" cx="50" cy="50" r="40" stroke="currentColor" stroke-dasharray="251.2" stroke-dashoffset="29.1" stroke-linecap="round" stroke-width="8"></circle>
+</svg>
+<div class="absolute flex flex-col items-center justify-center">
+<span class="font-metric-display-sm text-metric-display-sm text-on-surface">88<span class="font-body-sm text-body-sm text-outline">%</span></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant -mt-1">Rank #1 Match</span>
+</div>
+</div>
+<div class="flex flex-col gap-space-xs font-code-sm text-code-sm">
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span class="text-on-surface">Top: 0.8842</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="text-on-surface-variant">Mean: 0.3120</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-surface-container-highest"></span>
+<span class="text-outline">Floor: 0.0410</span>
+</div>
+</div>
+</div>
+<!-- Document Profile Summary -->
+<div class="bg-surface-container p-space-sm rounded-lg flex flex-col gap-space-2xs font-code-sm text-code-sm">
+<div class="flex justify-between text-on-surface-variant">
+<span>Vocabulary Size:</span>
+<span class="text-on-surface font-medium">1,482 terms</span>
+</div>
+<div class="flex justify-between text-on-surface-variant">
+<span>Extracted Entities:</span>
+<span class="text-on-surface font-medium">42 Entities [ORG, DATE, GPE]</span>
+</div>
+<div class="flex justify-between text-on-surface-variant">
+<span>Corpus Sparsity:</span>
+<span class="text-on-surface font-medium">96.3%</span>
+</div>
+</div>
+</div>
+<!-- Verified Extraction Context -->
+<div class="bg-surface-container-low p-space-md rounded-xl shadow-md flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<span class="font-title-sm text-title-sm text-on-surface font-semibold">Active Pipeline Modules</span>
+<span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+</div>
+<div class="flex flex-col gap-space-sm">
+<div class="flex items-start gap-space-sm bg-surface-container p-space-sm rounded-lg">
+<span class="material-symbols-outlined text-[18px] text-primary shrink-0 mt-0.5">token</span>
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm text-on-surface font-medium">Legal NLP Engine</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Deterministic sentence tokenizer & lemmatizer engine.</span>
+</div>
+</div>
+<div class="flex items-start gap-space-sm bg-surface-container p-space-sm rounded-lg">
+<span class="material-symbols-outlined text-[18px] text-secondary shrink-0 mt-0.5">calculate</span>
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm text-on-surface font-medium">Semantic Vector Search</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Normalized L2 Euclidean vector space modeling.</span>
+</div>
+</div>
+<div class="flex items-start gap-space-sm bg-surface-container p-space-sm rounded-lg">
+<span class="material-symbols-outlined text-[18px] text-tertiary shrink-0 mt-0.5">psychology</span>
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm text-on-surface font-medium">AI Classification Engine</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Clause classification trained on 10,000+ commercial contracts.</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Audit & Verification Card -->
+<div class="bg-surface-container-low p-space-md rounded-xl shadow-md flex flex-col gap-space-sm">
+<div class="flex items-center gap-space-xs text-on-surface">
+<span class="material-symbols-outlined text-[18px] text-outline">verified</span>
+<span class="font-title-sm text-title-sm font-semibold">Deterministic Guarantee</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+            All returned results reflect strict mathematical cosine distance against verbatim textual tokens. No synthetic language generation is injected at any stage of retrieval.
+          </p>
+<div class="pt-space-xs">
+<button class="w-full py-space-xs bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-code-sm text-code-sm rounded transition-colors text-center" type="button">
+              Export Mathematical Vector Log (.json)
+            </button>
+</div>
+</div>
+</aside>
+</div>
+</div>
+<!-- Client-side Interactive Behaviors -->
+<script>
+    (() => {
+      // Pill click query populator
+      const input = document.getElementById('query-input');
+      const pills = document.querySelectorAll('.query-pill');
+      pills.forEach(pill => {
+        pill.addEventListener('click', () => {
+          const text = pill.querySelector('span:last-child').textContent.trim();
+          input.value = text;
+          input.focus();
+        });
+      });
+
+      // Quick Copy micro-interaction
+      const copyBtns = document.querySelectorAll('.copy-btn');
+      copyBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const content = btn.getAttribute('data-copy');
+          if (content) {
+            navigator.clipboard.writeText(content).then(() => {
+              const label = btn.querySelector('span:last-child');
+              if (label) {
+                const orig = label.textContent;
+                label.textContent = 'Copied!';
+                setTimeout(() => { label.textContent = orig; }, 1800);
+              }
+            });
+          }
+        });
+      });
+    })();
+  </script>
+</div></div>
+<div id="view-ai-assistant" class="tab-view hidden"><div class="flex flex-col w-full">
+<div class="p-space-lg flex flex-col gap-space-lg w-full max-w-[1720px] mx-auto">
+<!-- Top Context & Identification Strip -->
+<div class="flex flex-wrap items-center justify-between gap-space-md bg-surface-container-low p-space-md rounded-xl shadow-md">
+<div class="flex flex-col min-w-0">
+<div class="flex flex-wrap items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm text-on-surface tracking-tight">AI Legal Assistant</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-highest text-primary font-code-sm text-code-sm flex items-center gap-1.5 shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+            Powered by Google Dialogflow • AI Legal Assistant
+          </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+          Ask questions about your uploaded legal document. Deterministic parsing across indexed token trees.
+        </p>
+</div>
+<div class="flex items-center gap-space-sm flex-wrap">
+<div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-container-high text-on-surface shadow-sm">
+<span class="material-symbols-outlined text-primary text-[18px]">verified</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Targeting Scope</span>
+<span id="assistant-doc-target" class="font-code-sm text-code-sm text-on-surface font-semibold truncate max-w-[220px]">Select a Document</span>
+</div>
+</div>
+<a class="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-surface-container hover:bg-surface-bright text-on-surface font-title-sm text-title-sm transition-colors shadow-sm" data-path="analysis" href="#">
+<span class="material-symbols-outlined text-[18px]">analytics</span>
+<span>Full Analysis Tab</span>
+</a>
+</div>
+</div>
+<!-- Main Balanced Two-Column Layout -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-space-lg items-start">
+<!-- Primary Chat Stream Column (xl:col-span-8) -->
+<div class="xl:col-span-8 flex flex-col gap-space-md">
+<!-- Quick Intent Prompt Pills -->
+<div class="flex flex-col gap-1.5 bg-surface-container-low p-space-sm rounded-xl shadow-sm">
+<div class="flex items-center justify-between px-2">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-primary">psychology_alt</span>
+              Quick Actions — Click to Ask
+            </span>
+<span class="font-code-sm text-code-sm text-on-surface-variant/70">Deterministic NLP • No LLM</span>
+</div>
+<div class="flex flex-wrap gap-1.5" id="pillsContainer">
+<button class="px-2.5 py-1.5 rounded bg-primary-container/30 hover:bg-primary-container text-primary font-label-md text-label-md transition-all text-left shadow-sm hover:scale-[1.02] border border-primary/20" onclick="sendPromptPill('Hi')" type="button">
+              👋 Say Hi
+            </button>
+<button class="px-2.5 py-1.5 rounded bg-primary-container/30 hover:bg-primary-container text-primary font-label-md text-label-md transition-all text-left shadow-sm hover:scale-[1.02] border border-primary/20" onclick="sendPromptPill('Who are you?')" type="button">
+              🤖 Who are you?
+            </button>
+<button class="px-2.5 py-1.5 rounded bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-all text-left shadow-sm hover:scale-[1.01]" onclick="sendPromptPill('When does this contract expire?')" type="button">
+              ⏳ Contract expiry date
+            </button>
+<button class="px-2.5 py-1.5 rounded bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-all text-left shadow-sm hover:scale-[1.01]" onclick="sendPromptPill('What are the payment terms?')" type="button">
+              💰 Payment terms
+            </button>
+<button class="px-2.5 py-1.5 rounded bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-all text-left shadow-sm hover:scale-[1.01]" onclick="sendPromptPill('What happens if I terminate early?')" type="button">
+              🛑 Early termination
+            </button>
+<button class="px-2.5 py-1.5 rounded bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-all text-left shadow-sm hover:scale-[1.01]" onclick="sendPromptPill('What is the risk?')" type="button">
+              📊 Risk score
+            </button>
+<button class="px-2.5 py-1.5 rounded bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-all text-left shadow-sm hover:scale-[1.01]" onclick="sendPromptPill('Are there any missing clauses?')" type="button">
+              ⚠️ Missing clauses
+            </button>
+<button class="px-2.5 py-1.5 rounded bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-all text-left shadow-sm hover:scale-[1.01]" onclick="sendPromptPill('Summary')" type="button">
+              📋 Contract summary
+            </button>
+<button class="px-2.5 py-1.5 rounded bg-surface-container hover:bg-error-container/30 text-error font-label-md text-label-md transition-all text-left shadow-sm hover:scale-[1.01]" onclick="sendPromptPill('Is there an uncapped liability clause?')" type="button">
+              ⚖️ Uncapped liability?
+            </button>
+</div>
+</div>
+<!-- Chat History Stream -->
+<div class="flex flex-col gap-space-lg bg-surface-container-low p-space-lg rounded-xl shadow-md min-h-[300px]" id="chatStream" style="max-height: 55vh; overflow-y: auto;">
+<!-- JS will inject the welcome message on DOMContentLoaded -->
+</div>
+<!-- Input Compose Canvas -->
+<div class="bg-surface-container-low p-space-md rounded-xl flex flex-col gap-space-xs shadow-lg">
+<div class="flex items-center gap-space-sm bg-surface-container px-space-md py-2.5 rounded-lg shadow-inner">
+<button class="text-on-surface-variant hover:text-primary transition-colors p-1" title="Attach context or clause fragment" type="button">
+<span class="material-symbols-outlined text-[20px]">attach_file</span>
+</button>
+<input class="flex-1 bg-transparent font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none" id="userPromptInput" onkeydown="if(event.key==='Enter') simulateSubmit()" placeholder="Type 'hi', ask a question, or click a quick action above..." type="text"/>
+<button class="text-on-surface-variant hover:text-primary transition-colors p-1" title="Voice input (Web Speech API)" type="button">
+<span class="material-symbols-outlined text-[20px]">mic</span>
+</button>
+<button id="assistant-send-btn" class="w-10 h-10 rounded-lg bg-primary text-on-primary flex items-center justify-center shrink-0 hover:bg-primary-container transition-colors shadow-md cursor-pointer" type="button">
+<span>Ask</span>
+<span class="material-symbols-outlined text-[18px]">send</span>
+</button>
+</div>
+<div class="flex items-center justify-between px-space-xs">
+<span class="font-body-sm text-body-sm text-outline">
+              Dialogflow handles intent mapping and conversational dialogue. Contract answers are strictly extracted from verified document clauses via semantic matching.
+            </span>
+<span class="font-code-sm text-code-sm text-tertiary flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+              Deterministic Guardrails Active
+            </span>
+</div>
+</div>
+</div>
+<!-- Right Drawer / Sidebar Context Panel (xl:col-span-4) -->
+<div class="xl:col-span-4 flex flex-col gap-space-md">
+<!-- Document Abstract & Health Visual -->
+<div class="bg-surface-container-low p-space-lg rounded-xl flex flex-col gap-space-md shadow-md">
+<div class="flex items-center justify-between">
+<span class="font-title-md text-title-md text-on-surface font-semibold">Extracted Entity Graph</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-highest text-primary font-code-sm text-code-sm">Legal NER Engine</span>
+</div>
+<!-- Semantic Entity Highlights Grid -->
+<div class="grid grid-cols-2 gap-space-sm">
+<div class="p-space-sm bg-surface-container rounded-lg flex flex-col shadow-sm">
+<span class="font-label-sm text-label-sm uppercase text-outline">Duration</span>
+<span class="font-title-sm text-title-sm text-on-surface mt-0.5">36 Months</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant mt-0.5">Nov 2024 — Oct 2027</span>
+</div>
+<div class="p-space-sm bg-surface-container rounded-lg flex flex-col shadow-sm">
+<span class="font-label-sm text-label-sm uppercase text-outline">Governing Law</span>
+<span class="font-title-sm text-title-sm text-on-surface mt-0.5">Delaware (US)</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant mt-0.5">Section 18.2</span>
+</div>
+<div class="p-space-sm bg-surface-container rounded-lg flex flex-col shadow-sm">
+<span class="font-label-sm text-label-sm uppercase text-outline">Payment Terms</span>
+<span class="font-title-sm text-title-sm text-on-surface mt-0.5">Net 30 Days</span>
+<span class="font-code-sm text-code-sm text-tertiary mt-0.5">2.5% Late Penalty</span>
+</div>
+<div class="p-space-sm bg-surface-container rounded-lg flex flex-col shadow-sm">
+<span class="font-label-sm text-label-sm uppercase text-outline">Identified Entities</span>
+<span class="font-title-sm text-title-sm text-on-surface mt-0.5">42 Entities</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant mt-0.5">18 ORG • 9 DATE • 15 MONEY</span>
+</div>
+</div>
+<!-- Risk Radar Mini Visual -->
+<div class="p-space-md bg-surface-container-lowest rounded-lg flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-error text-[18px]">gavel</span>
+<span class="font-title-sm text-title-sm text-on-surface font-semibold">High-Risk Clauses (6 Detected)</span>
+</div>
+<span class="px-2 py-0.5 rounded bg-error-container/40 text-error font-code-sm text-code-sm font-semibold">
+                ALERT
+              </span>
+</div>
+<div class="flex flex-col gap-2 mt-1">
+<!-- Risk Clause 1 -->
+<div class="p-2 rounded bg-surface-container flex items-center justify-between text-on-surface hover:bg-surface-container-high transition-colors cursor-pointer">
+<div class="flex flex-col min-w-0 pr-2">
+<span class="font-title-sm text-title-sm font-semibold text-error truncate">09.4 Early Termination Surcharge</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant">100% full unamortized fee forfeiture</span>
+</div>
+<span class="font-code-sm text-code-sm text-error font-bold">CRITICAL</span>
+</div>
+<!-- Risk Clause 2 -->
+<div class="p-2 rounded bg-surface-container flex items-center justify-between text-on-surface hover:bg-surface-container-high transition-colors cursor-pointer">
+<div class="flex flex-col min-w-0 pr-2">
+<span class="font-title-sm text-title-sm font-semibold text-error truncate">14.2 Unilateral Indemnity Waiver</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant">Vendor disclaims all third-party IP faults</span>
+</div>
+<span class="font-code-sm text-code-sm text-error font-bold">HIGH</span>
+</div>
+<!-- Risk Clause 3 -->
+<div class="p-2 rounded bg-surface-container flex items-center justify-between text-on-surface hover:bg-surface-container-high transition-colors cursor-pointer">
+<div class="flex flex-col min-w-0 pr-2">
+<span class="font-title-sm text-title-sm font-semibold text-error truncate">21.1 Automatic 3-Year Roll-Over</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant">Requires 120-day written cancellation</span>
+</div>
+<span class="font-code-sm text-code-sm text-error font-bold">HIGH</span>
+</div>
+</div>
+<!-- Inline SVG Cosine Similarity Distribution Graph -->
+<div class="pt-2 flex flex-col gap-1">
+<div class="flex items-center justify-between font-label-sm text-label-sm text-outline">
+<span>Vector Semantic Density</span>
+<span>k-NN Cluster Spread</span>
+</div>
+<svg class="w-full h-12 text-primary" fill="none" viewbox="0 0 320 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 40 Q 40 38, 80 24 T 160 12 T 240 28 T 320 8" fill="none" opacity="0.8" stroke="currentColor" stroke-width="2"></path>
+<path d="M0 40 Q 40 38, 80 24 T 160 12 T 240 28 T 320 8 L 320 48 L 0 48 Z" fill="currentColor" opacity="0.1"></path>
+<circle class="fill-tertiary" cx="160" cy="12" r="3.5"></circle>
+<circle class="fill-error" cx="240" cy="28" r="3"></circle>
+<circle class="fill-primary" cx="80" cy="24" r="3"></circle>
+</svg>
+</div>
+</div>
+<!-- Quick Navigation to Analysis -->
+<div class="flex flex-col gap-2 pt-1">
+<a class="w-full h-10 rounded bg-surface-container-high hover:bg-surface-bright text-on-surface flex items-center justify-center gap-2 font-title-sm text-title-sm transition-all shadow-sm" data-path="analysis" href="#">
+<span class="material-symbols-outlined text-[18px]">find_in_page</span>
+<span>Inspect All 18 Identified Clauses</span>
+</a>
+<button class="w-full h-10 rounded bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface flex items-center justify-center gap-2 font-title-sm text-title-sm transition-all shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">file_download</span>
+<span>Export Q&amp;A Audit Trail (PDF)</span>
+</button>
+</div>
+</div>
+<!-- Technical Telemetry Box -->
+<div class="bg-surface-container-low p-space-md rounded-xl flex flex-col gap-2 shadow-sm font-code-sm text-code-sm">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Pipeline Runtime Stats</span>
+<div class="flex justify-between text-on-surface-variant">
+<span>Dialogflow CX Agent:</span>
+<span class="text-on-surface font-semibold">legal-retrieval-prod-04</span>
+</div>
+<div class="flex justify-between text-on-surface-variant">
+<span>Inference Latency:</span>
+<span class="text-tertiary">38ms (FastAPI async)</span>
+</div>
+<div class="flex justify-between text-on-surface-variant">
+<span>Corpus Chunk Count:</span>
+<span class="text-on-surface">114 Token Blocks</span>
+</div>
+<div class="flex justify-between text-on-surface-variant">
+<span>Vocabulary Dimension:</span>
+<span class="text-on-surface">4,812 Vector Features</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+    function insertPrompt(text) {
+      const input = document.getElementById('userPromptInput');
+      if (input) {
+        input.value = text;
+        input.focus();
+      }
+    }
+
+    function simulateSubmit() {
+      const input = document.getElementById('userPromptInput');
+      if (!input || !input.value.trim()) return;
+
+      const question = input.value.trim();
+      input.value = '';
+
+      const stream = document.getElementById('chatStream');
+      if (!stream) return;
+
+      // Append user bubble
+      const userBubble = document.createElement('div');
+      userBubble.className = 'flex items-start justify-end gap-space-md';
+      userBubble.innerHTML = `
+        <div class="flex flex-col items-end gap-1.5 max-w-2xl">
+          <div class="flex items-center gap-space-xs">
+            <span class="font-label-sm text-label-sm text-outline">Just now</span>
+            <span class="font-title-sm text-title-sm text-on-surface font-semibold">Marcus Vance</span>
+          </div>
+          <div class="bg-primary text-on-primary p-space-md rounded-xl font-body-md text-body-md shadow-md">
+            <p class="font-medium">${escapeHtml(question)}</p>
+          </div>
+        </div>
+        <div class="w-9 h-9 rounded-lg bg-surface-container-highest text-primary flex items-center justify-center flex-shrink-0 shadow-sm">
+          <span class="material-symbols-outlined text-[20px]">person</span>
+        </div>
+      `;
+      stream.appendChild(userBubble);
+
+      // Scroll into view
+      userBubble.scrollIntoView({ behavior: 'smooth', block: 'end' });
+
+      // Simulate retrieval state
+      setTimeout(() => {
+        const botBubble = document.createElement('div');
+        botBubble.className = 'flex items-start gap-space-md';
+        botBubble.innerHTML = `
+          <div class="w-9 h-9 rounded-lg bg-primary-container text-on-primary-container flex items-center justify-center flex-shrink-0 shadow-md">
+            <span class="material-symbols-outlined text-[20px]">smart_toy</span>
+          </div>
+          <div class="flex flex-col gap-space-sm max-w-3xl w-full">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-space-xs">
+                <span class="font-title-sm text-title-sm text-on-surface font-semibold">LexiCore Dialogflow Engine</span>
+                <span class="px-1.5 py-0.2 rounded bg-tertiary-container/30 text-tertiary font-code-sm text-code-sm">Exact Match</span>
+              </div>
+              <span class="font-label-sm text-label-sm text-outline">Just now</span>
+            </div>
+            <div class="bg-surface-container p-space-md rounded-xl text-on-surface font-body-md text-body-md flex flex-col gap-space-sm shadow-sm">
+              <p>Relevant terms extracted from <span class="font-code-sm text-code-sm text-primary font-medium">High_Risk_Vendor_Contract.pdf</span> for query: &ldquo;${escapeHtml(question)}&rdquo;.</p>
+              <div class="p-space-sm bg-surface-container-lowest rounded-lg font-code-sm text-code-sm text-on-surface-variant flex items-center justify-between">
+                <span>Clause 14.1 &mdash; Limitation of Direct Liabilities (Page 21)</span>
+                <span class="text-tertiary">Cosine 88.4%</span>
+              </div>
+            </div>
+          </div>
+        `;
+        stream.appendChild(botBubble);
+        botBubble.scrollIntoView({ behavior: 'smooth', block: 'end' });
+      }, 450);
+    }
+
+    function escapeHtml(string) {
+      const entityMap = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;',
+        '/': '&#x2F;'
+      };
+      return String(string).replace(/[&<>"'\/]/g, s => entityMap[s]);
+    }
+  </script>
+</div></div>
+</main>
+</div>
+
+<!-- Global file input for PDF uploads -->
+<input type="file" id="global-pdf-input" accept=".pdf" class="hidden" onchange="handleFileSelect(this)" />
+
+<!-- Processing / Upload Modal with Pipeline Telemetry -->
+<div id="upload-modal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+  <div class="bg-surface-container border border-surface-high rounded-2xl p-6 max-w-lg w-full shadow-2xl space-y-4">
+    <div class="flex items-center justify-between pb-3 border-b border-surface-high">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-lg bg-primary-container text-on-primary-container flex items-center justify-center">
+          <span class="material-symbols-outlined text-[20px] animate-spin">sync</span>
+        </div>
+        <div>
+          <h3 class="font-title-sm text-on-surface font-semibold truncate max-w-[280px]" id="upload-filename">Ingesting Document.pdf</h3>
+          <span class="text-xs text-primary font-mono">Deterministic Legal NLP Pipeline Active</span>
+        </div>
+      </div>
+      <span id="upload-progress-percent" class="text-xs font-mono font-bold text-tertiary">20%</span>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="w-full bg-surface-low rounded-full h-2 overflow-hidden">
+      <div id="upload-progress-bar" class="bg-primary h-full transition-all duration-300" style="width: 20%;"></div>
+    </div>
+
+    <!-- Pipeline Steps Checklist -->
+    <div class="space-y-2 text-xs font-mono py-1">
+      <div id="step-ingress" class="flex items-center gap-2 text-primary font-semibold">
+        <span class="material-symbols-outlined text-[16px] animate-pulse">hourglass_top</span>
+        <span>1. Text Ingress & OCR Validation (PyMuPDF)</span>
+      </div>
+      <div id="step-segment" class="flex items-center gap-2 text-outline">
+        <span class="material-symbols-outlined text-[16px]">radio_button_unchecked</span>
+        <span>2. Deterministic Clause Segmentation (NLP Engine)</span>
+      </div>
+      <div id="step-classify" class="flex items-center gap-2 text-outline">
+        <span class="material-symbols-outlined text-[16px]">radio_button_unchecked</span>
+        <span>3. Clause Classification (AI Classification Engine)</span>
+      </div>
+      <div id="step-fuzzy" class="flex items-center gap-2 text-outline">
+        <span class="material-symbols-outlined text-[16px]">radio_button_unchecked</span>
+        <span>4. Risk Inference & Defuzzification (Mamdani Engine)</span>
+      </div>
+      <div id="step-summary" class="flex items-center gap-2 text-outline">
+        <span class="material-symbols-outlined text-[16px]">radio_button_unchecked</span>
+        <span>5. Extractive Summary & Missing Clause Audit</span>
+      </div>
+    </div>
+
+    <p class="text-xs text-on-surface-variant font-mono text-center pt-2 border-t border-surface-high/60">
+      Zero LLM interpolation &bull; 100% deterministic reproducibility
+    </p>
+  </div>
+</div>
+
+<!-- Architecture & Help Guide Modal -->
+<div id="help-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden" style="transition: opacity 0.15s ease;">
+  <div class="bg-surface-container border border-surface-high rounded-2xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+    <div class="p- space-md p-5 flex items-center justify-between border-b border-surface-high bg-surface-low">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary text-[22px]">menu_book</span>
+        <h3 class="font-title-md text-on-surface font-semibold">LexiCore System Guide & Viva Walkthrough</h3>
+      </div>
+      <button type="button" onclick="closeHelpModal()" class="text-on-surface-variant hover:text-on-surface">
+        <span class="material-symbols-outlined text-[20px]">close</span>
+      </button>
+    </div>
+    <div class="p-6 overflow-y-auto space-y-5 text-sm font-body-md text-on-surface-variant leading-relaxed">
+      <div>
+        <h4 class="text-primary font-semibold text-base mb-1.5 flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-[18px]">verified</span> 1. What is LexiCore?
+        </h4>
+        <p>LexiCore is an <strong>AI Legal Document Assistant</strong> designed to analyze, classify, evaluate risk, and answer questions from legal contracts using <strong>deterministic algorithms</strong> without relying on expensive, hallucinatory Large Language Models (LLMs).</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 font-mono text-xs">
+        <div class="p-3 rounded-xl bg-surface-low border border-surface-high/60">
+          <strong class="text-primary block mb-1">Text Ingress & Segmentation:</strong>
+          Document parser extracts text streams, and the NLP engine segments raw text into distinct contractual clauses using sentence boundaries and numbered headings.
+        </div>
+        <div class="p-3 rounded-xl bg-surface-low border border-surface-high/60">
+          <strong class="text-primary block mb-1">AI Clause Classification:</strong>
+          AI Classification Engine classifier predicts clause types: <em>Payment, Confidentiality, Termination, Liability, General</em> with ~75% test accuracy.
+        </div>
+        <div class="p-3 rounded-xl bg-surface-low border border-surface-high/60">
+          <strong class="text-tertiary block mb-1">Mamdani Fuzzy Logic Risk:</strong>
+          Computes Importance, Ambiguity, and Risk Indicators into triangular/trapezoidal membership functions to defuzzify into exact 0-100 risk scores.
+        </div>
+        <div class="p-3 rounded-xl bg-surface-low border border-surface-high/60">
+          <strong class="text-tertiary block mb-1">Semantic Retrieval & Dialogflow:</strong>
+          Transforms user questions into semantic vector space, retrieves relevant clauses, and extracts the exact answer sentence.
+        </div>
+      </div>
+
+      <div>
+        <h4 class="text-primary font-semibold text-base mb-1.5 flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-[18px]">rule</span> 2. Risk Level Interpretation
+        </h4>
+        <ul class="space-y-1 list-disc pl-5">
+          <li><strong class="text-tertiary">LOW RISK (0 &ndash; 34)</strong>: Standard balanced commercial provisions with clear obligations and mutual remedies.</li>
+          <li><strong class="text-amber-300">MEDIUM RISK (35 &ndash; 64)</strong>: Ambiguous terms, vague notice periods, or mild unilateral obligations requiring clarification.</li>
+          <li><strong class="text-error">HIGH RISK (65 &ndash; 100)</strong>: Asymmetric indemnity, uncapped consequential liability, or harsh unilateral termination covenants.</li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="text-primary font-semibold text-base mb-1.5 flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-[18px]">smart_toy</span> 3. How to Demo to Your Professor
+        </h4>
+        <ol class="space-y-1.5 list-decimal pl-5">
+          <li>Open <strong>Documents</strong> tab &rarr; click <strong>"High Risk Vendor"</strong> sample contract.</li>
+          <li>Show <strong>Analysis</strong> tab: explain the circular Mamdani Risk Gauge (score: 78, High) and the 5 extractive summary categories.</li>
+          <li>Point out the <strong>Missing Clause Audit</strong>: shows which mandatory protections were omitted.</li>
+          <li>Switch to <strong>Search</strong> tab: type <em>"When does this contract expire?"</em> to show semantic relevance ranking.</li>
+          <li>Switch to <strong>AI Assistant</strong>: say <em>"Hi"</em>, ask <em>"What are the payment terms?"</em> or click prompt suggestions to show interactive conversational retrieval!</li>
+        </ol>
+      </div>
+    </div>
+    <div class="p-4 border-t border-surface-high bg-surface-low flex justify-end">
+      <button type="button" onclick="closeHelpModal()" class="px-4 py-2 bg-primary text-on-primary font-semibold rounded-lg hover:bg-primary-container transition-colors text-xs">
+        Got it, let's explore!
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

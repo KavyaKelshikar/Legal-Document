@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI-powered legal document assistant that classifies clauses and assesses contract risk using Naive Bayes and Fuzzy Logic.">
+    <title>AI Legal Document Assistant</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-inner">
+            <div class="logo">
+                <div class="logo-icon">⚖</div>
+                <div>
+                    <h1>AI Legal Document Assistant</h1>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Upload Section -->
+        <section id="upload-section" class="card upload-card">
+            <div id="drop-zone" class="drop-zone">
+                <div class="drop-zone-content">
+                    <div class="upload-icon">📄</div>
+                    <h2>Upload Legal Document</h2>
+                    <p>Drag & drop a PDF here, or click to browse</p>
+                    <p class="file-hint">Supports: .pdf files up to 10MB</p>
+                    <input type="file" id="file-input" accept=".pdf" hidden>
+                    <button id="browse-btn" class="btn btn-primary">Choose PDF</button>
+                </div>
+                <div id="file-info" class="file-info" hidden>
+                    <span class="file-icon">📎</span>
+                    <span id="file-name"></span>
+                    <button id="clear-btn" class="btn-clear" title="Remove file">✕</button>
+                </div>
+            </div>
+            <button id="analyze-btn" class="btn btn-analyze" disabled>
+                <span class="btn-text">Analyze Document</span>
+                <span class="btn-loader" hidden>
+                    <span class="spinner"></span> Analyzing...
+                </span>
+            </button>
+        </section>
+
+        <!-- Error Display -->
+        <div id="error-banner" class="error-banner" hidden></div>
+
+        <!-- Results Section -->
+        <section id="results-section" hidden>
+            <!-- Document Summary -->
+            <div class="results-grid">
+                <div class="card summary-card">
+                    <h3>Document Overview</h3>
+                    <div class="summary-stats">
+                        <div class="stat">
+                            <span class="stat-value" id="stat-filename">—</span>
+                            <span class="stat-label">Filename</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value" id="stat-pages">—</span>
+                            <span class="stat-label">Pages</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value" id="stat-clauses">—</span>
+                            <span class="stat-label">Clauses Found</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Overall Risk Gauge -->
+                <div class="card risk-card">
+                    <h3>Overall Contract Risk</h3>
+                    <div class="risk-gauge">
+                        <div class="gauge-circle" id="gauge-circle">
+                            <span class="gauge-score" id="gauge-score">—</span>
+                            <span class="gauge-label">/ 100</span>
+                        </div>
+                        <div class="risk-badge" id="risk-badge">—</div>
+                    </div>
+                </div>
+
+                <!-- Category Breakdown -->
+                <div class="card category-card">
+                    <h3>Clause Categories</h3>
+                    <div id="category-breakdown" class="category-bars"></div>
+                </div>
+            </div>
+
+            <!-- Clause-by-Clause Analysis -->
+            <div class="card clauses-card">
+                <h3>Clause-by-Clause Analysis</h3>
+                <div id="clauses-list" class="clauses-list"></div>
+            </div>
+        </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
