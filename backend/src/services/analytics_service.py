@@ -133,6 +133,10 @@ class AnalyticsService:
                     "total_missing_categories": 0,
                     "most_common_missing_category": None,
                 },
+                "recent_alerts": {
+                    "high_risk_clauses": [],
+                    "missing_clauses": [],
+                },
             }
 
         total_clauses = 0
@@ -144,8 +148,11 @@ class AnalyticsService:
 
         docs_with_missing_count = 0
         missing_category_counter: Counter = Counter()
+        recent_high_risk: List[Dict[str, Any]] = []
+        recent_missing: List[Dict[str, Any]] = []
 
         for doc in all_docs:
+            d_name = doc.get("filename", "Contract")
             doc_risk = doc.get("document_risk", {})
             doc_score = doc_risk.get("overall_score")
             if isinstance(doc_score, (int, float)):
@@ -167,8 +174,16 @@ class AnalyticsService:
                 cat = c.get("predicted_category", "General")
                 category_distribution[cat] = category_distribution.get(cat, 0) + 1
 
-                if str(c.get("risk_level", "")).upper() == "HIGH":
+                if str(c.get("risk_level", "")).upper() == "HIGH" or (c.get("risk_score") or 0) >= 65:
                     high_risk_clause_count += 1
+                    if len(recent_high_risk) < 5:
+                        recent_high_risk.append({
+                            "clause_id": c.get("clause_id"),
+                            "document_name": d_name,
+                            "risk_score": c.get("risk_score", 0),
+                            "text": c.get("original_text", "")[:140],
+                            "category": cat,
+                        })
 
             # Missing clauses tally
             missing_info = doc.get("missing_clauses")
@@ -182,6 +197,11 @@ class AnalyticsService:
                 for item in missing_items:
                     cat_name = item.get("category") if isinstance(item, dict) else str(item)
                     missing_category_counter[cat_name] += 1
+                    if len(recent_missing) < 5:
+                        recent_missing.append({
+                            "document_name": d_name,
+                            "missing_category": cat_name,
+                        })
 
         avg_clauses_per_doc = round(total_clauses / total_documents, 2)
         avg_doc_risk = round(sum(doc_risk_scores) / len(doc_risk_scores), 2) if doc_risk_scores else 0.0
@@ -205,6 +225,10 @@ class AnalyticsService:
                 "documents_with_missing_clauses": docs_with_missing_count,
                 "total_missing_categories": total_missing,
                 "most_common_missing_category": most_common_missing,
+            },
+            "recent_alerts": {
+                "high_risk_clauses": recent_high_risk,
+                "missing_clauses": recent_missing,
             },
         }
 

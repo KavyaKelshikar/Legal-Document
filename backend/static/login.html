@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>LexiCore - Authentication & Legal Workspace Access</title>
+  <title>LawLens AI: Intelligent Legal Document Classification and Analysis System</title>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=JetBrains+Mono:wght@400..700&display=swap" rel="stylesheet"/>
   <script src="https://cdn.tailwindcss.com"></script>
@@ -60,14 +60,9 @@
 
   <!-- Top Logo Bar -->
   <header class="w-full max-w-5xl mx-auto flex items-center justify-between py-4">
-    <div class="flex items-center gap-3">
-      <div class="w-10 h-10 rounded-xl bg-surface-high border border-primary/30 flex items-center justify-center text-primary shadow-lg shadow-primary/10">
-        <span class="material-symbols-outlined text-[24px]">gavel</span>
-      </div>
-      <div class="flex flex-col">
-        <span class="font-semibold text-lg tracking-tight text-on-surface">LexiCore</span>
-        <span class="text-xs text-on-surface-variant font-mono">Deterministic Legal NLP Suite</span>
-      </div>
+    <div class="flex flex-col">
+      <span class="font-bold text-xl tracking-tight text-primary">LawLens AI</span>
+      <span class="text-xs text-on-surface-variant font-medium">Intelligent Legal Document Classification and Analysis System</span>
     </div>
     <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container border border-surface-high text-xs text-on-surface-variant font-mono">
       <span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
@@ -109,7 +104,7 @@
             <label class="block text-xs font-semibold uppercase tracking-wider text-on-surface-variant" for="signin-password">
               Password
             </label>
-            <a href="#" onclick="showQuickToast('For demo, use admin@lexicore.ai / LexiCore@2026! or create a new account.'); return false;" class="text-xs text-primary hover:underline">Forgot?</a>
+            <a href="#" onclick="showQuickToast('For demo, use admin@lawlens.ai / LawLens@2026! or create a new account.'); return false;" class="text-xs text-primary hover:underline">Forgot?</a>
           </div>
           <div class="relative">
             <span class="material-symbols-outlined absolute left-3 top-2.5 text-[18px] text-outline">lock</span>
@@ -135,7 +130,7 @@
 
         <button id="signin-submit-btn" type="submit"
           class="w-full py-2.5 mt-2 bg-primary text-on-primary font-semibold text-sm rounded-lg hover:bg-primary-container transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20">
-          <span>Access LexiCore Suite</span>
+          <span>Access LawLens AI Workspace</span>
           <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
         </button>
 
@@ -148,8 +143,8 @@
             <button type="button" onclick="fillDemoCreds()" class="text-tertiary underline hover:opacity-80">Auto-fill</button>
           </div>
           <div class="font-mono text-outline space-y-0.5">
-            <div>Email: <span class="text-on-surface">admin@lexicore.ai</span></div>
-            <div>Pass: <span class="text-on-surface">LexiCore@2026!</span></div>
+            <div>Email: <span class="text-on-surface">admin@lawlens.ai</span></div>
+            <div>Pass: <span class="text-on-surface">LawLens@2026!</span></div>
           </div>
         </div>
       </form>
@@ -262,7 +257,7 @@
 
   <!-- Bottom Info -->
   <footer class="w-full max-w-5xl mx-auto text-center py-4 text-xs text-outline font-mono">
-    <span>LexiCore Deterministic Legal Assistant &bull; Major Project Milestone &bull; Zero LLM Architecture</span>
+    <span>LawLens AI: Intelligent Legal Document Classification and Analysis System &bull; Major Project Milestone &bull; Zero LLM Architecture</span>
   </footer>
 
   <!-- Toast Notification -->
@@ -276,16 +271,16 @@
     const DEFAULT_USERS = [
       {
         name: "Marcus Vance",
-        email: "admin@lexicore.ai",
-        password: "LexiCore@2026!"
+        email: "admin@lawlens.ai",
+        password: "LawLens@2026!"
       }
     ];
 
     function getUsers() {
       try {
-        const stored = localStorage.getItem('lexicore_registered_users');
+        const stored = localStorage.getItem('lawlens_registered_users');
         if (!stored) {
-          localStorage.setItem('lexicore_registered_users', JSON.stringify(DEFAULT_USERS));
+          localStorage.setItem('lawlens_registered_users', JSON.stringify(DEFAULT_USERS));
           return DEFAULT_USERS;
         }
         return JSON.parse(stored);
@@ -297,7 +292,7 @@
     function saveUser(user) {
       const users = getUsers();
       users.push(user);
-      localStorage.setItem('lexicore_registered_users', JSON.stringify(users));
+      localStorage.setItem('lawlens_registered_users', JSON.stringify(users));
     }
 
     // Tabs toggle
@@ -417,7 +412,8 @@
       const errorText = document.getElementById('signin-error-text');
 
       const users = getUsers();
-      const matched = users.find(u => u.email.toLowerCase() === email && u.password === password);
+      const account = users.find(u => u.email.toLowerCase() === email);
+      const matched = account && account.password === password ? account : null;
 
       if (matched) {
         errorBox.classList.add('hidden');
@@ -425,7 +421,7 @@
         btn.innerHTML = `<span class="w-4 h-4 rounded-full border-2 border-on-primary border-t-transparent animate-spin"></span> Authenticating...`;
         btn.disabled = true;
 
-        localStorage.setItem('lexicore_current_user', JSON.stringify({
+        localStorage.setItem('lawlens_current_user', JSON.stringify({
           name: matched.name,
           email: matched.email
         }));
@@ -435,7 +431,9 @@
         }, 600);
       } else {
         errorBox.classList.remove('hidden');
-        errorText.textContent = 'Invalid credentials. Click "Auto-fill" below or create an account.';
+        errorText.textContent = account
+          ? 'Incorrect password for this account.'
+          : 'No account is saved for this email at this address. Use the same host where you registered, or create an account with this email to reconnect its documents.';
       }
     });
 
@@ -459,7 +457,7 @@
 
       showQuickToast('Account created successfully! Signing you in...', 'success');
 
-      localStorage.setItem('lexicore_current_user', JSON.stringify({
+      localStorage.setItem('lawlens_current_user', JSON.stringify({
         name: newUser.name,
         email: newUser.email
       }));
@@ -470,8 +468,8 @@
     });
 
     function fillDemoCreds() {
-      document.getElementById('signin-email').value = 'admin@lexicore.ai';
-      document.getElementById('signin-password').value = 'LexiCore@2026!';
+      document.getElementById('signin-email').value = 'admin@lawlens.ai';
+      document.getElementById('signin-password').value = 'LawLens@2026!';
       showQuickToast('Demo credentials populated!', 'info');
     }
 

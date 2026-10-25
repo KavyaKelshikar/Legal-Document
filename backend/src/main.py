@@ -31,8 +31,7 @@ async def lifespan(app: FastAPI):
     logger.info("Starting up AI Legal Document Assistant Service")
     # Pre-train the classifier on startup
     get_clause_classifier()
-    # Pre-load sample legal documents into vault if empty
-    _preload_sample_documents()
+    # Document store starts empty; users upload their own documents
     yield
     # ── Shutdown ──
     logger.info("Shutting down AI Service")
@@ -193,68 +192,7 @@ def _calculate_document_risk(clauses: list) -> dict:
     }
 
 
-def _preload_sample_documents():
-    """Preloads sample legal contracts into DocumentStore if empty."""
-    store = get_document_store()
-    if len(store.list_documents()) > 0:
-        return
 
-    sample_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "sample_pdfs")
-    if not os.path.exists(sample_dir):
-        return
-
-    classifier = get_clause_classifier()
-    summary_service = get_summary_service()
-    missing_service = get_missing_clause_service()
-
-    for fname in sorted(os.listdir(sample_dir)):
-        if not fname.lower().endswith(".pdf"):
-            continue
-        try:
-            fpath = os.path.join(sample_dir, fname)
-            with open(fpath, "rb") as f:
-                contents = f.read()
-
-            result = extract_text_from_pdf(contents)
-            if not result.get("success"):
-                continue
-
-            full_text = result.get("text", "")
-            metadata = result.get("metadata", {})
-            clauses = segment_clauses(full_text)
-            analyzed_clauses = []
-
-            for clause in clauses:
-                category, confidence = classifier.predict(clause["text"], clause["clean_text"])
-                risk_result = assess_contract_risk(clause["text"], category)
-                analyzed_clauses.append({
-                    "clause_id": clause["clause_id"],
-                    "original_text": clause["text"],
-                    "predicted_category": category,
-                    "classification_confidence": round(confidence, 4),
-                    "fuzzy_inputs": risk_result["fuzzy_inputs"],
-                    "risk_score": risk_result["risk_score"],
-                    "risk_level": risk_result["risk_level"],
-                })
-
-            doc_risk = _calculate_document_risk(analyzed_clauses)
-            contract_summary = summary_service.extract_summary(analyzed_clauses)
-            missing_clauses = missing_service.detect_missing_clauses(analyzed_clauses)
-
-            store.save_document({
-                "filename": fname,
-                "user_email": "admin@lexicore.ai",
-                "metadata": metadata,
-                "raw_text": full_text,
-                "total_clauses": len(analyzed_clauses),
-                "clauses": analyzed_clauses,
-                "document_risk": doc_risk,
-                "summary": contract_summary,
-                "missing_clauses": missing_clauses,
-            })
-            logger.info("Preloaded sample document: %s", fname)
-        except Exception as e:
-            logger.warning("Could not preload sample %s: %s", fname, e)
 
 
 
@@ -294,12 +232,16 @@ async def search_document_get(document_id: str, question: str = ""):
 
 
 @app.get("/api/v1/documents")
-async def list_documents(user_email: Optional[str] = None):
+async def list_documents(
+    user_email: Optional[str] = None,
+    x_user_email: Optional[str] = Header(None, alias="X-User-Email"),
+):
     """
     List analyzed documents stored in the DocumentStore, optionally filtered by user_email.
     """
+    resolved_email = (user_email or x_user_email or "").strip().lower() or None
     store = get_document_store()
-    return JSONResponse(content=store.list_documents(user_email=user_email))
+    return JSONResponse(content=store.list_documents(user_email=resolved_email))
 
 
 @app.get("/api/v1/documents/{document_id}")
@@ -368,12 +310,16 @@ async def get_document_analytics(document_id: str):
 
 
 @app.get("/api/v1/analytics")
-async def get_system_analytics(user_email: Optional[str] = None):
+async def get_system_analytics(
+    user_email: Optional[str] = None,
+    x_user_email: Optional[str] = Header(None, alias="X-User-Email"),
+):
     """
     Retrieve system-wide analytics across analyzed documents for the given user.
     """
+    resolved_email = (user_email or x_user_email or "").strip().lower() or None
     analytics_service = get_analytics_service()
-    system_analytics = analytics_service.get_system_analytics(user_email=user_email)
+    system_analytics = analytics_service.get_system_analytics(user_email=resolved_email)
     return JSONResponse(content=system_analytics)
 
 

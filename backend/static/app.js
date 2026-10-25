@@ -1,5 +1,5 @@
 /**
- * LexiCore - Deterministic Legal NLP Suite
+ * LawLens AI - Intelligent Legal Document Classification and Analysis System
  * Unified Frontend Application Controller
  */
 
@@ -17,7 +17,7 @@ const state = {
 // ==========================================
 function getCurrentUser() {
   try {
-    const raw = localStorage.getItem('lexicore_current_user');
+    const raw = localStorage.getItem('lawlens_current_user');
     if (raw) return JSON.parse(raw);
   } catch (e) {
     console.error('Error parsing user session:', e);
@@ -32,24 +32,15 @@ function getCurrentUserEmail() {
 
 function initUserProfile() {
   const user = getCurrentUser();
-  if (user) {
-    const nameEl = document.getElementById('user-display-name');
-    const roleEl = document.getElementById('user-display-role');
-    if (nameEl) nameEl.textContent = user.name || 'Legal Counsel';
-    if (roleEl) roleEl.textContent = user.email || 'Enterprise User';
-  } else {
-    // If running in development without auth session, set demo session
-    const demoUser = { name: 'Marcus Vance', email: 'admin@lexicore.ai' };
-    localStorage.setItem('lexicore_current_user', JSON.stringify(demoUser));
-    const nameEl = document.getElementById('user-display-name');
-    const roleEl = document.getElementById('user-display-role');
-    if (nameEl) nameEl.textContent = demoUser.name;
-    if (roleEl) roleEl.textContent = demoUser.email;
-  }
+  const nameEl = document.getElementById('user-display-name');
+  const roleEl = document.getElementById('user-display-role');
+
+  if (nameEl) nameEl.textContent = user.name || 'Signed-in user';
+  if (roleEl) roleEl.textContent = user.email || '';
 }
 
 function logoutUser() {
-  localStorage.removeItem('lexicore_current_user');
+  localStorage.removeItem('lawlens_current_user');
   window.location.href = '/';
 }
 
@@ -57,6 +48,12 @@ function logoutUser() {
 // Initialization
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
+  const user = getCurrentUser();
+  if (!user || !user.email) {
+    window.location.replace('/');
+    return;
+  }
+
   initUserProfile();
   initNavigation();
   initUploadHandlers();
@@ -64,9 +61,14 @@ document.addEventListener('DOMContentLoaded', () => {
   initAssistantHandlers();
   initPillsAndShortcuts();
 
-  // Load existing documents vault and dashboard
+  // Load documents first so the selected tab can restore with its document context.
   loadDocumentsVault().then(() => {
     loadDashboardData();
+    const savedTab = localStorage.getItem('lawlens_current_tab') || sessionStorage.getItem('lawlens_current_tab');
+    const savedView = savedTab && document.getElementById(`view-${savedTab}`);
+    if (savedView && savedView.classList.contains('tab-view')) {
+      switchTab(savedTab);
+    }
   });
 });
 
@@ -82,7 +84,7 @@ function initNavigation() {
       if (path === 'reports') {
         exportCurrentReport();
       } else if (path === 'settings') {
-        showToast('LexiCore Legal Intelligence Suite: Enterprise NLP & Risk Engine', 'info');
+        showToast('LawLens AI: Intelligent Legal Document Classification and Analysis System', 'info');
       } else {
         switchTab(path);
       }
@@ -111,8 +113,103 @@ function initNavigation() {
   });
 }
 
+function showEmptyAnalysisState() {
+  state.activeDocumentId = null;
+  state.activeDocument = null;
+
+  const emptyState = document.getElementById('analysis-empty-state');
+  if (emptyState) emptyState.classList.remove('hidden');
+
+  const results = document.getElementById('analysis-results');
+  if (results) results.classList.add('hidden');
+
+  const status = document.getElementById('analysis-status');
+  if (status) status.textContent = 'Awaiting Upload';
+
+  const topTitle = document.getElementById('top-doc-title');
+  if (topTitle) topTitle.textContent = 'No Document Selected';
+
+  const topRisk = document.getElementById('top-doc-risk');
+  if (topRisk) {
+    topRisk.textContent = 'Ready';
+    topRisk.className = 'px-space-xs py-space-2xs rounded bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm font-semibold';
+  }
+
+  const analysisTitle = document.getElementById('analysis-doc-title');
+  if (analysisTitle) analysisTitle.textContent = 'No Document Selected';
+
+  const searchTarget = document.getElementById('search-doc-target');
+  if (searchTarget) searchTarget.textContent = 'No Document Selected';
+
+  const assistantTarget = document.getElementById('assistant-doc-target');
+  if (assistantTarget) assistantTarget.textContent = 'No Document Selected';
+
+  const scoreEl = document.getElementById('analysis-risk-score');
+  if (scoreEl) scoreEl.textContent = '0';
+
+  const badgeEl = document.getElementById('analysis-risk-badge');
+  if (badgeEl) badgeEl.textContent = 'Risk: PENDING';
+
+  const circle = document.getElementById('analysis-risk-gauge-circle');
+  if (circle) {
+    circle.style.strokeDashoffset = '301.6';
+    circle.style.stroke = '#7f8ea3';
+  }
+
+  const exportBtn = document.getElementById('analysis-export-report-btn');
+  if (exportBtn) {
+    exportBtn.disabled = true;
+    exportBtn.classList.add('opacity-50', 'cursor-not-allowed');
+    exportBtn.onclick = null;
+  }
+
+  const clausesTbody = document.getElementById('analysis-clauses-tbody');
+  if (clausesTbody) {
+    clausesTbody.innerHTML = `
+      <tr>
+        <td colspan="5" class="py-space-xl text-center text-on-surface-variant font-body-md">
+          Upload a PDF contract to populate the clause review here.
+        </td>
+      </tr>
+    `;
+  }
+
+  const detailContainer = document.getElementById('analysis-clause-detail-container');
+  if (detailContainer) {
+    detailContainer.innerHTML = `
+      <div class="flex flex-col items-center justify-center text-center gap-space-sm py-space-xl">
+        <span class="material-symbols-outlined text-[42px] text-outline">description</span>
+        <div>
+          <div class="font-title-md text-title-md text-on-surface">No clause details available</div>
+          <div class="font-body-sm text-body-sm text-on-surface-variant mt-space-2xs">Upload a contract to inspect clause risk, summaries, and missing provisions.</div>
+        </div>
+      </div>
+    `;
+  }
+
+  const summaryContainer = document.getElementById('analysis-summary-container');
+  if (summaryContainer) {
+    summaryContainer.innerHTML = `
+      <div class="p-space-md bg-surface-container-low rounded-lg text-body-sm font-body-sm text-on-surface-variant text-center">
+        No extractive summary is available until a document is uploaded.
+      </div>
+    `;
+  }
+
+  const missingContainer = document.getElementById('analysis-missing-clauses-container');
+  if (missingContainer) {
+    missingContainer.innerHTML = `
+      <div class="p-space-md bg-surface-container-low rounded-lg text-body-sm font-body-sm text-on-surface-variant text-center">
+        Missing clause audit will appear after the first PDF upload.
+      </div>
+    `;
+  }
+}
+
 function switchTab(tabName) {
   state.currentTab = tabName;
+  localStorage.setItem('lawlens_current_tab', tabName);
+  sessionStorage.setItem('lawlens_current_tab', tabName);
 
   // Hide all tab views
   const views = document.querySelectorAll('.tab-view');
@@ -145,6 +242,8 @@ function switchTab(tabName) {
   } else if (tabName === 'analysis') {
     if (state.activeDocumentId) {
       refreshAnalysisView(state.activeDocumentId);
+    } else {
+      showEmptyAnalysisState();
     }
   } else if (tabName === 'search' || tabName === 'ai-assistant') {
     updateActiveDocumentLabels();
@@ -360,14 +459,23 @@ async function loadDocumentsVault() {
     const countEl = document.getElementById('docs-total-count');
     if (countEl) countEl.textContent = docs.length;
 
+    // Update filter pill counts
+    const filterAll = document.getElementById('doc-filter-count-all');
+    const filterHigh = document.getElementById('doc-filter-count-high');
+    const filterMed = document.getElementById('doc-filter-count-med');
+    const filterLow = document.getElementById('doc-filter-count-low');
+    if (filterAll) filterAll.textContent = docs.length;
+    if (filterHigh) filterHigh.textContent = docs.filter(d => (d.overall_level || '').toUpperCase() === 'HIGH').length;
+    if (filterMed) filterMed.textContent = docs.filter(d => (d.overall_level || '').toUpperCase() === 'MEDIUM' || (d.overall_level || '').toUpperCase() === 'MODERATE').length;
+    if (filterLow) filterLow.textContent = docs.filter(d => (d.overall_level || '').toUpperCase() === 'LOW').length;
+
     // If no active document, set the first one, or reset if no docs
     if (docs.length > 0) {
       if (!state.activeDocumentId || !docs.some(d => d.document_id === state.activeDocumentId)) {
         selectDocument(docs[0].document_id);
       }
     } else {
-      state.activeDocumentId = null;
-      state.activeDocument = null;
+      showEmptyAnalysisState();
       updateActiveDocumentLabels();
     }
 
@@ -464,14 +572,24 @@ function renderDocumentsTable(docs) {
 }
 
 async function selectDocument(docId) {
+  if (!docId) {
+    showEmptyAnalysisState();
+    return;
+  }
+
   state.activeDocumentId = docId;
   try {
     const res = await fetch(`/api/v1/documents/${docId}`);
     if (res.ok) {
       state.activeDocument = await res.json();
+    } else {
+      showEmptyAnalysisState();
+      return;
     }
   } catch (err) {
     console.error('Error fetching document details:', err);
+    showEmptyAnalysisState();
+    return;
   }
 
   updateActiveDocumentLabels();
@@ -511,9 +629,126 @@ function updateActiveDocumentLabels() {
   const searchTarget = document.getElementById('search-doc-target');
   if (searchTarget) searchTarget.textContent = filename;
 
+  const searchClauseCount = document.getElementById('search-doc-clause-count');
+  if (searchClauseCount) {
+    const count = state.activeDocument ? (state.activeDocument.clauses || []).length : 0;
+    searchClauseCount.textContent = `${count} ${count === 1 ? 'Clause' : 'Clauses'}`;
+  }
+
   // Assistant target
   const assistantTarget = document.getElementById('assistant-doc-target');
   if (assistantTarget) assistantTarget.textContent = filename;
+
+  renderAssistantContext();
+}
+
+function renderAssistantContext() {
+  const panel = document.getElementById('assistant-context-panel');
+  if (!panel) return;
+
+  panel.classList.remove('hidden');
+  const doc = state.activeDocument;
+  if (!doc) {
+    panel.innerHTML = `
+      <section class="bg-surface-container-low rounded-xl border border-dashed border-surface-container-high p-space-lg text-center">
+        <span class="material-symbols-outlined text-[30px] text-outline">description</span>
+        <h2 class="mt-space-sm font-title-md text-title-md text-on-surface">Document insights</h2>
+        <p class="mt-space-xs font-body-sm text-body-sm text-on-surface-variant">Select or upload a PDF to see its real clause categories and risk distribution.</p>
+      </section>
+    `;
+    return;
+  }
+
+  const clauses = Array.isArray(doc.clauses) ? doc.clauses : [];
+  const summaries = doc.summary || {};
+  const summaryFields = [
+    ['duration', 'Duration'],
+    ['payment_terms', 'Payment terms'],
+    ['termination', 'Termination'],
+    ['liability', 'Liability']
+  ];
+  const summaryItems = summaryFields.map(([key, label]) => {
+    const item = summaries[key];
+    const text = item && typeof item === 'object' ? item.text : item;
+    return text ? { label, text } : null;
+  }).filter(Boolean);
+  const riskBucket = (clause) => {
+    const level = (clause.risk_level || '').toUpperCase();
+    const score = Number(clause.risk_score) || 0;
+    if (level === 'HIGH' || level === 'CRITICAL' || score >= 65) return 'HIGH';
+    if (level === 'MEDIUM' || level === 'MODERATE' || score >= 35) return 'MEDIUM';
+    return 'LOW';
+  };
+  const riskCounts = { LOW: 0, MEDIUM: 0, HIGH: 0 };
+  clauses.forEach(clause => {
+    riskCounts[riskBucket(clause)] += 1;
+  });
+
+  const total = clauses.length;
+  const riskRows = [
+    ['LOW', riskCounts.LOW, 'bg-tertiary', 'text-tertiary'],
+    ['MEDIUM', riskCounts.MEDIUM, 'bg-amber-400', 'text-amber-300'],
+    ['HIGH', riskCounts.HIGH, 'bg-error', 'text-error']
+  ];
+  const riskBar = riskRows.map(([label, count, color]) =>
+    `<div class="h-full ${color}" style="width:${total ? (count / total) * 100 : 0}%" title="${label}: ${count}"></div>`
+  ).join('');
+  const riskLegend = riskRows.map(([label, count, , textColor]) => `
+    <div class="flex items-center justify-between gap-space-xs font-code-sm text-code-sm">
+      <span class="flex items-center gap-space-2xs ${textColor}"><span class="h-2 w-2 rounded-full ${riskRows.find(row => row[0] === label)[2]}"></span>${label}</span>
+      <span class="text-on-surface-variant">${count}</span>
+    </div>
+  `).join('');
+  const summaryHtml = summaryItems.length
+    ? summaryItems.map(item => `
+        <div class="min-w-0 rounded-lg bg-surface-container p-space-sm">
+          <span class="font-label-sm text-label-sm uppercase text-on-surface-variant">${item.label}</span>
+          <p class="mt-space-2xs line-clamp-3 font-body-sm text-body-sm text-on-surface">${escapeHtml(item.text)}</p>
+        </div>
+      `).join('')
+    : '<p class="col-span-2 py-space-sm text-body-sm text-on-surface-variant">No summary facts were extracted for this document.</p>';
+  const highRiskClauses = clauses
+    .map((clause, index) => ({ clause, index }))
+    .filter(({ clause }) => riskBucket(clause) === 'HIGH')
+    .sort((a, b) => (Number(b.clause.risk_score) || 0) - (Number(a.clause.risk_score) || 0));
+  const riskClauseHtml = highRiskClauses.length
+    ? highRiskClauses.slice(0, 3).map(({ clause, index }) => {
+        const category = clause.predicted_category || clause.category || 'General';
+        const source = (clause.original_text || clause.text || '').replace(/\s+/g, ' ').trim();
+        const excerpt = source.length > 100 ? `${source.slice(0, 100)}...` : source;
+        return `<article class="rounded-lg border border-surface-container-high bg-surface-container p-space-sm">
+          <div class="flex items-start justify-between gap-space-xs">
+            <div class="min-w-0"><span class="font-label-sm text-label-sm text-on-surface-variant">CLAUSE ${index + 1} · ${escapeHtml(category)}</span>
+            <p class="mt-space-2xs font-body-sm text-body-sm text-on-surface">${escapeHtml(excerpt || 'No clause text available.')}</p></div>
+            <span class="shrink-0 font-code-sm text-code-sm font-semibold text-error">${Math.round(Number(clause.risk_score) || 0)}</span>
+          </div>
+        </article>`;
+      }).join('')
+    : '<p class="rounded-lg bg-surface-container p-space-sm font-body-sm text-body-sm text-on-surface-variant">No high-risk clauses detected in this document.</p>';
+  const documentId = encodeURIComponent(doc.document_id || '');
+
+  panel.innerHTML = `
+    <section class="bg-surface-container-low rounded-xl border border-surface-container-high p-space-md flex flex-col gap-space-md">
+      <header class="flex min-w-0 items-start justify-between gap-space-sm">
+        <div class="min-w-0"><span class="font-label-sm text-label-sm uppercase tracking-wider text-primary">Document insights</span>
+          <h2 class="mt-space-2xs truncate font-title-md text-title-md text-on-surface">${escapeHtml(doc.filename || 'Selected PDF')}</h2>
+          <p class="mt-space-2xs font-body-sm text-body-sm text-on-surface-variant">${total} analyzed clauses</p>
+        </div>
+        <span class="material-symbols-outlined shrink-0 text-primary">description</span>
+      </header>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-xs">${summaryHtml}</div>
+    </section>
+    <section class="bg-surface-container-low rounded-xl border border-surface-container-high p-space-md flex flex-col gap-space-sm">
+      <div class="flex items-center justify-between"><h3 class="font-title-sm text-title-sm text-on-surface">Clause risk distribution</h3><span class="font-code-sm text-code-sm text-on-surface-variant">${total} clauses</span></div>
+      <div class="flex h-3 w-full overflow-hidden rounded-full bg-surface-container-highest">${riskBar}</div>
+      <div class="grid grid-cols-3 gap-space-sm">${riskLegend}</div>
+      <div class="pt-space-xs"><h3 class="mb-space-xs font-title-sm text-title-sm text-on-surface">Highest-risk clauses <span class="font-code-sm text-code-sm text-on-surface-variant">(${highRiskClauses.length})</span></h3><div class="flex flex-col gap-space-xs">${riskClauseHtml}</div></div>
+    </section>
+    <div class="grid grid-cols-2 gap-space-xs">
+      <a data-path="analysis" href="#" class="flex min-h-10 items-center justify-center gap-space-xs rounded-lg bg-surface-container-high px-space-sm py-space-xs text-center font-title-sm text-title-sm text-on-surface transition-colors hover:bg-surface-bright">Review ${total} clauses</a>
+      <button type="button" onclick="window.open('/api/v1/documents/${documentId}/report', '_blank')" class="flex min-h-10 items-center justify-center gap-space-xs rounded-lg bg-primary px-space-sm py-space-xs text-center font-title-sm text-title-sm text-on-primary transition-colors hover:bg-primary-container">Export report</button>
+    </div>
+  `;
 }
 
 // ==========================================
@@ -537,13 +772,66 @@ async function loadDashboardData() {
 
   const totalDocs = docs.length;
   const totalClauses = docs.reduce((acc, d) => acc + (d.total_clauses || 0), 0);
-  const highRiskDocs = docs.filter(d => (d.overall_level || '').toUpperCase() === 'HIGH').length;
-  const medRiskDocs = docs.filter(d => (d.overall_level || '').toUpperCase() === 'MEDIUM' || (d.overall_level || '').toUpperCase() === 'MODERATE').length;
-  const lowRiskDocs = docs.filter(d => (d.overall_level || '').toUpperCase() === 'LOW').length;
+  const getRiskBucket = (doc) => {
+    const level = (doc.overall_level || '').toUpperCase();
+    if (level === 'HIGH' || level === 'CRITICAL') return 'HIGH';
+    if (level === 'MEDIUM' || level === 'MODERATE') return 'MEDIUM';
+    if (level === 'LOW') return 'LOW';
+
+    const score = Number(doc.overall_score);
+    if (Number.isFinite(score)) {
+      return score >= 65 ? 'HIGH' : score >= 35 ? 'MEDIUM' : 'LOW';
+    }
+    return 'LOW';
+  };
+  const highRiskDocs = docs.filter(doc => getRiskBucket(doc) === 'HIGH').length;
+  const medRiskDocs = docs.filter(doc => getRiskBucket(doc) === 'MEDIUM').length;
+  const lowRiskDocs = docs.filter(doc => getRiskBucket(doc) === 'LOW').length;
 
   const avgRiskScore = totalDocs > 0
     ? Math.round(docs.reduce((acc, d) => acc + (d.overall_score || 0), 0) / totalDocs)
     : 0;
+
+  const vaultSummary = document.getElementById('docs-vault-summary');
+  if (vaultSummary) {
+    vaultSummary.textContent = totalDocs === 0
+      ? 'Awaiting first upload'
+      : `${totalDocs} analyzed ${totalDocs === 1 ? 'document' : 'documents'}`;
+  }
+
+  const parsedClauseCount = document.getElementById('docs-parsed-clause-count');
+  if (parsedClauseCount) parsedClauseCount.textContent = totalClauses;
+
+  const parsedClauseSummary = document.getElementById('docs-parsed-clause-summary');
+  if (parsedClauseSummary) {
+    parsedClauseSummary.textContent = totalDocs === 0
+      ? 'Upload a PDF to begin extraction'
+      : 'Extracted from uploaded PDFs';
+  }
+
+  const hasRiskAnalytics = analyticsData &&
+    typeof analyticsData.high_risk_clause_count === 'number' &&
+    analyticsData.missing_clause_statistics &&
+    typeof analyticsData.missing_clause_statistics.total_missing_categories === 'number';
+  const riskAlertCount = hasRiskAnalytics
+    ? analyticsData.high_risk_clause_count + analyticsData.missing_clause_statistics.total_missing_categories
+    : null;
+
+  const riskAlertCountEl = document.getElementById('docs-risk-alert-count');
+  if (riskAlertCountEl) riskAlertCountEl.textContent = riskAlertCount === null ? '—' : riskAlertCount;
+
+  const riskAlertSummary = document.getElementById('docs-risk-alert-summary');
+  if (riskAlertSummary) {
+    if (totalDocs === 0) {
+      riskAlertSummary.textContent = 'Awaiting upload';
+    } else if (riskAlertCount === null) {
+      riskAlertSummary.textContent = 'Analytics unavailable';
+    } else if (riskAlertCount === 0) {
+      riskAlertSummary.textContent = 'No high-risk or missing-clause findings';
+    } else {
+      riskAlertSummary.textContent = `${analyticsData.high_risk_clause_count} high-risk · ${analyticsData.missing_clause_statistics.total_missing_categories} missing`;
+    }
+  }
 
   // 1. KPI Cards
   const totalDocsEl = document.getElementById('dash-total-docs');
@@ -556,6 +844,16 @@ async function loadDashboardData() {
 
   const totalClausesEl = document.getElementById('dash-total-clauses');
   if (totalClausesEl) totalClausesEl.textContent = totalClauses;
+
+  const clausesSubtext = document.getElementById('dash-clauses-subtext');
+  if (clausesSubtext) {
+    clausesSubtext.textContent = totalDocs === 0 ? 'Awaiting contract upload' : 'Segmented via Legal NLP Engine';
+  }
+
+  const parsedStatusEl = document.getElementById('dash-parsed-status');
+  if (parsedStatusEl) {
+    parsedStatusEl.textContent = totalDocs === 0 ? 'Awaiting Upload' : '100% Parsed';
+  }
 
   const highRiskEl = document.getElementById('dash-high-risk-docs');
   if (highRiskEl) highRiskEl.textContent = highRiskDocs;
@@ -747,13 +1045,103 @@ async function loadDashboardData() {
       }).join('');
     }
   }
+
+  // 5. Dynamic Alerts & Findings Panel
+  const alertsBadge = document.getElementById('dash-alerts-count');
+  const alertsContainer = document.getElementById('dash-alerts-container');
+  const alertsIcon = document.getElementById('dash-alerts-icon');
+
+  if (alertsContainer) {
+    const highRiskClauses = [];
+    const missingClauses = [];
+
+    if (analyticsData && analyticsData.recent_alerts) {
+      if (Array.isArray(analyticsData.recent_alerts.high_risk_clauses)) {
+        highRiskClauses.push(...analyticsData.recent_alerts.high_risk_clauses);
+      }
+      if (Array.isArray(analyticsData.recent_alerts.missing_clauses)) {
+        missingClauses.push(...analyticsData.recent_alerts.missing_clauses);
+      }
+    }
+
+    const totalFlags = (analyticsData && typeof analyticsData.high_risk_clause_count === 'number' ? analyticsData.high_risk_clause_count : highRiskClauses.length) +
+                       (analyticsData && analyticsData.missing_clause_statistics && typeof analyticsData.missing_clause_statistics.total_missing_categories === 'number' ? analyticsData.missing_clause_statistics.total_missing_categories : missingClauses.length);
+
+    if (alertsBadge) {
+      if (totalFlags > 0) {
+        alertsBadge.textContent = `${totalFlags} Flag${totalFlags === 1 ? '' : 's'}`;
+        alertsBadge.className = 'px-space-xs py-space-2xs rounded bg-error-container text-error font-code-sm text-code-sm font-semibold';
+      } else {
+        alertsBadge.textContent = 'All Clear (0 Flags)';
+        alertsBadge.className = 'px-space-xs py-space-2xs rounded bg-surface-container text-tertiary font-code-sm text-code-sm font-semibold';
+      }
+    }
+
+    if (alertsIcon) {
+      alertsIcon.textContent = totalFlags > 0 ? 'rule_folder' : 'verified_user';
+      alertsIcon.className = `material-symbols-outlined ${totalFlags > 0 ? 'text-error' : 'text-tertiary'} text-[18px]`;
+    }
+
+    if (totalFlags === 0) {
+      alertsContainer.innerHTML = `
+        <div class="flex flex-col items-center justify-center p-6 text-center text-on-surface-variant bg-surface-container/20 rounded-lg border border-surface-container-high/30 my-2">
+          <div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-tertiary mb-2">
+            <span class="material-symbols-outlined text-[20px]">verified</span>
+          </div>
+          <span class="font-title-sm text-on-surface text-sm">No Risk Flags Detected</span>
+          <span class="text-xs text-on-surface-variant max-w-xs mt-1">
+            ${totalDocs === 0 ? 'Upload a PDF contract to evaluate high-risk clauses, uncapped liabilities, and missing legal provisions.' : 'All evaluated clauses within active contracts fall within acceptable risk thresholds.'}
+          </span>
+        </div>
+      `;
+    } else {
+      let html = '';
+      if (highRiskClauses.length > 0) {
+        html += `
+          <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold">High-Risk Clauses</span>
+          ${highRiskClauses.slice(0, 2).map(c => `
+            <div class="bg-surface-container rounded-lg p-space-sm flex flex-col space-y-space-2xs mb-2">
+              <div class="flex items-center justify-between">
+                <span class="font-title-sm text-title-sm text-error truncate max-w-[200px]">${escapeHtml(c.document_name || 'Contract')}</span>
+                <span class="px-space-xs py-space-2xs rounded bg-error-container text-error font-code-sm text-code-sm">Score: ${Math.round(c.risk_score || 0)}/100</span>
+              </div>
+              <p class="font-body-sm text-body-sm text-on-surface line-clamp-2">${escapeHtml(c.text || '')}</p>
+              <div class="text-on-surface-variant font-code-sm text-code-sm pt-space-2xs flex items-center gap-space-2xs">
+                <span class="material-symbols-outlined text-[14px]">psychology</span>
+                <span>Category: ${escapeHtml(c.category || 'General')}</span>
+              </div>
+            </div>
+          `).join('')}
+        `;
+      }
+
+      if (missingClauses.length > 0) {
+        html += `
+          <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold pt-space-xs">Potentially Missing Clauses</span>
+          ${missingClauses.slice(0, 2).map(m => `
+            <div class="bg-surface-container rounded-lg p-space-sm flex flex-col space-y-space-2xs mb-2">
+              <div class="flex items-center justify-between">
+                <span class="font-title-sm text-title-sm text-on-surface truncate max-w-[200px]">${escapeHtml(m.document_name || 'Contract')}</span>
+                <span class="px-space-xs py-space-2xs rounded bg-surface-container-high text-secondary font-code-sm text-code-sm">Omission</span>
+              </div>
+              <p class="font-body-sm text-body-sm text-on-surface-variant">Missing provision: <span class="text-on-surface font-medium">${escapeHtml(m.missing_category || '')}</span></p>
+            </div>
+          `).join('')}
+        `;
+      }
+      alertsContainer.innerHTML = html;
+    }
+  }
 }
 
 // ==========================================
 // Analysis Tab Population
 // ==========================================
 async function refreshAnalysisView(docId, preloadedData = null) {
-  if (!docId) return;
+  if (!docId) {
+    showEmptyAnalysisState();
+    return;
+  }
 
   let docData = preloadedData;
   if (!docData) {
@@ -770,13 +1158,128 @@ async function refreshAnalysisView(docId, preloadedData = null) {
 
   if (docData) {
     renderAnalysisData(docData);
+  } else {
+    showEmptyAnalysisState();
   }
 }
 
 function renderAnalysisData(docData) {
+  if (!docData) {
+    showEmptyAnalysisState();
+    return;
+  }
+
   const docRisk = docData.document_risk || {};
-  const score = Math.round(docRisk.overall_score || 0);
+  const score = Math.max(0, Math.min(100, Math.round(Number(docRisk.overall_score) || 0)));
   const risk = (docRisk.overall_level || 'LOW').toUpperCase();
+  const clauses = Array.isArray(docData.clauses) ? docData.clauses : [];
+  const summary = docData.summary || {};
+  const missingData = docData.missing_clauses || {};
+  const missingClauses = missingData.missing_clauses || missingData.missing || [];
+  const highRiskCount = clauses.filter(clause => ['HIGH', 'CRITICAL'].includes((clause.risk_level || '').toUpperCase())).length;
+  const mediumRiskCount = clauses.filter(clause => ['MEDIUM', 'MODERATE'].includes((clause.risk_level || '').toUpperCase())).length;
+  const lowRiskCount = clauses.length - highRiskCount - mediumRiskCount;
+
+  const emptyState = document.getElementById('analysis-empty-state');
+  if (emptyState) emptyState.classList.add('hidden');
+
+  const results = document.getElementById('analysis-results');
+  if (results) {
+    results.classList.remove('hidden');
+
+    const riskColor = risk.includes('HIGH') || risk.includes('CRITICAL')
+      ? 'text-error bg-error-container'
+      : risk.includes('MEDIUM') || risk.includes('MODERATE')
+        ? 'text-amber-300 bg-amber-500/20'
+        : 'text-tertiary bg-tertiary-container/30';
+    const riskAccent = risk.includes('HIGH') || risk.includes('CRITICAL')
+      ? '#f87171'
+      : risk.includes('MEDIUM') || risk.includes('MODERATE')
+        ? '#fbbf24'
+        : '#34d399';
+    const summaryCategories = [
+      ['duration', 'Duration & Term'],
+      ['payment_terms', 'Payment Terms'],
+      ['termination', 'Termination'],
+      ['confidentiality', 'Confidentiality'],
+      ['liability', 'Liability & Indemnity']
+    ];
+    const summaryHtml = summaryCategories.map(([key, label]) => {
+      const item = summary[key];
+      const text = item && typeof item === 'object' ? item.text : item;
+      if (!text) return '';
+      return `<div class="border-b border-surface-container-high py-space-sm last:border-0">
+        <h3 class="font-title-sm text-title-sm text-on-surface">${label}</h3>
+        <p class="mt-space-2xs font-body-sm text-body-sm text-on-surface-variant">${escapeHtml(text)}</p>
+      </div>`;
+    }).join('');
+    const clausesHtml = clauses.length ? clauses.map((clause, index) => {
+      const clauseRisk = (clause.risk_level || 'LOW').toUpperCase();
+      const clauseRiskColor = clauseRisk === 'HIGH' || clauseRisk === 'CRITICAL'
+        ? 'text-error'
+        : clauseRisk === 'MEDIUM' || clauseRisk === 'MODERATE'
+          ? 'text-amber-300'
+          : 'text-tertiary';
+      const category = clause.predicted_category || clause.category || 'General';
+      const clauseText = clause.original_text || clause.text || '';
+      return `<tr class="border-t border-surface-container-high align-top">
+        <td class="px-space-sm py-space-sm font-code-sm text-code-sm text-on-surface-variant">${index + 1}</td>
+        <td class="px-space-sm py-space-sm">
+          <span class="font-title-sm text-title-sm text-on-surface">${escapeHtml(category)}</span>
+          <details class="mt-space-2xs max-w-2xl">
+            <summary class="cursor-pointer font-body-sm text-body-sm text-primary">View clause text</summary>
+            <p class="mt-space-xs whitespace-pre-wrap break-words font-body-sm text-body-sm text-on-surface-variant">${escapeHtml(clauseText)}</p>
+          </details>
+        </td>
+        <td class="px-space-sm py-space-sm font-code-sm text-code-sm ${clauseRiskColor}">${Math.round(Number(clause.risk_score) || 0)} / 100</td>
+        <td class="px-space-sm py-space-sm font-label-sm text-label-sm ${clauseRiskColor}">${escapeHtml(clauseRisk)}</td>
+      </tr>`;
+    }).join('') : `<tr><td colspan="4" class="px-space-sm py-space-lg text-center text-on-surface-variant">No clauses were extracted from this PDF.</td></tr>`;
+    const missingHtml = missingClauses.length
+      ? missingClauses.map(item => `<li class="py-space-xs text-body-sm text-on-surface-variant">
+          <span class="font-title-sm text-title-sm text-on-surface">${escapeHtml(item.category || item.title || 'Unclassified provision')}</span>
+          <span class="block mt-space-2xs">${escapeHtml(item.rationale || item.recommendation || item.risk_impact || '')}</span>
+        </li>`).join('')
+      : '<li class="py-space-xs text-body-sm text-on-surface-variant">No missing clause findings were returned for this document.</li>';
+
+    results.innerHTML = `
+      <section class="grid grid-cols-1 md:grid-cols-4 gap-space-md" aria-label="Document analysis metrics">
+        <div class="bg-surface-container-low rounded-xl border border-surface-container-high p-space-md">
+          <div class="font-label-sm text-label-sm uppercase text-on-surface-variant">Overall risk</div>
+          <div class="mt-space-sm flex items-center gap-space-md">
+            <div role="img" aria-label="Risk score ${score} out of 100" class="grid h-20 w-20 shrink-0 place-items-center rounded-full" style="background:conic-gradient(${riskAccent} ${score}%,rgba(255,255,255,.09) ${score}% 100%)">
+              <div class="flex h-16 w-16 flex-col items-center justify-center rounded-full bg-surface-container-low">
+                <strong class="font-metric-display-sm text-metric-display-sm leading-none text-on-surface">${score}</strong>
+                <span class="font-code-sm text-code-sm text-on-surface-variant">/ 100</span>
+              </div>
+            </div>
+            <div class="min-w-0">
+              <span class="inline-flex rounded px-space-xs py-space-2xs font-label-sm text-label-sm ${riskColor}">${escapeHtml(risk)}</span>
+              <p class="mt-space-xs font-body-sm text-body-sm text-on-surface-variant">Overall document risk</p>
+            </div>
+          </div>
+        </div>
+        <div class="bg-surface-container-low rounded-xl border border-surface-container-high p-space-md"><div class="font-label-sm text-label-sm uppercase text-on-surface-variant">Clauses analyzed</div><div class="mt-space-sm font-metric-display-sm text-metric-display-sm text-on-surface">${clauses.length}</div><div class="mt-space-xs h-1.5 overflow-hidden rounded-full bg-surface-container-highest"><div class="h-full rounded-full bg-primary" style="width:${clauses.length ? 100 : 0}%"></div></div><div class="mt-space-xs font-body-sm text-body-sm text-on-surface-variant">Extracted from this PDF</div></div>
+        <div class="bg-surface-container-low rounded-xl border border-surface-container-high p-space-md"><div class="font-label-sm text-label-sm uppercase text-on-surface-variant">High-risk clauses</div><div class="mt-space-sm font-metric-display-sm text-metric-display-sm text-error">${highRiskCount}</div><div class="mt-space-xs font-body-sm text-body-sm text-on-surface-variant">${mediumRiskCount} medium · ${lowRiskCount} low</div></div>
+        <div class="bg-surface-container-low rounded-xl border border-surface-container-high p-space-md"><div class="font-label-sm text-label-sm uppercase text-on-surface-variant">Potential gaps</div><div class="mt-space-sm font-metric-display-sm text-metric-display-sm text-on-surface">${missingClauses.length}</div><div class="mt-space-xs font-body-sm text-body-sm text-on-surface-variant">Missing clause findings</div></div>
+      </section>
+      <section class="grid grid-cols-1 xl:grid-cols-2 gap-space-lg">
+        <div class="bg-surface-container rounded-xl p-space-lg">
+          <div class="flex items-center justify-between gap-space-sm"><h2 class="font-title-md text-title-md text-on-surface">Clause analysis</h2><span class="font-code-sm text-code-sm text-on-surface-variant">${clauses.length} total</span></div>
+          <div class="mt-space-sm max-h-[34rem] overflow-auto">
+            <table class="w-full text-left"><thead class="sticky top-0 bg-surface-container"><tr class="font-label-sm text-label-sm uppercase text-on-surface-variant"><th class="px-space-sm py-space-xs">#</th><th class="px-space-sm py-space-xs">Category and text</th><th class="px-space-sm py-space-xs">Score</th><th class="px-space-sm py-space-xs">Risk</th></tr></thead><tbody>${clausesHtml}</tbody></table>
+          </div>
+        </div>
+        <div class="space-y-space-lg">
+          <section class="bg-surface-container rounded-xl p-space-lg"><h2 class="font-title-md text-title-md text-on-surface">Extracted summary</h2><div class="mt-space-xs">${summaryHtml || '<p class="py-space-sm text-body-sm text-on-surface-variant">No summary sentences were extracted.</p>'}</div></section>
+          <section class="bg-surface-container rounded-xl p-space-lg"><h2 class="font-title-md text-title-md text-on-surface">Potentially missing clauses</h2><ul class="mt-space-xs divide-y divide-surface-container-high">${missingHtml}</ul></section>
+        </div>
+      </section>
+    `;
+  }
+
+  const status = document.getElementById('analysis-status');
+  if (status) status.textContent = 'Analysis complete';
 
   const scoreEl = document.getElementById('analysis-risk-score');
   if (scoreEl) scoreEl.textContent = score;
@@ -800,7 +1303,6 @@ function renderAnalysisData(docData) {
   }
 
   // Render clauses preview
-  const clauses = docData.clauses || [];
   if (clauses.length > 0) {
     renderClausesPreview(clauses);
     inspectClause(clauses[0], 0);
@@ -829,6 +1331,8 @@ function renderAnalysisData(docData) {
   // PDF report export button
   const exportBtn = document.getElementById('analysis-export-report-btn');
   if (exportBtn) {
+    exportBtn.disabled = false;
+    exportBtn.classList.remove('opacity-50', 'cursor-not-allowed');
     exportBtn.onclick = () => {
       window.open(`/api/v1/documents/${docData.document_id}/report`, '_blank');
     };
@@ -1018,75 +1522,39 @@ function renderMissingClauses(missingData) {
 }
 
 // ==========================================
-// Dashboard Tab Population
-// ==========================================
-async function loadDashboardData() {
-  try {
-    const res = await fetch('/api/v1/analytics');
-    if (!res.ok) return;
-    const analytics = await res.json();
-
-    const totalDocsEl = document.getElementById('dash-total-docs');
-    if (totalDocsEl) totalDocsEl.textContent = analytics.total_documents || 0;
-
-    const avgRiskEl = document.getElementById('dash-avg-risk');
-    if (avgRiskEl) avgRiskEl.textContent = Math.round(analytics.average_risk_score || 0);
-
-    const highRiskEl = document.getElementById('dash-high-risk-count');
-    if (highRiskEl) highRiskEl.textContent = (analytics.risk_distribution && analytics.risk_distribution.HIGH) || 0;
-
-    const lowRiskEl = document.getElementById('dash-low-risk-count');
-    if (lowRiskEl) lowRiskEl.textContent = (analytics.risk_distribution && analytics.risk_distribution.LOW) || 0;
-
-    // Recent documents table in dashboard
-    const tbody = document.getElementById('dash-recent-docs-tbody');
-    if (tbody && state.documents && state.documents.length > 0) {
-      tbody.innerHTML = state.documents.slice(0, 5).map(doc => {
-        const risk = (doc.overall_level || 'MODERATE').toUpperCase();
-        const riskColor = risk === 'HIGH' ? 'text-error' : (risk === 'MEDIUM' ? 'text-amber-300' : 'text-tertiary');
-        const badgeBg = risk === 'HIGH' ? 'bg-error-container text-error' : (risk === 'MEDIUM' ? 'bg-amber-500/20 text-amber-300' : 'bg-tertiary-container/30 text-tertiary');
-
-        return `
-          <tr class="hover:bg-surface-bright transition-colors cursor-pointer" onclick="selectDocument('${doc.document_id}'); switchTab('analysis');">
-            <td class="py-space-sm px-space-md">
-              <span class="font-title-sm text-title-sm text-on-surface block truncate max-w-[240px]">${escapeHtml(doc.filename)}</span>
-            </td>
-            <td class="py-space-sm px-space-md font-code-sm text-code-sm text-on-surface-variant">${doc.total_clauses || 0}</td>
-            <td class="py-space-sm px-space-md font-code-sm text-code-sm ${riskColor} font-bold">${Math.round(doc.overall_score || 0)}/100</td>
-            <td class="py-space-sm px-space-md">
-              <span class="px-space-xs py-space-2xs rounded ${badgeBg} font-label-sm text-label-sm uppercase font-semibold">${risk}</span>
-            </td>
-            <td class="py-space-sm px-space-md text-right">
-              <span class="material-symbols-outlined text-[18px] text-primary">arrow_forward</span>
-            </td>
-          </tr>
-        `;
-      }).join('');
-    }
-  } catch (err) {
-    console.error('Failed to load dashboard analytics:', err);
-  }
-}
-
-// ==========================================
 // Semantic Search Tab Logic
 // ==========================================
 function initSearchHandlers() {
+  const form = document.getElementById('search-form');
   const queryInput = document.getElementById('query-input');
-  const searchBtn = document.getElementById('search-submit-btn');
+  const resultsContainer = document.getElementById('search-results-container');
 
-  if (queryInput) {
-    queryInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        executeSearch(queryInput.value);
-      }
+  if (form && queryInput) {
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      executeSearch(queryInput.value);
     });
   }
 
-  if (searchBtn && queryInput) {
-    searchBtn.addEventListener('click', () => {
-      executeSearch(queryInput.value);
-    });
+  if (resultsContainer) {
+    resultsContainer.innerHTML = `
+      <div class="min-h-56 bg-surface-container rounded-xl border border-dashed border-outline/50 p-space-xl flex flex-col items-center justify-center text-center">
+        <span class="material-symbols-outlined text-[36px] text-outline">manage_search</span>
+        <h2 class="mt-space-sm font-title-md text-title-md text-on-surface">Search this document</h2>
+        <p class="mt-space-xs max-w-lg font-body-sm text-body-sm text-on-surface-variant">Enter a question above or choose a suggested inquiry. Results will be extracted from the selected document.</p>
+      </div>
+    `;
+  }
+
+  const searchAside = document.querySelector('#view-search aside');
+  if (searchAside) {
+    searchAside.innerHTML = `
+      <section class="bg-surface-container-low p-space-md rounded-xl shadow-sm">
+        <h2 class="font-title-sm text-title-sm text-on-surface font-semibold">Search method</h2>
+        <p class="mt-space-xs font-body-sm text-body-sm text-on-surface-variant">LawLens ranks clauses by TF-IDF and cosine similarity, then returns the strongest matching sentence with its source clause.</p>
+        <p class="mt-space-sm font-body-sm text-body-sm text-on-surface-variant">Choose a document from the Documents page to change the search target.</p>
+      </section>
+    `;
   }
 }
 
@@ -1142,7 +1610,7 @@ function renderSearchResults(data, query) {
     return;
   }
 
-  const simPct = Math.round((data.similarity_score || 0) * 100);
+  const simPct = Math.max(0, Math.min(100, Math.round((Number(data.similarity_score) || 0) * 100)));
   const category = data.clause_category || 'General';
 
   container.innerHTML = `
@@ -1152,13 +1620,15 @@ function renderSearchResults(data, query) {
           <span class="px-space-xs py-space-2xs rounded bg-surface-container-high font-code-sm text-code-sm text-primary font-semibold">BEST MATCH</span>
           <span class="font-title-md text-title-md text-on-surface font-semibold">${escapeHtml(category)} Provision</span>
         </div>
-        <div class="flex items-center gap-space-xs self-start sm:self-auto bg-surface-container px-space-sm py-space-xs rounded-full">
-          <span class="w-2.5 h-2.5 rounded-full bg-tertiary"></span>
-          <span class="font-code-sm text-code-sm font-semibold text-tertiary">Cosine Similarity: ${simPct}%</span>
+        <div class="flex items-center gap-space-xs self-start sm:self-auto">
+          <div role="img" aria-label="Match similarity ${simPct} percent" class="grid h-14 w-14 shrink-0 place-items-center rounded-full" style="background:conic-gradient(#adc6ff ${simPct}%,rgba(255,255,255,.09) ${simPct}% 100%)">
+            <div class="grid h-11 w-11 place-items-center rounded-full bg-surface-container-low font-code-sm text-code-sm font-semibold text-primary">${simPct}%</div>
+          </div>
+          <div class="flex flex-col"><span class="font-label-sm text-label-sm uppercase text-on-surface-variant">Match strength</span><span class="font-code-sm text-code-sm text-primary">Cosine similarity</span></div>
         </div>
       </div>
       <div class="p-space-md bg-surface-container rounded-lg border-l-4 border-primary">
-        <span class="font-label-sm text-label-sm text-primary uppercase block mb-1">Deterministic Extracted Answer:</span>
+        <span class="font-label-sm text-label-sm text-primary uppercase block mb-1">Best-matching answer</span>
         <p class="font-title-sm text-title-sm text-on-surface font-semibold">${escapeHtml(data.answer)}</p>
       </div>
       <div class="flex flex-col gap-1">
@@ -1200,7 +1670,7 @@ function initAssistantHandlers() {
   const stream = document.getElementById('chatStream');
   if (stream && stream.children.length === 0) {
     appendBotBubble(
-      "Hello! 👋 I am your **LexiCore AI Legal Assistant**.\n\n" +
+      "Hello! 👋 I am your **LawLens AI Legal Assistant**.\n\n" +
       "I analyze legal contracts deterministically without using an LLM. You can say **\"Hi\"**, ask **\"What can you do?\"**, or ask questions about your active contract like:\n" +
       "• *\"What are the payment terms?\"*\n" +
       "• *\"When does this contract expire?\"*\n" +
@@ -1252,7 +1722,7 @@ async function submitAssistantMessage(presetQuery = null) {
     <div class="flex flex-col gap-space-sm max-w-3xl w-full">
       <div class="bg-surface-container p-space-md rounded-xl text-on-surface font-body-md text-body-md flex items-center gap-2">
         <span class="w-4 h-4 rounded-full border-2 border-primary border-t-transparent animate-spin"></span>
-        <span class="font-code-sm text-code-sm text-on-surface-variant">Thinking & querying LexiCore Dialogflow Webhook...</span>
+        <span class="font-code-sm text-code-sm text-on-surface-variant">Thinking & querying LawLens AI Dialogflow Webhook...</span>
       </div>
     </div>
   `;
@@ -1339,7 +1809,7 @@ function appendBotBubble(text, citation) {
     <div class="flex flex-col gap-space-sm max-w-3xl w-full">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-space-xs">
-          <span class="font-title-sm text-title-sm text-on-surface font-semibold">LexiCore Dialogflow Engine</span>
+          <span class="font-title-sm text-title-sm text-on-surface font-semibold">LawLens AI Dialogflow Engine</span>
           <span class="px-1.5 py-0.5 rounded bg-tertiary-container/30 text-tertiary font-code-sm text-code-sm">AI Assistant</span>
         </div>
         <span class="font-label-sm text-label-sm text-outline">Just now</span>
@@ -1457,24 +1927,9 @@ function escapeHtml(string) {
   return String(string).replace(/[&<>"'\/]/g, s => entityMap[s]);
 }
 
-function initUserProfile() {
-  try {
-    const raw = localStorage.getItem('lexicore_current_user');
-    if (raw) {
-      const user = JSON.parse(raw);
-      const nameEl = document.getElementById('user-display-name');
-      const roleEl = document.getElementById('user-display-role');
-      if (nameEl && user.name) nameEl.textContent = user.name;
-      if (roleEl && user.email) roleEl.textContent = user.email;
-    }
-  } catch (e) {
-    console.warn('Could not read user session:', e);
-  }
-}
-
 function logoutUser() {
-  localStorage.removeItem('lexicore_current_user');
-  showToast('Signing out of LexiCore Workspace...', 'info');
+  localStorage.removeItem('lawlens_current_user');
+  showToast('Signing out of LawLens AI Workspace...', 'info');
   setTimeout(() => {
     window.location.href = '/';
   }, 350);

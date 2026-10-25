@@ -4,7 +4,9 @@ analyzed legal documents and their extracted analysis.
 """
 
 import copy
+import json
 import logging
+import os
 import threading
 import uuid
 from datetime import datetime, timezone
@@ -12,14 +14,42 @@ from typing import Any, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 
+DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "data")
+DATA_FILE = os.path.join(DATA_DIR, "document_store.json")
+
 
 class DocumentStore:
-    """Thread-safe in-memory repository for analyzed legal contracts."""
+    """Thread-safe persistent repository for analyzed legal contracts."""
 
-    def __init__(self):
+    def __init__(self, persist_file: Optional[str] = None):
         self._lock = threading.RLock()
         self._documents: Dict[str, Dict[str, Any]] = {}
         self._ordered_ids: List[str] = []
+        self._persist_file = persist_file
+        self._load_from_disk()
+
+    def _load_from_disk(self) -> None:
+        if not self._persist_file:
+            return
+        try:
+            if os.path.exists(self._persist_file):
+                with open(self._persist_file, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    self._documents = data.get("documents", {})
+                    self._ordered_ids = data.get("ordered_ids", [])
+                    logger.info("Restored %d documents from %s", len(self._documents), self._persist_file)
+        except Exception as e:
+            logger.warning("Could not restore documents from disk: %s", e)
+
+    def _save_to_disk(self) -> None:
+        if not self._persist_file:
+            return
+        try:
+            os.makedirs(os.path.dirname(self._persist_file), exist_ok=True)
+            with open(self._persist_file, "w", encoding="utf-8") as f:
+                json.dump({"documents": self._documents, "ordered_ids": self._ordered_ids}, f)
+        except Exception as e:
+            logger.warning("Could not persist documents to disk: %s", e)
 
     def save_document(self, data: Dict[str, Any]) -> str:
         """
@@ -61,16 +91,17 @@ class DocumentStore:
             self._ordered_ids.append(doc_id)
 
             logger.info("Saved document %s (%s) for user %s with %d clauses", doc_id, doc_record["filename"], user_email or "public", total_clauses)
+            self._save_to_disk()
             return doc_id
 
     def _matches_user(self, doc: Dict[str, Any], user_email: Optional[str]) -> bool:
         if not user_email:
             return True
         norm = user_email.strip().lower()
-        if norm in ("admin@lexicore.ai", "admin", "demo"):
-            # Demo / admin sees sample preloaded documents and demo docs
+        if norm in ("admin@lawlens.ai", "admin", "demo"):
+            # Demo / admin sees their own documents and demo docs
             doc_user = (doc.get("user_email") or "").lower()
-            return doc_user in ("", "admin@lexicore.ai", "admin", "demo")
+            return doc_user in ("", "admin@lawlens.ai", "admin", "demo")
         doc_user = (doc.get("user_email") or "").lower()
         return doc_user == norm
 
@@ -234,6 +265,7 @@ class DocumentStore:
         with self._lock:
             self._documents.clear()
             self._ordered_ids.clear()
+            self._save_to_disk()
 
 
 # ── Global Singleton Instance ──
@@ -247,5 +279,5 @@ def get_document_store() -> DocumentStore:
     if _store_instance is None:
         with _store_lock:
             if _store_instance is None:
-                _store_instance = DocumentStore()
+                _store_instance = DocumentStore(persist_file=DATA_FILE)
     return _store_instance
